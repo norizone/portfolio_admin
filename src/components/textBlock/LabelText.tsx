@@ -3,13 +3,13 @@ import { ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 export type LabelTextProps = {
-  children: ReactNode
+  label: string
   lang?: 'jp' | 'en'
   required?: boolean
 }
 
 export const LabelText = (props: LabelTextProps) => {
-  const { children, lang = 'jp', required = false } = props
+  const { label, lang = 'jp', required = false } = props
   return (
     <p
       className={twMerge(
@@ -18,7 +18,7 @@ export const LabelText = (props: LabelTextProps) => {
       )}
     >
       {required && <span className="text-error">* </span>}
-      <span>{children}</span>
+      <span>{label}</span>
     </p>
   )
 }
