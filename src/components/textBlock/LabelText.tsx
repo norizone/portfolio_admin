@@ -2,13 +2,13 @@ import clsx from 'clsx'
 import { ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-type Props = {
+export type LabelTextProps = {
   children: ReactNode
   lang?: 'jp' | 'en'
   required?: boolean
 }
 
-export const LabelText = (props: Props) => {
+export const LabelText = (props: LabelTextProps) => {
   const { children, lang = 'jp', required = false } = props
   return (
     <p

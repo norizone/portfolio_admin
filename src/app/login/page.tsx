@@ -1,6 +1,7 @@
 'use client'
 import { BaseBtn } from '@/components/btn/BaseBtn'
 import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
+import { LabelWithInput } from '@/components/input/LabelWithInput'
 
 export default function AdminSetting() {
   return (
@@ -9,27 +10,29 @@ export default function AdminSetting() {
         <PrimaryHeadline lang="en" tag="h1">
           login
         </PrimaryHeadline>
-        <div className="mt-[2em] p-[2em] text-left flex flex-col gap-[1em]">
-          <label>
-            <p className="font-en">
-              <span className="text-error">* </span>
-              <span>email</span>
-            </p>
-            <input className="border border-border w-full" type="email"></input>
-          </label>
-          <label>
-            <p className="font-en">
-              <span className="text-error">* </span>
-              <span>password</span>
-            </p>
-            <input
-              className="border border-border w-full"
-              type="password"
-            ></input>
-          </label>
+        <div className="mt-[2em] p-[1em] text-left flex flex-col gap-[1em]">
+          <LabelWithInput
+            lang="en"
+            required
+            type="email"
+            name="email"
+            placeholder="example.mail.com"
+            onChange={() => {}}
+          >
+            email
+          </LabelWithInput>
+          <LabelWithInput
+            lang="en"
+            required
+            name="password"
+            type="password"
+            onChange={() => {}}
+          >
+            password
+          </LabelWithInput>
         </div>
         <div className="mt-[2em]">
-          <BaseBtn btnColor="primary" onClick={() => {}}>
+          <BaseBtn btnColor="primary" type="submit" onClick={() => {}}>
             login
           </BaseBtn>
         </div>
