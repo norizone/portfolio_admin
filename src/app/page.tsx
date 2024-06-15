@@ -1,17 +1,32 @@
-import { PrimaryHeadline } from "@/components/headline/PrimaryHeadline";
-import Image from "next/image";
+import { ListCard } from '@/components/card/ListCard'
+import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
+import { title } from 'process'
+
+const mockData = [
+  {
+    title: '制作実績',
+    count: 3,
+  },
+  {
+    title: 'ユーザー',
+    count: 3,
+  },
+]
 
 export default function Home() {
   return (
-    <div>
-      <PrimaryHeadline lang="jp" tag="h1">
-        日本語
-      </PrimaryHeadline>
-      <PrimaryHeadline lang="en" tag="h1">
-        Pome
-      </PrimaryHeadline>
-      <p className="font-jp">日本語</p>
-      <p className="font-en">dposafidpsafj</p>
-    </div>
-  );
+    <section>
+      <PrimaryHeadline tag="h1">ダッシュボード</PrimaryHeadline>
+      <ul className="grid grid-cols-3 mt-[2em] gap-[1em]">
+        {mockData.map((data, index) => (
+          <ListCard key={index}>
+            <div className="flex-center flex-col gap-[.6em]">
+              <p>{data.title}</p>
+              <p>{data.count}件</p>
+            </div>
+          </ListCard>
+        ))}
+      </ul>
+    </section>
+  )
 }
