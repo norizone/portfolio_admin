@@ -5,8 +5,15 @@ import { routers } from '@/routers/routers'
 import { WorksIcon } from '../icon/WorksIcon'
 import { SettingIcon } from '../icon/SettingIcon'
 import { LogoutIcon } from '../icon/LogoutIcon'
+import { HomeIcon } from '../icon/HomeIcon'
 
 const MENU_LIST = [
+  {
+    title: 'ダッシュボード',
+    url: routers.DASHBOARD,
+    icon: <HomeIcon />,
+    chilled: [{ title: '', url: '' }],
+  },
   {
     title: '制作実績',
     url: routers.WORKS,
