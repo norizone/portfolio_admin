@@ -43,9 +43,9 @@ const tableData = [
     width: 4 / 10,
   },
   {
-    tableHeader: '更新日時',
+    tableHeader: '公開状況',
     tableKey: 'updateAt',
-    text: 'dsfopaji',
+    text: '非公開',
     width: 2 / 10,
   },
   {
