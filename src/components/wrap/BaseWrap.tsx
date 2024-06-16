@@ -1,18 +1,18 @@
-import { ReactNode } from "react"
-import { SideBar } from "../sidebar/PrimarySidebar"
-import { PrimaryHeader } from "../header/PrimaryHeader"
+import { ReactNode } from 'react'
+import { SideBar } from '../sidebar/PrimarySidebar'
+import { PrimaryHeader } from '../header/PrimaryHeader'
 
-type Props ={
-  children:ReactNode
+type Props = {
+  children: ReactNode
 }
 
-export const BaseWrap = (props:Props)=>{
-  const {children} = props
+export const BaseWrap = (props: Props) => {
+  const { children } = props
   return (
     <div className="w-full flex flex-row flex-nowrap">
-      <SideBar/>
+      <SideBar />
       <div className="max-w-[900px] p-[2em] mx-auto w-full">
-      <PrimaryHeader/>
+        <PrimaryHeader />
         {children}
       </div>
     </div>
