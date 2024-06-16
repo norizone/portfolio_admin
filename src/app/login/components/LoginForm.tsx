@@ -55,7 +55,7 @@ export const LoginForm = () => {
           <BaseInput type="password" {...register('password')} />
         </FormLabel>
       </div>
-      <div className="mt-[2em]">
+      <div className="mt-[2em] flex-center">
         <BaseBtn
           btnColor="primary"
           btnProps={{

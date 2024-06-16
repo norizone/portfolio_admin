@@ -30,4 +30,7 @@ export const createWorks = yup.object({
   // gitUrl?: string
 })
 
-export const createUser = yup.object({})
+export const createUser = yup.object({
+  name: yup.string().required(requiredMessage('ユーザー名')),
+  permissions: yup.number().required(requiredMessage('権限')),
+})

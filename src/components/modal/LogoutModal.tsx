@@ -10,9 +10,9 @@ export const LogoutModal = (props: props) => {
   const { handleOpenModal, isOpen, onSubmit } = props
   return (
     <BaseModal isOpen={isOpen} handleOpenModal={handleOpenModal}>
-      <section className="text-center p-[1em] flex-center flex-col m-auto">
+      <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
         <PrimaryHeadline tag="h3">ログアウトしますか？</PrimaryHeadline>
-        <div className="flex-center flex-row gap-[2em] mt-[3em]">
+        <div className="flex-center flex-row gap-[1em] mt-[3em]">
           <BaseBtn
             btnProps={{
               type: 'button',

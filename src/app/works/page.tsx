@@ -37,7 +37,7 @@ export default function Works() {
         <BaseTable onDelete={handleOpenModal} />
       </div>
       <div className="mt-[2em]">
-        <BasePagination allPage={20} currentPage={3} />
+        <BasePagination totalPage={20} currentPage={3} />
       </div>
       <DeleteModal
         isOpen={isOpenModal}

@@ -3,7 +3,7 @@ import { ReactNode, useMemo, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 type Props = {
-  allPage: number
+  totalPage: number
   currentPage: number
 }
 const MAX_PAGINATION = 5
@@ -39,16 +39,16 @@ const RenderListBlock = ({
 }
 
 export const BasePagination = (props: Props) => {
-  const { allPage = 20, currentPage = 5 } = props
+  const { totalPage = 20, currentPage = 5 } = props
   const [pageArray, setPageArray] = useState<Array<number>>([])
 
   useMemo(() => {
-    if (allPage >= 5) {
+    if (totalPage >= 5) {
       const startingCount =
         currentPage < 3
           ? 1
-          : allPage - 5 < currentPage
-          ? allPage - 4
+          : totalPage - 5 < currentPage
+          ? totalPage - 4
           : currentPage - 2
 
       const pages = [...Array(MAX_PAGINATION).keys()].map(
@@ -56,12 +56,12 @@ export const BasePagination = (props: Props) => {
       )
       setPageArray(pages)
     } else {
-      const pages = [...Array(allPage).keys()].map((i) => i + 1)
+      const pages = [...Array(totalPage).keys()].map((i) => i + 1)
       setPageArray(pages)
     }
-  }, [allPage, currentPage])
+  }, [totalPage, currentPage])
 
-  return (
+  return totalPage === 1 ? null : (
     <nav aria-label="ページネーション">
       <ul className="flex flex-row flex-nowrap gap-[.4em] w-max mx-auto">
         <RenderListBlock ariaLabel={'最初のページへ'}>

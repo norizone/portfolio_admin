@@ -27,7 +27,7 @@ export default function UserManagement() {
         <BaseTable />
       </div>
       <div className="mt-[2em]">
-        <BasePagination allPage={20} currentPage={3} />
+        <BasePagination totalPage={20} currentPage={3} />
       </div>
     </section>
   )

@@ -19,7 +19,7 @@ export const DeleteModal = (props: props) => {
         {modalType === 'confirm' && (
           <>
             <PrimaryHeadline tag="h3">削除しますか？</PrimaryHeadline>
-            <div className="flex-center flex-row gap-[2em] mt-[3em]">
+            <div className="flex-center flex-row gap-[1em] mt-[3em]">
               <BaseBtn
                 onClick={() => {
                   onSubmit
