@@ -13,10 +13,22 @@ export const LogoutModal = (props: props) => {
       <section className="text-center p-[1em] flex-center flex-col m-auto">
         <PrimaryHeadline tag="h3">ログアウトしますか？</PrimaryHeadline>
         <div className="flex-center flex-row gap-[2em] mt-[3em]">
-          <BaseBtn type="button" onClick={onSubmit} btnColor="primary">
+          <BaseBtn
+            btnProps={{
+              type: 'button',
+            }}
+            onClick={onSubmit}
+            btnColor="primary"
+          >
             はい
           </BaseBtn>
-          <BaseBtn type="button" onClick={handleOpenModal} btnColor="cancel">
+          <BaseBtn
+            btnProps={{
+              type: 'button',
+            }}
+            onClick={handleOpenModal}
+            btnColor="cancel"
+          >
             いいえ
           </BaseBtn>
         </div>

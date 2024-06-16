@@ -16,6 +16,9 @@ export default function UserManagement() {
             e.preventDefault
           }}
           btnColor="primary"
+          btnProps={{
+            type: 'button',
+          }}
         >
           新規作成
         </BaseBtn>

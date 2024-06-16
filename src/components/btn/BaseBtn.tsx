@@ -1,29 +1,37 @@
 'use client'
 
 import clsx from 'clsx'
-import { ReactNode } from 'react'
+import {
+  ReactNode,
+  ElementType,
+  ButtonHTMLAttributes,
+  AnchorHTMLAttributes,
+  forwardRef,
+} from 'react'
 import { twMerge } from 'tailwind-merge'
 
 type Props = {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
-  type?: 'submit' | 'reset' | 'button' | undefined
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
   children: ReactNode
   btnColor: 'primary' | 'success' | 'error' | 'warning' | 'cancel'
-  disabled?: boolean
+  as?: ElementType
+  btnProps?: ButtonHTMLAttributes<HTMLButtonElement>
+  linkProps?: AnchorHTMLAttributes<HTMLAnchorElement>
 }
 
-export const BaseBtn = (props: Props) => {
+export const BaseBtn = forwardRef<ElementType, Props>((props, ref) => {
   const {
     onClick,
     children,
     btnColor,
-    disabled = false,
-    type = 'button',
+    as: CustomTag = 'button',
+    btnProps,
+    linkProps,
   } = props
   return (
-    <button
+    <CustomTag
       className={twMerge(
-        'w-max p-[.4em] rounded-lg min-w-[10em] shadow-lg transition-all',
+        'w-max p-[.4em] rounded-lg min-w-[10em] shadow-lg transition-all block text-center',
         clsx(
           btnColor === 'primary' &&
             'bg-primary-dark  hover:bg-primary text-white',
@@ -33,11 +41,16 @@ export const BaseBtn = (props: Props) => {
           btnColor === 'cancel' && 'bg-[#b2b2b2] hover:bg-[#c4c4c4]'
         )
       )}
-      type={type}
+      {...btnProps}
+      {...linkProps}
       onClick={onClick}
-      disabled={disabled}
+      ref={ref}
     >
       {children}
-    </button>
+    </CustomTag>
   )
-}
+})
+
+BaseBtn.displayName = 'BaseBtn'
+
+export default BaseBtn

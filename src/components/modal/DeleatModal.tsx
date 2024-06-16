@@ -21,17 +21,21 @@ export const DeleteModal = (props: props) => {
             <PrimaryHeadline tag="h3">削除しますか？</PrimaryHeadline>
             <div className="flex-center flex-row gap-[2em] mt-[3em]">
               <BaseBtn
-                type="button"
                 onClick={() => {
                   onSubmit
                   setModalType('complete')
+                }}
+                btnProps={{
+                  type: 'button',
                 }}
                 btnColor="error"
               >
                 削除する
               </BaseBtn>
               <BaseBtn
-                type="button"
+                btnProps={{
+                  type: 'button',
+                }}
                 onClick={handleOpenModal}
                 btnColor="cancel"
               >
@@ -47,7 +51,9 @@ export const DeleteModal = (props: props) => {
             </PrimaryHeadline>
             <div className="flex-center flex-row gap-[2em] mt-[3em]">
               <BaseBtn
-                type="button"
+                btnProps={{
+                  type: 'button',
+                }}
                 onClick={handleOpenModal}
                 btnColor="cancel"
               >

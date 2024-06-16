@@ -6,6 +6,8 @@ import { BaseTable } from '@/components/table/BaseTable'
 import { useState } from 'react'
 import { useFixBody } from '@/hooks/useFixeBody'
 import { DeleteModal } from '@/components/modal/DeleatModal'
+import Link from 'next/link'
+import { routers } from '@/routers/routers'
 
 export default function Works() {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
@@ -20,12 +22,13 @@ export default function Works() {
       <PrimaryHeadline lang="jp" tag="h1">
         制作実績一覧
       </PrimaryHeadline>
-      <div className="mt-[2em] text-right">
+      <div className="mt-[2em] w-max ml-auto">
         <BaseBtn
-          onClick={(e) => {
-            e.preventDefault
-          }}
+          as={Link}
           btnColor="primary"
+          linkProps={{
+            href: routers.WORKS_CREATE,
+          }}
         >
           新規作成
         </BaseBtn>

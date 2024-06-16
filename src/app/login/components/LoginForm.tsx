@@ -56,7 +56,13 @@ export const LoginForm = () => {
         </FormLabel>
       </div>
       <div className="mt-[2em]">
-        <BaseBtn btnColor="primary" type="submit" onClick={() => {}}>
+        <BaseBtn
+          btnColor="primary"
+          btnProps={{
+            type: 'submit',
+          }}
+          onClick={() => {}}
+        >
           login
         </BaseBtn>
       </div>
