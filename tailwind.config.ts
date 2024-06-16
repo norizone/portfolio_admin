@@ -36,6 +36,7 @@ const config: Config = {
         'primary-dark': '#2177d2',
         success: '#13cd87',
         error: '#fd0f0f',
+        'error-dark': '#df1010',
         warning: '#dcd209',
       },
     },
