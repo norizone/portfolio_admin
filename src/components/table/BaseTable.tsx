@@ -4,6 +4,10 @@ import { EditIcon } from '@/components/icon/EditIcon'
 import clsx from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+type Props = {
+  onDelete?: () => void
+}
+
 const works = [
   {
     title: '制作1',
@@ -62,7 +66,8 @@ const tableData = [
 
 const tableColMargin = 'p-[.6em]'
 
-export const BaseTable = () => {
+export const BaseTable = (props: Props) => {
+  const { onDelete } = props
   return (
     <table className="w-full table-fixed">
       <thead>
@@ -107,7 +112,7 @@ export const BaseTable = () => {
                 <button
                   className={`w-full ${tableColMargin} flex-center`}
                   type="button"
-                  // onClick={() => {}}
+                  onClick={onDelete}
                 >
                   <DeleteIcon />
                 </button>
