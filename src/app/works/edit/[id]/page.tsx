@@ -1,7 +1,7 @@
 import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
 
 import type { Metadata } from 'next'
-import { CreateForm } from '../../components/CreateForm'
+import { CreateForm } from '../../_components/CreateForm'
 
 export const metadata: Metadata = {
   title: '新規作成',

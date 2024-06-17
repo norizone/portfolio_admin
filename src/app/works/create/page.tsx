@@ -1,5 +1,5 @@
 import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
-import { CreateForm } from '../components/CreateForm'
+import { CreateForm } from '../_components/CreateForm'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
