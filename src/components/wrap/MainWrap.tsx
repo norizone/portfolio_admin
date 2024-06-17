@@ -6,7 +6,7 @@ type Props = {
   children: ReactNode
 }
 
-export const BaseWrap = (props: Props) => {
+export const MainWrap = (props: Props) => {
   const { children } = props
   return (
     <div className="w-full flex flex-row flex-nowrap">
