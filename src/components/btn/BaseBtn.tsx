@@ -19,7 +19,7 @@ type Props = {
   linkProps?: AnchorHTMLAttributes<HTMLAnchorElement>
 }
 
-export const BaseBtn = forwardRef<ElementType, Props>((props, ref) => {
+const BaseBtn = forwardRef<ElementType, Props>((props, ref) => {
   const {
     onClick,
     children,

@@ -1,7 +1,7 @@
 'use client'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { BaseBtn } from '@/components/btn/BaseBtn'
+import BaseBtn from '@/components/btn/BaseBtn'
 import { createWorks, loginSchema } from '@/utils/validations'
 import { FormLabel } from '@/components/textBlock/FormLabel'
 import BaseInput from '@/components/input/BaseInput'

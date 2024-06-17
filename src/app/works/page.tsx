@@ -1,5 +1,5 @@
 'use client'
-import { BaseBtn } from '@/components/btn/BaseBtn'
+import BaseBtn from '@/components/btn/BaseBtn'
 import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
 import { BasePagination } from '@/components/pagination/BasePagination'
 import { BaseTable } from '@/components/table/BaseTable'

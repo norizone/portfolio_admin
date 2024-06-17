@@ -1,6 +1,6 @@
 import { BaseModal, BaseModalProps } from './BaseModal'
 import { PrimaryHeadline } from '../headline/PrimaryHeadline'
-import { BaseBtn } from '../btn/BaseBtn'
+import BaseBtn from '../btn/BaseBtn'
 import { useState } from 'react'
 
 type props = Omit<BaseModalProps, 'children'> & {

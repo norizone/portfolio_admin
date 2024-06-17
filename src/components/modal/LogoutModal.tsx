@@ -1,6 +1,6 @@
 import { BaseModal, BaseModalProps } from './BaseModal'
 import { PrimaryHeadline } from '../headline/PrimaryHeadline'
-import { BaseBtn } from '../btn/BaseBtn'
+import BaseBtn from '../btn/BaseBtn'
 
 type props = Omit<BaseModalProps, 'children'> & {
   onSubmit: () => void
