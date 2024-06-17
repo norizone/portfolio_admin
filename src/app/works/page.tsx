@@ -1,7 +1,7 @@
 'use client'
 import BaseBtn from '@/components/btn/BaseBtn'
 import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
-import { BasePagination } from '@/components/pagination/BasePagination'
+import { PrimaryPagination } from '@/components/pagination/PrimaryPagination'
 import { BaseTable } from '@/components/table/BaseTable'
 import { useState } from 'react'
 import { useFixBody } from '@/hooks/useFixeBody'
@@ -37,7 +37,7 @@ export default function Works() {
         <BaseTable onDelete={handleOpenModal} />
       </div>
       <div className="mt-[2em]">
-        <BasePagination totalPage={20} currentPage={3} />
+        <PrimaryPagination totalPage={20} currentPage={3} />
       </div>
       <DeleteModal
         isOpen={isOpenModal}

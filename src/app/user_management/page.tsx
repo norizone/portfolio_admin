@@ -1,7 +1,7 @@
 'use client'
 import BaseBtn from '@/components/btn/BaseBtn'
 import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
-import { BasePagination } from '@/components/pagination/BasePagination'
+import { PrimaryPagination } from '@/components/pagination/PrimaryPagination'
 import { BaseTable } from '@/components/table/BaseTable'
 
 export default function UserManagement() {
@@ -27,7 +27,7 @@ export default function UserManagement() {
         <BaseTable />
       </div>
       <div className="mt-[2em]">
-        <BasePagination totalPage={20} currentPage={3} />
+        <PrimaryPagination totalPage={20} currentPage={3} />
       </div>
     </section>
   )

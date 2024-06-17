@@ -38,7 +38,7 @@ const RenderListBlock = ({
   )
 }
 
-export const BasePagination = (props: Props) => {
+export const PrimaryPagination = (props: Props) => {
   const { totalPage = 20, currentPage = 5 } = props
   const [pageArray, setPageArray] = useState<Array<number>>([])
 
