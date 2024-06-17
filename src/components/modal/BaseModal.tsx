@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, forwardRef } from 'react'
 import ReactModal from 'react-modal'
 import FocusLock from 'react-focus-lock'
 
@@ -35,51 +35,57 @@ const customStyles = {
 
 ReactModal.setAppElement('body')
 
-export const BaseModal = (props: BaseModalProps) => {
-  const { children, handleOpenModal, isOpen } = props
+const BaseModal = forwardRef<HTMLElement, BaseModalProps>(
+  (props: BaseModalProps, ref) => {
+    const { children, handleOpenModal, isOpen } = props
 
-  return (
-    <FocusLock>
-      <ReactModal
-        className='relative px-1 md:px-7 py-3 md:py-5 rounded-lg border-2 border-[#fff] flex-center flex-col outline-none
+    return (
+      <FocusLock ref={ref}>
+        <ReactModal
+          className='relative px-1 md:px-7 py-3 md:py-5 rounded-lg border-2 border-[#fff] flex-center flex-col outline-none
           after:absolute after:top-0 after:left-0 after:backdrop-blur-[12px] after:bg-[#ffffffb5] after:w-full after:h-full after:contents-[""] after:block after:z-[-1]'
-        style={customStyles}
-        isOpen={isOpen}
-        onRequestClose={handleOpenModal}
-        contentLabel="Modal"
-        ariaHideApp={false}
-      >
-        <div className="absolute top-4 right-5 z-[55] cursor-pointer">
-          <button onClick={handleOpenModal}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="23.486"
-              height="23.486"
-              viewBox="0 0 23.486 23.486"
-            >
-              <g transform="translate(4.243 4.243)">
-                <line
-                  x2="15"
-                  y2="15"
-                  fill="none"
-                  stroke="#707070"
-                  strokeLinecap="round"
-                  strokeWidth="6"
-                />
-                <line
-                  x1="15"
-                  y2="15"
-                  fill="none"
-                  stroke="#707070"
-                  strokeLinecap="round"
-                  strokeWidth="6"
-                />
-              </g>
-            </svg>
-          </button>
-        </div>
-        {children}
-      </ReactModal>
-    </FocusLock>
-  )
-}
+          style={customStyles}
+          isOpen={isOpen}
+          onRequestClose={handleOpenModal}
+          contentLabel="Modal"
+          ariaHideApp={false}
+        >
+          <div className="absolute top-4 right-5 z-[55] cursor-pointer">
+            <button onClick={handleOpenModal}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="23.486"
+                height="23.486"
+                viewBox="0 0 23.486 23.486"
+              >
+                <g transform="translate(4.243 4.243)">
+                  <line
+                    x2="15"
+                    y2="15"
+                    fill="none"
+                    stroke="#707070"
+                    strokeLinecap="round"
+                    strokeWidth="6"
+                  />
+                  <line
+                    x1="15"
+                    y2="15"
+                    fill="none"
+                    stroke="#707070"
+                    strokeLinecap="round"
+                    strokeWidth="6"
+                  />
+                </g>
+              </svg>
+            </button>
+          </div>
+          {children}
+        </ReactModal>
+      </FocusLock>
+    )
+  }
+)
+
+BaseModal.displayName = 'BaseModal'
+
+export default BaseModal

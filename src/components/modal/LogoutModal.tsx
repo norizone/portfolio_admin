@@ -1,4 +1,4 @@
-import { BaseModal, BaseModalProps } from './BaseModal'
+import BaseModal, { BaseModalProps } from './BaseModal'
 import { PrimaryHeadline } from '../headline/PrimaryHeadline'
 import BaseBtn from '../btn/BaseBtn'
 
