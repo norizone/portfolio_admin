@@ -1,5 +1,5 @@
 import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
-import { LoginForm } from './components/LoginForm'
+import { LoginForm } from './_components/LoginForm'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
