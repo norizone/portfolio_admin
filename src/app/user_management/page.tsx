@@ -1,8 +1,8 @@
 'use client'
-import BaseBtn from '@/components/btn/BaseBtn'
+import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
 import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
 import { PrimaryPagination } from '@/components/pagination/PrimaryPagination'
-import { BaseTable } from '@/components/table/BaseTable'
+import PrimaryTable from '@/components/table/PrimaryTable'
 
 export default function UserManagement() {
   return (
@@ -11,7 +11,7 @@ export default function UserManagement() {
         ユーザー一覧
       </PrimaryHeadline>
       <div className="mt-[2em] text-right">
-        <BaseBtn
+        <PrimaryBtn
           onClick={(e) => {
             e.preventDefault
           }}
@@ -21,11 +21,9 @@ export default function UserManagement() {
           }}
         >
           新規作成
-        </BaseBtn>
+        </PrimaryBtn>
       </div>
-      <div className="mt-[2em]">
-        <BaseTable />
-      </div>
+      <div className="mt-[2em]">{/* <PrimaryTable/> */}</div>
       <div className="mt-[2em]">
         <PrimaryPagination totalPage={20} currentPage={3} />
       </div>

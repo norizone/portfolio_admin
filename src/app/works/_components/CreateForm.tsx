@@ -1,10 +1,10 @@
 'use client'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import BaseBtn from '@/components/btn/BaseBtn'
 import { createWorks, loginSchema } from '@/utils/validations'
 import { FormLabel } from '@/components/textBlock/FormLabel'
 import BaseInput from '@/components/input/BaseInput'
+import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
 
 type CreateWorks = {
   status: number
@@ -128,14 +128,14 @@ export const CreateForm = (props: Props) => {
         </div>
       </FormLabel>
       <div className="flex-center mt-[2em]">
-        <BaseBtn
+        <PrimaryBtn
           btnColor="primary"
           btnProps={{
             type: 'submit',
           }}
         >
           保存
-        </BaseBtn>
+        </PrimaryBtn>
       </div>
     </form>
   )

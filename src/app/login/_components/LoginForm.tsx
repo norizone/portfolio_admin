@@ -1,10 +1,10 @@
 'use client'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import BaseBtn from '@/components/btn/BaseBtn'
 import { loginSchema } from '@/utils/validations'
 import { FormLabel } from '@/components/textBlock/FormLabel'
 import BaseInput from '@/components/input/BaseInput'
+import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
 
 type LoginDate = {
   email: string
@@ -56,7 +56,7 @@ export const LoginForm = () => {
         </FormLabel>
       </div>
       <div className="mt-[2em] flex-center">
-        <BaseBtn
+        <PrimaryBtn
           btnColor="primary"
           btnProps={{
             type: 'submit',
@@ -64,7 +64,7 @@ export const LoginForm = () => {
           onClick={() => {}}
         >
           login
-        </BaseBtn>
+        </PrimaryBtn>
       </div>
     </form>
   )

@@ -1,7 +1,7 @@
 import BaseModal, { BaseModalProps } from './BaseModal'
 import { PrimaryHeadline } from '../headline/PrimaryHeadline'
-import BaseBtn from '../btn/BaseBtn'
 import { useState } from 'react'
+import { PrimaryBtn } from '../btn/PrimaryBtn'
 
 type props = Omit<BaseModalProps, 'children'> & {
   onSubmit: () => void
@@ -20,7 +20,7 @@ export const DeleteModal = (props: props) => {
           <>
             <PrimaryHeadline tag="h3">削除しますか？</PrimaryHeadline>
             <div className="flex-center flex-row gap-[1em] mt-[3em]">
-              <BaseBtn
+              <PrimaryBtn
                 onClick={() => {
                   onSubmit
                   setModalType('complete')
@@ -31,8 +31,8 @@ export const DeleteModal = (props: props) => {
                 btnColor="error"
               >
                 削除する
-              </BaseBtn>
-              <BaseBtn
+              </PrimaryBtn>
+              <PrimaryBtn
                 btnProps={{
                   type: 'button',
                 }}
@@ -40,7 +40,7 @@ export const DeleteModal = (props: props) => {
                 btnColor="cancel"
               >
                 削除しない
-              </BaseBtn>
+              </PrimaryBtn>
             </div>
           </>
         )}
@@ -50,7 +50,7 @@ export const DeleteModal = (props: props) => {
               {isSuccess ? '削除しました' : '削除できませんでした'}
             </PrimaryHeadline>
             <div className="flex-center flex-row gap-[2em] mt-[3em]">
-              <BaseBtn
+              <PrimaryBtn
                 btnProps={{
                   type: 'button',
                 }}
@@ -58,7 +58,7 @@ export const DeleteModal = (props: props) => {
                 btnColor="cancel"
               >
                 閉じる
-              </BaseBtn>
+              </PrimaryBtn>
             </div>
           </>
         )}

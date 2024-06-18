@@ -1,6 +1,6 @@
 import BaseModal, { BaseModalProps } from './BaseModal'
 import { PrimaryHeadline } from '../headline/PrimaryHeadline'
-import BaseBtn from '../btn/BaseBtn'
+import { PrimaryBtn } from '../btn/PrimaryBtn'
 
 type props = Omit<BaseModalProps, 'children'> & {
   onSubmit: () => void
@@ -13,7 +13,7 @@ export const LogoutModal = (props: props) => {
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
         <PrimaryHeadline tag="h3">ログアウトしますか？</PrimaryHeadline>
         <div className="flex-center flex-row gap-[1em] mt-[3em]">
-          <BaseBtn
+          <PrimaryBtn
             btnProps={{
               type: 'button',
             }}
@@ -21,8 +21,8 @@ export const LogoutModal = (props: props) => {
             btnColor="primary"
           >
             はい
-          </BaseBtn>
-          <BaseBtn
+          </PrimaryBtn>
+          <PrimaryBtn
             btnProps={{
               type: 'button',
             }}
@@ -30,7 +30,7 @@ export const LogoutModal = (props: props) => {
             btnColor="cancel"
           >
             いいえ
-          </BaseBtn>
+          </PrimaryBtn>
         </div>
       </section>
     </BaseModal>
