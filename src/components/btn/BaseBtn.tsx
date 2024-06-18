@@ -1,6 +1,5 @@
 'use client'
 
-import clsx from 'clsx'
 import {
   ReactNode,
   ElementType,
@@ -8,42 +7,34 @@ import {
   AnchorHTMLAttributes,
   forwardRef,
 } from 'react'
-import { twMerge } from 'tailwind-merge'
 
-type Props = {
+export type BaseBtnProps = {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
   children: ReactNode
-  btnColor: 'primary' | 'success' | 'error' | 'warning' | 'cancel'
+  btnClassName: string
   as?: ElementType
   btnProps?: ButtonHTMLAttributes<HTMLButtonElement>
   linkProps?: AnchorHTMLAttributes<HTMLAnchorElement>
+  ariaLabel?: string
 }
 
-const BaseBtn = forwardRef<ElementType, Props>((props, ref) => {
+const BaseBtn = forwardRef<ElementType, BaseBtnProps>((props, ref) => {
   const {
     onClick,
     children,
-    btnColor,
     as: CustomTag = 'button',
     btnProps,
     linkProps,
+    btnClassName,
+    ariaLabel,
   } = props
   return (
     <CustomTag
-      className={twMerge(
-        'w-max p-[.4em] rounded-lg min-w-[10em] shadow-lg transition-all block text-center',
-        clsx(
-          btnColor === 'primary' &&
-            'bg-primary-dark  hover:bg-primary text-white',
-          btnColor === 'success' && '',
-          btnColor === 'error' && 'bg-error-dark  hover:bg-error text-white',
-          btnColor === 'warning' && '',
-          btnColor === 'cancel' && 'bg-[#b2b2b2] hover:bg-[#c4c4c4]'
-        )
-      )}
+      className={btnClassName}
       {...btnProps}
       {...linkProps}
       onClick={onClick}
+      aria-label={ariaLabel}
       ref={ref}
     >
       {children}
