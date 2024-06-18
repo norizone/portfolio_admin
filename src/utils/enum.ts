@@ -1,4 +1,4 @@
 export enum PUBLICATION_STATUS {
-  PUBLIC = 0,
-  PRIVATE = 1,
+  PRIVATE = 0,
+  PUBLIC = 1,
 }
