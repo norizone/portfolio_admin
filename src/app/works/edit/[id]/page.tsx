@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { CreateForm } from '../../_components/CreateForm'
 
 export const metadata: Metadata = {
-  title: '新規作成',
+  title: '制作実績 編集',
 }
 
 export default function Works() {
