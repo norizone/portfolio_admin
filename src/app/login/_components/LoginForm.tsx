@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { loginSchema } from '@/utils/validations'
 import { FormLabel } from '@/components/textBlock/FormLabel'
-import BaseInput from '@/components/input/BaseInput'
 import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
+import { PrimaryInput } from '@/components/input/PrimaryInput'
 
 type LoginDate = {
   email: string
@@ -40,7 +40,7 @@ export const LoginForm = () => {
           required
           errorMessage={errors?.email?.message}
         >
-          <BaseInput
+          <PrimaryInput
             type="email"
             placeholder="example.mail.com"
             {...register('email')}
@@ -52,7 +52,7 @@ export const LoginForm = () => {
           required
           errorMessage={errors?.password?.message}
         >
-          <BaseInput type="password" {...register('password')} />
+          <PrimaryInput type="password" {...register('password')} />
         </FormLabel>
       </div>
       <div className="mt-[2em] flex-center">

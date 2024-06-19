@@ -1,17 +1,24 @@
 'use client'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { createWorks, loginSchema } from '@/utils/validations'
 import { FormLabel } from '@/components/textBlock/FormLabel'
-import BaseInput from '@/components/input/BaseInput'
 import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
+import { PrimaryInput } from '@/components/input/PrimaryInput'
+import { PrimaryLabelCheckBox } from '@/components/checkBox/PrimaryLabelCheckBox'
+import { twMerge } from 'tailwind-merge'
+import { PrimarySelectBox } from '@/components/selectBox/PrimarySelectBox'
+import { PrimaryTextArea } from '@/components/textArea/PrimaryTextArea'
+import { PUBLICATION_STATUS } from '@/utils/enum'
+import { convertPublication } from '@/utils/converter'
+import { ImageInput } from '@/components/input/ImageInput'
 
 type CreateWorks = {
   status: number
   title: string
   titleEn: string
   archiveImg: unknown
-  useTools: number[]
+  useTools: []
   comment?: string
   url?: string
   role?: string
@@ -19,21 +26,64 @@ type CreateWorks = {
   singleImgSub1?: unknown
   singleImgSub2?: unknown
   gitUrl?: string
+  permission?: number
 }
 
 type Props = {
   formType: 'create' | 'edit'
-  defaultValues?: {}
 }
+
+const tools = [
+  {
+    label: 't',
+    value: 1,
+  },
+  {
+    label: 'e',
+    value: 2,
+  },
+  {
+    label: 'r',
+    value: 3,
+  },
+  {
+    label: 'u',
+    value: 4,
+  },
+  {
+    label: 'i',
+    value: 5,
+  },
+]
+
+const publicStatusItems = Object.keys(convertPublication).map((key) => ({
+  label: convertPublication[+key as PUBLICATION_STATUS],
+  value: key,
+}))
+
+const permissionItems = [
+  {
+    value: 1,
+    label: '制限',
+  },
+  {
+    value: 2,
+    label: '制限なし',
+  },
+]
+
+const inputMargin = 'mx-[1em] mt-[.2em] w-[calc(100%_-_2em)]'
+const minInputWidth = 'w-[12em]'
 
 export const CreateForm = (props: Props) => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
+    control,
   } = useForm<CreateWorks>({
     mode: 'onBlur',
-    // defaultValues,
     resolver: yupResolver(createWorks),
   })
 
@@ -51,7 +101,27 @@ export const CreateForm = (props: Props) => {
         required
         errorMessage={errors?.status?.message}
       >
-        <div className="ml-[.4em] mt-[.2em]">{/* radio_btn */}</div>
+        <PrimarySelectBox
+          customClassName={twMerge(inputMargin, minInputWidth)}
+          optionItems={publicStatusItems}
+          placeholder="選択してください"
+          value={watch('status')}
+          {...register('status')}
+        />
+      </FormLabel>
+
+      <FormLabel
+        label="表示権限"
+        required
+        errorMessage={errors?.permission?.message}
+      >
+        <PrimarySelectBox
+          customClassName={twMerge(inputMargin, minInputWidth)}
+          optionItems={permissionItems}
+          placeholder="選択してください"
+          value={watch('permission')}
+          {...register('permission')}
+        />
       </FormLabel>
 
       <FormLabel
@@ -59,13 +129,12 @@ export const CreateForm = (props: Props) => {
         required
         errorMessage={errors?.title?.message}
       >
-        <div className="ml-[.4em] mt-[.2em]">
-          <BaseInput
-            type="text"
-            placeholder="タイトル"
-            {...register('title')}
-          />
-        </div>
+        <PrimaryInput
+          customClassName={inputMargin}
+          type="text"
+          placeholder="タイトル"
+          {...register('title')}
+        />
       </FormLabel>
 
       <FormLabel
@@ -73,9 +142,12 @@ export const CreateForm = (props: Props) => {
         required
         errorMessage={errors?.titleEn?.message}
       >
-        <div className="ml-[.4em] mt-[.2em]">
-          <BaseInput type="text" placeholder="title" {...register('titleEn')} />
-        </div>
+        <PrimaryInput
+          type="text"
+          placeholder="title"
+          customClassName={inputMargin}
+          {...register('titleEn')}
+        />
       </FormLabel>
 
       <FormLabel
@@ -83,50 +155,105 @@ export const CreateForm = (props: Props) => {
         required
         errorMessage={errors?.archiveImg?.message}
       >
-        <div className="ml-[.4em] mt-[.2em]">{/* 画像アップロード */}</div>
+        <ImageInput customClassName={inputMargin} {...register('archiveImg')} />
       </FormLabel>
 
       <FormLabel
-        label="アーカイブ画像"
+        label="詳細ページpc画面画像"
         required
-        errorMessage={errors?.archiveImg?.message}
+        errorMessage={errors?.singleImgMain?.message}
       >
-        <div className="ml-[.4em] mt-[.2em]">{/* 画像アップロード */}</div>
+        <ImageInput
+          customClassName={inputMargin}
+          {...register('singleImgMain')}
+        />
+      </FormLabel>
+
+      <FormLabel
+        label="詳細ページsp画面画像1"
+        required
+        errorMessage={errors?.singleImgSub1?.message}
+      >
+        <ImageInput
+          customClassName={inputMargin}
+          {...register('singleImgSub1')}
+        />
+      </FormLabel>
+
+      <FormLabel
+        label="詳細ページsp画面画像2"
+        errorMessage={errors?.singleImgSub2?.message}
+      >
+        <ImageInput
+          customClassName={inputMargin}
+          {...register('singleImgSub2')}
+        />
       </FormLabel>
 
       <FormLabel
         label="使用ツール"
         required
         errorMessage={errors?.useTools?.message}
+        as="p"
       >
-        <div className="ml-[.4em] mt-[.2em]">
-          {/*　使用ツール　チェックボックス　*/}
+        <div
+          className={twMerge(
+            'flex flex-row flex-wrap gap-x-[2em] gap-y-[1.6em] w-full px-[.4em]',
+            inputMargin
+          )}
+        >
+          {tools.map((tool, index) => (
+            <Controller
+              key={index}
+              defaultValue={[]}
+              control={control}
+              name="useTools"
+              render={({ field }) => (
+                <PrimaryLabelCheckBox
+                  label={tool.label ?? ''}
+                  value={tool.value}
+                  {...register('useTools')}
+                />
+              )}
+            />
+          ))}
         </div>
       </FormLabel>
 
-      <FormLabel label="コメント" errorMessage={errors?.useTools?.message}>
-        <div className="ml-[.4em] mt-[.2em]">
-          {/*　コメント　テキストエリア　*/}
-        </div>
+      <FormLabel label="コメント" errorMessage={errors?.comment?.message}>
+        <PrimaryTextArea
+          customClassName={inputMargin}
+          {...register('comment')}
+        />
       </FormLabel>
 
       <FormLabel label="url" errorMessage={errors?.url?.message}>
-        <div className="ml-[.4em] mt-[.2em]">
-          <BaseInput type="url" placeholder="http://" {...register('url')} />
-        </div>
+        <PrimaryInput
+          customClassName={inputMargin}
+          type="url"
+          placeholder="http://"
+          {...register('url')}
+        />
       </FormLabel>
 
-      <FormLabel label="role" required errorMessage={errors?.role?.message}>
-        <div className="ml-[.4em] mt-[.2em]">
-          <BaseInput type="url" placeholder="http://" {...register('role')} />
-        </div>
+      <FormLabel label="役割" required errorMessage={errors?.role?.message}>
+        <PrimaryInput
+          customClassName={inputMargin}
+          type="url"
+          placeholder="front-end"
+          {...register('role')}
+        />
       </FormLabel>
 
       <FormLabel label="git_url" errorMessage={errors?.gitUrl?.message}>
-        <div className="ml-[.4em] mt-[.2em]">
-          <BaseInput type="url" placeholder="http://" {...register('gitUrl')} />
-        </div>
+        <PrimaryInput
+          customClassName={inputMargin}
+          type="url"
+          placeholder="http://"
+          {...register('gitUrl')}
+        />
       </FormLabel>
+
       <div className="flex-center mt-[2em]">
         <PrimaryBtn
           btnColor="primary"

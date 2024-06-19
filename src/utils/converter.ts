@@ -1,12 +1,6 @@
 import { PUBLICATION_STATUS } from './enum'
 
-export const converterPublication = (status: PUBLICATION_STATUS): string => {
-  switch (status) {
-    case PUBLICATION_STATUS.PUBLIC:
-      return '公開'
-    case PUBLICATION_STATUS.PRIVATE:
-      return '非公開'
-    default:
-      return ''
-  }
-}
+export const convertPublication: Record<PUBLICATION_STATUS, string> = {
+  [PUBLICATION_STATUS.PUBLIC]: '公開',
+  [PUBLICATION_STATUS.PRIVATE]: '非公開',
+};
