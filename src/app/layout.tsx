@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${mPlus.variable} ${montserrat.variable} font-sm font-jp bg-background text-base-text font-normal min-w-[1200px] overflow-auto`}
+        className={`${mPlus.variable} ${montserrat.variable} font-sm font-jp bg-background text-fc font-normal min-w-[1200px] overflow-auto`}
       >
         <MainWrap>{children}</MainWrap>
       </body>

@@ -10,11 +10,11 @@ type props = Omit<BaseModalProps, 'children'> & {
 }
 
 export const DeleteModal = (props: props) => {
-  const { handleOpenModal, isOpen, onSubmit, isSuccess } = props
+  const { handleToggleModal, isOpen, onSubmit, isSuccess } = props
   const [modalType, setModalType] = useState<'confirm' | 'complete'>('confirm')
 
   return (
-    <BaseModal isOpen={isOpen} handleOpenModal={handleOpenModal}>
+    <BaseModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
         {modalType === 'confirm' && (
           <>
@@ -36,7 +36,7 @@ export const DeleteModal = (props: props) => {
                 btnProps={{
                   type: 'button',
                 }}
-                onClick={handleOpenModal}
+                onClick={handleToggleModal}
                 btnColor="cancel"
               >
                 削除しない
@@ -54,7 +54,7 @@ export const DeleteModal = (props: props) => {
                 btnProps={{
                   type: 'button',
                 }}
-                onClick={handleOpenModal}
+                onClick={handleToggleModal}
                 btnColor="cancel"
               >
                 閉じる

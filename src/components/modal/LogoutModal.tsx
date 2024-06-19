@@ -7,9 +7,9 @@ type props = Omit<BaseModalProps, 'children'> & {
 }
 
 export const LogoutModal = (props: props) => {
-  const { handleOpenModal, isOpen, onSubmit } = props
+  const { handleToggleModal, isOpen, onSubmit } = props
   return (
-    <BaseModal isOpen={isOpen} handleOpenModal={handleOpenModal}>
+    <BaseModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
         <PrimaryHeadline tag="h3">ログアウトしますか？</PrimaryHeadline>
         <div className="flex-center flex-row gap-[1em] mt-[3em]">
@@ -26,7 +26,7 @@ export const LogoutModal = (props: props) => {
             btnProps={{
               type: 'button',
             }}
-            onClick={handleOpenModal}
+            onClick={handleToggleModal}
             btnColor="cancel"
           >
             いいえ

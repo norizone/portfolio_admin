@@ -9,7 +9,7 @@ type Props = Omit<BaseBtnProps, 'btnClassName' | 'ariaLabel' | 'children'> & {
 
 export const DeleteBtn = (props: Props) => {
   const { customClassName, ariaLabel = '削除', ...baseBtnProps } = props
-  const defaultClassName = `w-full flex-center hover:bg-hover-alert transition-all fill-base-text hover:fill-error`
+  const defaultClassName = `w-full flex-center hover:bg-hover-alert transition-all fill-fc hover:fill-error`
   return (
     <BaseBtn
       btnClassName={twMerge(defaultClassName, customClassName)}

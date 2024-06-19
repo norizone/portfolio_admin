@@ -3,7 +3,7 @@ import { PrimaryPagination } from '@/components/pagination/PrimaryPagination'
 import { useState } from 'react'
 import { useFixBody } from '@/hooks/useFixeBody'
 import { DeleteModal } from '@/components/modal/DeleatModal'
-import { converterPublication } from '@/utils/converter'
+import { convertPublication } from '@/utils/converter'
 import PrimaryTable from '@/components/table/PrimaryTable'
 import { EditBtn } from '@/components/btn/EditBtn'
 import { DeleteBtn } from '@/components/btn/DeleteBtn'
@@ -72,7 +72,7 @@ export const ListWorks = () => {
       header: '公開状況',
       key: 'publicationStatus',
       width: 2,
-      converter: (row) => converterPublication(row.publicationStatus),
+      converter: (row) => convertPublication[row.publicationStatus],
     },
     {
       header: '編集',
@@ -107,7 +107,7 @@ export const ListWorks = () => {
       </div>
       <DeleteModal
         isOpen={isOpenModal}
-        handleOpenModal={handleOpenModal}
+        handleToggleModal={handleOpenModal}
         modalType="confirm"
         onSubmit={() => {}}
       />

@@ -27,17 +27,36 @@ const config: Config = {
       colors: {
         background: '#f6f6f6',
         active: '#e4e4e4',
-        hover: '#eaecf1',
-        'hover-alert': '#f5ecec',
-        'base-text': '#444', // ベースのフォントカラー
-        border: '#a9a9a9',
-        'border-op': '#a9a9a924',
-        primary: '#0f83fd',
-        'primary-dark': '#2177d2',
-        success: '#13cd87',
-        error: '#fd0f0f',
-        'error-dark': '#df1010',
-        warning: '#dcd209',
+        // base:{
+        //   text: , // ベースのフォントカラー
+        // },
+        fc: {
+          //font-color
+          DEFAULT: '#444',
+          placeholder: '#9b9b9b',
+        },
+        hover: {
+          DEFAULT: '#eaecf1',
+          alert: '#f5ecec',
+        },
+        border: {
+          DEFAULT: '#a9a9a9',
+          op: '#a9a9a924',
+        },
+        primary: {
+          DEFAULT: '#0f83fd',
+          dark: '#2177d2',
+        },
+        success: {
+          DEFAULT: '#13cd87',
+        },
+        error: {
+          DEFAULT: '#fd0f0f',
+          dark: '#df1010',
+        },
+        warning: {
+          DEFAULT: '#dcd209',
+        },
       },
     },
   },

@@ -8,8 +8,7 @@ type Props = {
   lang?: 'en' | 'jp'
 }
 export const PrimaryHeadline = (props: Props) => {
-  const { children, tag, lang = 'jp' } = props
-  const Tag = tag
+  const { children, tag: Tag, lang = 'jp' } = props
   return (
     <Tag
       className={twMerge(

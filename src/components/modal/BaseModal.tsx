@@ -6,7 +6,7 @@ import FocusLock from 'react-focus-lock'
 
 export type BaseModalProps = {
   children: ReactNode
-  handleOpenModal: () => void
+  handleToggleModal: () => void
   isOpen: boolean
 }
 
@@ -37,7 +37,7 @@ ReactModal.setAppElement('body')
 
 const BaseModal = forwardRef<HTMLElement, BaseModalProps>(
   (props: BaseModalProps, ref) => {
-    const { children, handleOpenModal, isOpen } = props
+    const { children, handleToggleModal, isOpen } = props
 
     return (
       <FocusLock ref={ref}>
@@ -46,12 +46,12 @@ const BaseModal = forwardRef<HTMLElement, BaseModalProps>(
           after:absolute after:top-0 after:left-0 after:backdrop-blur-[12px] after:bg-[#ffffffb5] after:w-full after:h-full after:contents-[""] after:block after:z-[-1]'
           style={customStyles}
           isOpen={isOpen}
-          onRequestClose={handleOpenModal}
+          onRequestClose={handleToggleModal}
           contentLabel="Modal"
           ariaHideApp={false}
         >
           <div className="absolute top-4 right-5 z-[55] cursor-pointer">
-            <button onClick={handleOpenModal}>
+            <button onClick={handleToggleModal}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="23.486"

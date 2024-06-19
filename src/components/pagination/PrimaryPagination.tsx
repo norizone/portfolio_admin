@@ -70,7 +70,7 @@ export const PrimaryPagination = (props: Props) => {
             height="24px"
             viewBox="0 -960 960 960"
             width="24px"
-            className="fill-base-text"
+            className="fill-fc"
           >
             <path d="M459-279 258-480l201-201 18.5 18.5L295-480l182.5 182.5L459-279Zm224.5 0-201-201 201-201 18.5 18.5L519.5-480 702-297.5 683.5-279Z" />
           </svg>
@@ -90,7 +90,7 @@ export const PrimaryPagination = (props: Props) => {
             height="24px"
             viewBox="0 -960 960 960"
             width="24px"
-            className="fill-base-text"
+            className="fill-fc"
           >
             <path d="M441-480 258-662.5l18.5-18.5 201 201-201 201-18.5-18.5L441-480Zm224.5 0-183-182.5L501-681l201 201-201 201-18.5-18.5 183-182.5Z" />
           </svg>
