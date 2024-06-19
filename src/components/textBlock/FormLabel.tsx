@@ -10,15 +10,15 @@ type Props = LabelTextProps &
 export const FormLabel = (props: Props) => {
   const { errorMessage, children, ...labelProps } = props
   return (
-    <label className="flex gap-[.2em] flex-col relative">
+    <div className="flex gap-[.4em] flex-col relative">
       <LabelText {...labelProps} />
       {children}
       {errorMessage && (
         <WarningMessage
           errorMessage={errorMessage}
-          className="absolute bottom-[-1.6em]"
+          className="absolute bottom-[-1.8em] ml-[1em]"
         />
       )}
-    </label>
+    </div>
   )
 }

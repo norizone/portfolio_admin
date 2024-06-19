@@ -8,6 +8,7 @@ export type BaseInputProps = {
   disabled?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   value?: string | number
+  inputClassName: string
   inputProps?: InputHTMLAttributes<HTMLInputElement>
 }
 
@@ -20,7 +21,8 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       disabled,
       onChange,
       value,
-      ...inputProps
+      inputClassName,
+      inputProps,
     } = props
     return (
       <input
@@ -32,7 +34,7 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         value={value}
         {...inputProps}
         ref={ref}
-        className="border border-border w-full py-[.2em] px-[.6em] rounded-sm  font-normal"
+        className={inputClassName}
       />
     )
   }

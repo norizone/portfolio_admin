@@ -8,6 +8,8 @@ export type WarningMessageProps = {
 export const WarningMessage = (props: WarningMessageProps) => {
   const { errorMessage = '', className } = props
   return (
-    <p className={twMerge('text-xs text-error', className)}>{errorMessage}</p>
+    <span className={twMerge('text-xs text-error', className)}>
+      {errorMessage}
+    </span>
   )
 }
