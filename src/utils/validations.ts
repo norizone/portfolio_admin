@@ -3,7 +3,7 @@ import * as yup from 'yup'
 const ENTER_TEXT = 'を入力してください'
 const SELECT_TEXT = 'を選択してください'
 
-const requiredMessage = (title: string , type:'input'|'select' = 'input') => {
+const requiredMessage = (title: string, type: 'input' | 'select' = 'input') => {
   switch (type) {
     case 'input':
       return `${title}${ENTER_TEXT}`
@@ -26,20 +26,29 @@ export const loginSchema = yup.object({
 })
 
 export const createWorks = yup.object({
-  status: yup.number().typeError(requiredMessage('表示権限','select')).required(requiredMessage('公開状況','select')),
+  order: yup.number().required(requiredMessage('並び順', 'select')),
+  permission: yup
+    .number()
+    .typeError(requiredMessage('表示権限', 'select'))
+    .required(requiredMessage('表示権限', 'select')),
+  publication: yup
+    .number()
+    .typeError(requiredMessage('公開状況', 'select'))
+    .required(requiredMessage('公開状況', 'select')),
   title: yup.string().required(requiredMessage('タイトル')),
-  titleEn: yup.string().matches(/^[a-zA-Z0-9]*$/, '英数字のみを入力してください').required(requiredMessage('英文字タイトル')),
-  archiveImg: yup.string().required(requiredMessage('アーカイブ画像')),
-  permission:yup.number().typeError(requiredMessage('表示権限','select')).required(requiredMessage('表示権限','select')),
-  useTools : yup.array().min(1,requiredMessage('使用ツール','select')),
+  titleEn: yup
+    .string()
+    .matches(/^[a-zA-Z0-9]*$/, '英数字のみを入力してください')
+    .required(requiredMessage('英文字タイトル')),
+  archiveImg: yup.string().required(requiredMessage('一覧画像')),
+  useTools: yup.array().min(1, requiredMessage('使用ツール', 'select')),
   comment: yup.string(),
   url: yup.string().url('url形式で入力してください'),
-  role: yup.string().required(requiredMessage('役割')),
   gitUrl: yup.string().url('url形式で入力してください'),
-  // singleImgMain: unknown
-  // singleImgSub1?: unknown
-  // singleImgSub2?: unknown
-  
+  role: yup.string().required(requiredMessage('役割')),
+  singleImgMain: yup.string().required(requiredMessage('詳細ページメイン画像')),
+  singleImgSub: yup.string().required(requiredMessage('詳細ページサブ画像')),
+  singleImgSub2: yup.string(),
 })
 
 export const createUser = yup.object({

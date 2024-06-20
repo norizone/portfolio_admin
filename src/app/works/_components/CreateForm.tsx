@@ -12,49 +12,14 @@ import { PrimaryTextArea } from '@/components/textArea/PrimaryTextArea'
 import { PUBLICATION_STATUS } from '@/utils/enum'
 import { convertPublication } from '@/utils/converter'
 import { ImageInput } from '@/components/input/ImageInput'
-
-type CreateWorks = {
-  status: number
-  title: string
-  titleEn: string
-  archiveImg: unknown
-  useTools: []
-  comment?: string
-  url?: string
-  role?: string
-  singleImgMain: unknown
-  singleImgSub1?: unknown
-  singleImgSub2?: unknown
-  gitUrl?: string
-  permission?: number
-}
+import { CreateWorkBody } from '@/types/api/front'
+import { useGetToolList, useMutateCreateWork } from '@/hooks/api/front.hooks'
+import { useMemo, useState } from 'react'
+import { selectItem } from '@/types/SelectItems'
 
 type Props = {
   formType: 'create' | 'edit'
 }
-
-const tools = [
-  {
-    label: 't',
-    value: 1,
-  },
-  {
-    label: 'e',
-    value: 2,
-  },
-  {
-    label: 'r',
-    value: 3,
-  },
-  {
-    label: 'u',
-    value: 4,
-  },
-  {
-    label: 'i',
-    value: 5,
-  },
-]
 
 const publicStatusItems = Object.keys(convertPublication).map((key) => ({
   label: convertPublication[+key as PUBLICATION_STATUS],
@@ -72,24 +37,55 @@ const permissionItems = [
   },
 ]
 
+const defaultValues = {
+  order: 1,
+  permission: 1,
+  publication: 1,
+  title: '',
+  titleEn: '',
+  archiveImg: 'こめ',
+  useTools: [],
+  comment: 'こめ',
+  url: 'こめ',
+  gitUrl: 'こめ',
+  role: 'こめ',
+  singleImgMain: 'こめ',
+  singleImgSub: 'こめ',
+  singleImgSub2: 'こめ',
+}
+
 const inputMargin = 'mx-[1em] mt-[.2em] w-[calc(100%_-_2em)]'
 const minInputWidth = 'w-[12em]'
 
 export const CreateForm = (props: Props) => {
+  const { data: toolList } = useGetToolList()
+  const [toolItems, setToolItems] = useState<selectItem[]>([])
+  const { mutate } = useMutateCreateWork()
+
+  useMemo(() => {
+    const tool =
+      toolList && toolList?.length > 0
+        ? toolList.map((tool) => ({ value: tool.id, label: tool.toolName }))
+        : []
+    setToolItems(tool)
+  }, [toolList])
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
     control,
-  } = useForm<CreateWorks>({
+  } = useForm<CreateWorkBody>({
     mode: 'onBlur',
+    defaultValues,
     resolver: yupResolver(createWorks),
   })
 
-  const onSubmit = (data: CreateWorks) => {
-    console.log(data)
+  const onSubmit = async (data: CreateWorkBody) => {
+    mutate(data)
   }
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -97,16 +93,15 @@ export const CreateForm = (props: Props) => {
       className="text-left flex flex-col gap-[2em] w-[90%] p-[5%] m-auto bg-white shadow-md"
     >
       <FormLabel
-        label="公開状態"
+        label="表示権限"
         required
-        errorMessage={errors?.status?.message}
+        errorMessage={errors?.order?.message}
       >
-        <PrimarySelectBox
+        <PrimaryInput
           customClassName={twMerge(inputMargin, minInputWidth)}
-          optionItems={publicStatusItems}
-          placeholder="選択してください"
-          value={watch('status')}
-          {...register('status')}
+          type="number"
+          placeholder="並び順"
+          {...register('order')}
         />
       </FormLabel>
 
@@ -121,6 +116,20 @@ export const CreateForm = (props: Props) => {
           placeholder="選択してください"
           value={watch('permission')}
           {...register('permission')}
+        />
+      </FormLabel>
+
+      <FormLabel
+        label="公開状態"
+        required
+        errorMessage={errors?.publication?.message}
+      >
+        <PrimarySelectBox
+          customClassName={twMerge(inputMargin, minInputWidth)}
+          optionItems={publicStatusItems}
+          placeholder="選択してください"
+          value={watch('publication')}
+          {...register('publication')}
         />
       </FormLabel>
 
@@ -151,43 +160,12 @@ export const CreateForm = (props: Props) => {
       </FormLabel>
 
       <FormLabel
-        label="アーカイブ画像"
+        label="一覧画像"
         required
         errorMessage={errors?.archiveImg?.message}
       >
-        <ImageInput customClassName={inputMargin} {...register('archiveImg')} />
-      </FormLabel>
-
-      <FormLabel
-        label="詳細ページpc画面画像"
-        required
-        errorMessage={errors?.singleImgMain?.message}
-      >
-        <ImageInput
-          customClassName={inputMargin}
-          {...register('singleImgMain')}
-        />
-      </FormLabel>
-
-      <FormLabel
-        label="詳細ページsp画面画像1"
-        required
-        errorMessage={errors?.singleImgSub1?.message}
-      >
-        <ImageInput
-          customClassName={inputMargin}
-          {...register('singleImgSub1')}
-        />
-      </FormLabel>
-
-      <FormLabel
-        label="詳細ページsp画面画像2"
-        errorMessage={errors?.singleImgSub2?.message}
-      >
-        <ImageInput
-          customClassName={inputMargin}
-          {...register('singleImgSub2')}
-        />
+        <input hidden {...register('archiveImg')} value="img" />
+        {/* <ImageInput customClassName={inputMargin} {...register('archiveImg')} /> */}
       </FormLabel>
 
       <FormLabel
@@ -198,25 +176,22 @@ export const CreateForm = (props: Props) => {
       >
         <div
           className={twMerge(
-            'flex flex-row flex-wrap gap-x-[2em] gap-y-[1.6em] w-full px-[.4em]',
+            'flex flex-row flex-wrap gap-x-[2em] gap-y-[1em] w-full px-[.4em]',
             inputMargin
           )}
         >
-          {tools.map((tool, index) => (
-            <Controller
-              key={index}
-              defaultValue={[]}
-              control={control}
-              name="useTools"
-              render={({ field }) => (
-                <PrimaryLabelCheckBox
-                  label={tool.label ?? ''}
-                  value={tool.value}
-                  {...register('useTools')}
-                />
-              )}
-            />
-          ))}
+          {toolItems?.length > 0 &&
+            toolItems.map((tool, index) => (
+              <Controller
+                key={index}
+                defaultValue={[]}
+                control={control}
+                name="useTools"
+                render={({ field }) => (
+                  <PrimaryLabelCheckBox item={tool} {...register('useTools')} />
+                )}
+              />
+            ))}
         </div>
       </FormLabel>
 
@@ -236,6 +211,15 @@ export const CreateForm = (props: Props) => {
         />
       </FormLabel>
 
+      <FormLabel label="git_url" errorMessage={errors?.gitUrl?.message}>
+        <PrimaryInput
+          customClassName={inputMargin}
+          type="url"
+          placeholder="http://"
+          {...register('gitUrl')}
+        />
+      </FormLabel>
+
       <FormLabel label="役割" required errorMessage={errors?.role?.message}>
         <PrimaryInput
           customClassName={inputMargin}
@@ -245,13 +229,40 @@ export const CreateForm = (props: Props) => {
         />
       </FormLabel>
 
-      <FormLabel label="git_url" errorMessage={errors?.gitUrl?.message}>
-        <PrimaryInput
+      <FormLabel
+        label="詳細ページメイン画像"
+        required
+        errorMessage={errors?.singleImgMain?.message}
+      >
+        <input hidden {...register('singleImgMain')} value="img" />
+        {/* <ImageInput
           customClassName={inputMargin}
-          type="url"
-          placeholder="http://"
-          {...register('gitUrl')}
-        />
+          {...register('singleImgMain')}
+        /> */}
+      </FormLabel>
+
+      <FormLabel
+        label="詳細ページサブ画像1"
+        required
+        errorMessage={errors?.singleImgSub?.message}
+      >
+        <input hidden {...register('singleImgSub')} value="img" />
+        {/* <ImageInput
+          customClassName={inputMargin}
+          {...register('singleImgSub')}
+        /> */}
+      </FormLabel>
+
+      <FormLabel
+        label="詳細ページサブ画像2"
+        errorMessage={errors?.singleImgSub2?.message}
+      >
+        <input hidden {...register('singleImgSub2')} value="img" />
+        {/* <ImageInput
+        {/* <ImageInput
+          customClassName={inputMargin}
+          {...register('singleImgSub2')}
+        /> */}
       </FormLabel>
 
       <div className="flex-center mt-[2em]">
