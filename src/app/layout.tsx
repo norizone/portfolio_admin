@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { M_PLUS_1, Montserrat } from 'next/font/google'
 import './globals.css'
 import { MainWrap } from '@/components/wrap/MainWrap'
+import { QueryProviders } from '@/providers/queryProvider'
 
 const mPlus = M_PLUS_1({
   weight: ['300', '700'],
@@ -33,7 +34,9 @@ export default function RootLayout({
       <body
         className={`${mPlus.variable} ${montserrat.variable} font-sm font-jp bg-background text-fc font-normal min-w-[1200px] overflow-auto`}
       >
-        <MainWrap>{children}</MainWrap>
+        <QueryProviders>
+          <MainWrap>{children}</MainWrap>
+        </QueryProviders>
       </body>
     </html>
   )
