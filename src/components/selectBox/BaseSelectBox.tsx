@@ -30,8 +30,7 @@ export const BaseSelectBox = forwardRef<HTMLSelectElement, BaseSelectBoxProps>(
         name={name}
         onChange={onChange}
         disabled={disabled}
-        value={value}
-        // defaultValue={!value ? '' : value}
+        defaultValue={!value ? '' : value}
         ref={ref}
         className={selectClassName}
         {...selectProps}
