@@ -7,9 +7,8 @@ import { WorksIcon } from '../icon/WorksIcon'
 import { SettingIcon } from '../icon/SettingIcon'
 import { LogoutIcon } from '../icon/LogoutIcon'
 import { HomeIcon } from '../icon/HomeIcon'
-import { useState } from 'react'
-import { useFixBody } from '@/hooks/useFixeBody'
 import { LogoutModal } from '../modal/LogoutModal'
+import { useToggleModal } from '@/hooks/useToggleModal'
 
 const MENU_LIST = [
   {
@@ -31,8 +30,8 @@ const MENU_LIST = [
     chilled: [{ title: '', url: '' }],
   },
   {
-    title: '管理者設定',
-    url: routers.ADMIN_SETTING,
+    title: 'ツール管理',
+    url: routers.TOOL,
     icon: <SettingIcon />,
     chilled: [{ title: '', url: '' }],
   },
@@ -40,12 +39,8 @@ const MENU_LIST = [
 
 export const SideBar = () => {
   const xWrap = 'px-[2em]'
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
-  const { fixBody, unfixedBody } = useFixBody()
-  const handleOpenModal = () => {
-    isOpenModal ? unfixedBody() : fixBody()
-    setIsOpenModal(!isOpenModal)
-  }
+  const { isOpenModal: isOpenLogoutModal, toggleModal: toggleLogoutModal } =
+    useToggleModal()
 
   return (
     <>
@@ -65,7 +60,7 @@ export const SideBar = () => {
                 className="fill-black hover:fill-primary transition-all"
                 type="button"
                 aria-label="ログアウト"
-                onClick={handleOpenModal}
+                onClick={toggleLogoutModal}
               >
                 <LogoutIcon />
               </button>
@@ -88,8 +83,8 @@ export const SideBar = () => {
         </div>
       </nav>
       <LogoutModal
-        isOpen={isOpenModal}
-        handleToggleModal={handleOpenModal}
+        isOpen={isOpenLogoutModal}
+        handleToggleModal={toggleLogoutModal}
         onSubmit={() => {}}
       />
     </>
