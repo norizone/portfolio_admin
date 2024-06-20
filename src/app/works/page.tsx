@@ -2,7 +2,7 @@ import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
 import Link from 'next/link'
 import { routers } from '@/routers/routers'
 import type { Metadata } from 'next'
-import { ListWorks } from './_components/ListWorks'
+import { WorkList } from './_components/WorkList'
 import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default function Works() {
           新規作成
         </PrimaryBtn>
       </div>
-      <ListWorks />
+      <WorkList />
     </section>
   )
 }

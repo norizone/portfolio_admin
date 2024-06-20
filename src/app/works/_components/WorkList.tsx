@@ -11,6 +11,7 @@ import { ColumnsType } from '@/components/table/PrimaryTable/type'
 import { PUBLICATION_STATUS } from '@/utils/enum'
 import Link from 'next/link'
 import { routers } from '@/routers/routers'
+import { useToggleModal } from '@/hooks/useToggleModal'
 
 const tableElementClassName = 'p-[.6em]'
 
@@ -36,19 +37,10 @@ const data = [
   },
 ]
 
-export const ListWorks = () => {
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
+export const WorkList = () => {
+  const { isOpenModal: isOpenDeleteModal, toggleModal: toggleDeleteModal } =
+    useToggleModal()
   const [deleteId, setDeleteId] = useState<number>()
-  const { fixBody, unfixedBody } = useFixBody()
-  const handleOpenModal = () => {
-    isOpenModal ? unfixedBody() : fixBody()
-    setIsOpenModal(!isOpenModal)
-  }
-
-  const handleDeleteModal = (id: number) => {
-    handleOpenModal()
-    setDeleteId(id)
-  }
 
   const onDeleteSubmit = () => {
     console.log(deleteId)
@@ -91,7 +83,10 @@ export const ListWorks = () => {
       renderCell: (row) => (
         <DeleteBtn
           customClassName={tableElementClassName}
-          onClick={() => handleDeleteModal(row.id)}
+          onClick={() => {
+            toggleDeleteModal()
+            setDeleteId(row.id)
+          }}
         />
       ),
     },
@@ -106,9 +101,8 @@ export const ListWorks = () => {
         <PrimaryPagination totalPage={20} currentPage={3} />
       </div>
       <DeleteModal
-        isOpen={isOpenModal}
-        handleToggleModal={handleOpenModal}
-        modalType="confirm"
+        isOpen={isOpenDeleteModal}
+        handleToggleModal={toggleDeleteModal}
         onSubmit={() => {}}
       />
     </>

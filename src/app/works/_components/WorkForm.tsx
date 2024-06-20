@@ -1,7 +1,7 @@
 'use client'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { createWorks, loginSchema } from '@/utils/validations'
+import { createWorks } from '@/utils/validations'
 import { FormLabel } from '@/components/textBlock/FormLabel'
 import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
 import { PrimaryInput } from '@/components/input/PrimaryInput'
@@ -9,8 +9,8 @@ import { PrimaryLabelCheckBox } from '@/components/checkBox/PrimaryLabelCheckBox
 import { twMerge } from 'tailwind-merge'
 import { PrimarySelectBox } from '@/components/selectBox/PrimarySelectBox'
 import { PrimaryTextArea } from '@/components/textArea/PrimaryTextArea'
-import { PUBLICATION_STATUS } from '@/utils/enum'
-import { convertPublication } from '@/utils/converter'
+import { PUBLICATION_STATUS, VIEW_PERMISSION } from '@/utils/enum'
+import { convertPublication, convertViewPermission } from '@/utils/converter'
 import { ImageInput } from '@/components/input/ImageInput'
 import { CreateWorkBody } from '@/types/api/front'
 import { useGetToolList, useMutateCreateWork } from '@/hooks/api/front.hooks'
@@ -19,6 +19,7 @@ import { selectItem } from '@/types/SelectItems'
 
 type Props = {
   formType: 'create' | 'edit'
+  defaultValues?: CreateWorkBody
 }
 
 const publicStatusItems = Object.keys(convertPublication).map((key) => ({
@@ -26,38 +27,16 @@ const publicStatusItems = Object.keys(convertPublication).map((key) => ({
   value: key,
 }))
 
-const permissionItems = [
-  {
-    value: 1,
-    label: '制限',
-  },
-  {
-    value: 2,
-    label: '制限なし',
-  },
-]
-
-const defaultValues = {
-  order: 1,
-  permission: 1,
-  publication: 1,
-  title: '',
-  titleEn: '',
-  archiveImg: 'こめ',
-  useTools: [],
-  comment: 'こめ',
-  url: 'こめ',
-  gitUrl: 'こめ',
-  role: 'こめ',
-  singleImgMain: 'こめ',
-  singleImgSub: 'こめ',
-  singleImgSub2: 'こめ',
-}
+const permissionItems = Object.keys(convertViewPermission).map((key) => ({
+  label: convertViewPermission[+key as VIEW_PERMISSION],
+  value: key,
+}))
 
 const inputMargin = 'mx-[1em] mt-[.2em] w-[calc(100%_-_2em)]'
-const minInputWidth = 'w-[12em]'
+const minInputWidth = 'w-[16em]'
 
-export const CreateForm = (props: Props) => {
+export const WorkForm = (props: Props) => {
+  const { defaultValues = {}, formType } = props
   const { data: toolList } = useGetToolList()
   const [toolItems, setToolItems] = useState<selectItem[]>([])
   const { mutate } = useMutateCreateWork()
@@ -83,7 +62,7 @@ export const CreateForm = (props: Props) => {
   })
 
   const onSubmit = async (data: CreateWorkBody) => {
-    mutate(data)
+    formType === 'create' ? mutate(data) : ''
   }
 
   return (
@@ -272,7 +251,7 @@ export const CreateForm = (props: Props) => {
             type: 'submit',
           }}
         >
-          保存
+          {formType === 'create' ? '保存' : '更新'}
         </PrimaryBtn>
       </div>
     </form>

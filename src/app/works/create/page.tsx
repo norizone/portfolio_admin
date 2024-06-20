@@ -1,5 +1,5 @@
 import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
-import { CreateForm } from '../_components/CreateForm'
+import { WorkForm } from '../_components/WorkForm'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default function Works() {
         制作実績 新規作成
       </PrimaryHeadline>
       <div className="mt-[3em]">
-        <CreateForm formType={'create'} />
+        <WorkForm formType={'create'} />
       </div>
     </section>
   )
