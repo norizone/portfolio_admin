@@ -25,8 +25,20 @@ export const loginSchema = yup.object({
   password: yup.string().required(requiredMessage('パスワード')),
 })
 
+const toolSchema = yup.object().shape({
+  id: yup.number().required(),
+  toolName: yup.string().required(),
+})
+
+export const createToolSchema = yup.object({
+  toolName: yup.string().required(requiredMessage('ツール名')),
+})
+
 export const createWorks = yup.object({
-  order: yup.number().required(requiredMessage('並び順', 'select')),
+  order: yup
+    .number()
+    .typeError('数字で入力してください')
+    .required(requiredMessage('並び順', 'select')),
   permission: yup
     .number()
     .typeError(requiredMessage('表示権限', 'select'))
@@ -41,17 +53,25 @@ export const createWorks = yup.object({
     .matches(/^[a-zA-Z0-9]*$/, '英数字のみを入力してください')
     .required(requiredMessage('英文字タイトル')),
   archiveImg: yup.string().required(requiredMessage('一覧画像')),
-  useTools: yup.array().min(1, requiredMessage('使用ツール', 'select')),
-  comment: yup.string(),
-  url: yup.string().url('url形式で入力してください'),
-  gitUrl: yup.string().url('url形式で入力してください'),
+  useTools: yup
+    .array()
+    .of(toolSchema)
+    .min(1, requiredMessage('使用ツール', 'select'))
+    .required(requiredMessage('使用ツール', 'select')),
+  comment: yup.string().nullable(),
+  url: yup.string().url('url形式で入力してください').nullable(),
+  gitUrl: yup.string().url('url形式で入力してください').nullable(),
   role: yup.string().required(requiredMessage('役割')),
   singleImgMain: yup.string().required(requiredMessage('詳細ページメイン画像')),
   singleImgSub: yup.string().required(requiredMessage('詳細ページサブ画像')),
-  singleImgSub2: yup.string(),
+  singleImgSub2: yup.string().nullable(),
 })
 
-export const createUser = yup.object({
-  name: yup.string().required(requiredMessage('ユーザー名')),
-  permissions: yup.number().required(requiredMessage('権限')),
+export const createUserSchema = yup.object({
+  email: yup.string().required(requiredMessage('メールアドレス')),
+  password: yup.string().min(5).required(requiredMessage('パスワード')),
+  permissions: yup
+    .number()
+    .typeError(requiredMessage('権限', 'select'))
+    .required(requiredMessage('権限', 'select')),
 })
