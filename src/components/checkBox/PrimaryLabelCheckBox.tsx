@@ -1,26 +1,28 @@
 import { ReactNode, forwardRef } from 'react'
 import BaseInput, { BaseInputProps } from '../input/BaseInput'
+import { selectItem } from '@/types/SelectItems'
 
-type Props = Omit<BaseInputProps, 'inputClassName' | 'type'> & {
-  label: string | ReactNode
+type Props = Omit<BaseInputProps, 'inputClassName' | 'type' | 'value'> & {
+  item: selectItem
   checked?: boolean
 }
 
 export const PrimaryLabelCheckBox = forwardRef<HTMLInputElement, Props>(
   (props, ref) => {
-    const { label, checked, ...baseInputProps } = props
+    const { item, checked, ...baseInputProps } = props
     return (
-      <label className="font-normal flex-center flex-row flex-nowrap gap-x-[1em] cursor-pointer">
+      <label className="font-normal flex-center flex-row flex-nowrap gap-x-[.4em] cursor-pointer">
         <BaseInput
           ref={ref}
           type="checkbox"
-          inputClassName="w-full "
+          inputClassName=""
           inputProps={{
             checked,
           }}
+          value={item.value}
           {...baseInputProps}
         />
-        {label}
+        {item.label}
       </label>
     )
   }

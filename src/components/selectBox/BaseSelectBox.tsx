@@ -1,10 +1,6 @@
 'use client'
 import { forwardRef, SelectHTMLAttributes } from 'react'
-
-export type selectItem = {
-  label: string
-  value: string | number
-}
+import { selectItem } from '@/types/SelectItems'
 
 export type BaseSelectBoxProps = {
   name: string
@@ -35,7 +31,7 @@ export const BaseSelectBox = forwardRef<HTMLSelectElement, BaseSelectBoxProps>(
         onChange={onChange}
         disabled={disabled}
         value={value}
-        defaultValue={!value ? '' : value}
+        // defaultValue={!value ? '' : value}
         ref={ref}
         className={selectClassName}
         {...selectProps}
