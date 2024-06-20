@@ -4,7 +4,7 @@ import { ReactNode, forwardRef } from 'react'
 import ReactModal from 'react-modal'
 import FocusLock from 'react-focus-lock'
 
-export type BaseModalProps = {
+export type PrimaryModalProps = {
   children: ReactNode
   handleToggleModal: () => void
   isOpen: boolean
@@ -35,8 +35,8 @@ const customStyles = {
 
 ReactModal.setAppElement('body')
 
-const BaseModal = forwardRef<HTMLElement, BaseModalProps>(
-  (props: BaseModalProps, ref) => {
+const PrimaryModal = forwardRef<HTMLElement, PrimaryModalProps>(
+  (props: PrimaryModalProps, ref) => {
     const { children, handleToggleModal, isOpen } = props
 
     return (
@@ -86,6 +86,6 @@ const BaseModal = forwardRef<HTMLElement, BaseModalProps>(
   }
 )
 
-BaseModal.displayName = 'BaseModal'
+PrimaryModal.displayName = 'PrimaryModal'
 
-export default BaseModal
+export default PrimaryModal

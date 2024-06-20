@@ -1,68 +1,43 @@
-import BaseModal, { BaseModalProps } from './BaseModal'
+import PrimaryModal, { PrimaryModalProps } from './PrimaryModal'
 import { PrimaryHeadline } from '../headline/PrimaryHeadline'
-import { useState } from 'react'
 import { PrimaryBtn } from '../btn/PrimaryBtn'
 
-type props = Omit<BaseModalProps, 'children'> & {
+type props = Omit<PrimaryModalProps, 'children'> & {
   onSubmit: () => void
-  isSuccess?: boolean
-  modalType: 'confirm' | 'complete'
+  isLoading?: boolean
 }
 
 export const DeleteModal = (props: props) => {
-  const { handleToggleModal, isOpen, onSubmit, isSuccess } = props
-  const [modalType, setModalType] = useState<'confirm' | 'complete'>('confirm')
+  const { handleToggleModal, isOpen, onSubmit, isLoading } = props
 
   return (
-    <BaseModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
+    <PrimaryModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
-        {modalType === 'confirm' && (
-          <>
-            <PrimaryHeadline tag="h3">削除しますか？</PrimaryHeadline>
-            <div className="flex-center flex-row gap-[1em] mt-[3em]">
-              <PrimaryBtn
-                onClick={() => {
-                  onSubmit
-                  setModalType('complete')
-                }}
-                btnProps={{
-                  type: 'button',
-                }}
-                btnColor="error"
-              >
-                削除する
-              </PrimaryBtn>
-              <PrimaryBtn
-                btnProps={{
-                  type: 'button',
-                }}
-                onClick={handleToggleModal}
-                btnColor="cancel"
-              >
-                削除しない
-              </PrimaryBtn>
-            </div>
-          </>
-        )}
-        {modalType === 'complete' && (
-          <>
-            <PrimaryHeadline tag="h3">
-              {isSuccess ? '削除しました' : '削除できませんでした'}
-            </PrimaryHeadline>
-            <div className="flex-center flex-row gap-[2em] mt-[3em]">
-              <PrimaryBtn
-                btnProps={{
-                  type: 'button',
-                }}
-                onClick={handleToggleModal}
-                btnColor="cancel"
-              >
-                閉じる
-              </PrimaryBtn>
-            </div>
-          </>
-        )}
+        <PrimaryHeadline tag="h3">削除しますか？</PrimaryHeadline>
+        <div className="flex-center flex-row gap-[1em] mt-[3em]">
+          <PrimaryBtn
+            onClick={() => {
+              onSubmit()
+            }}
+            btnProps={{
+              type: 'button',
+            }}
+            btnColor="error"
+            isLoading={isLoading}
+          >
+            削除する
+          </PrimaryBtn>
+          <PrimaryBtn
+            btnProps={{
+              type: 'button',
+            }}
+            onClick={handleToggleModal}
+            btnColor="cancel"
+          >
+            削除しない
+          </PrimaryBtn>
+        </div>
       </section>
-    </BaseModal>
+    </PrimaryModal>
   )
 }

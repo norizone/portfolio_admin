@@ -1,17 +1,17 @@
-import BaseModal, { BaseModalProps } from './BaseModal'
+import PrimaryModal, { PrimaryModalProps } from './PrimaryModal'
 import { PrimaryHeadline } from '../headline/PrimaryHeadline'
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import { PrimaryBtn } from '../btn/PrimaryBtn'
 
-type props = Omit<BaseModalProps, 'children'> & {
+type props = Omit<PrimaryModalProps, 'children'> & {
   completeText: ReactNode | string
 }
 
-export const completeModal = (props: props) => {
+export const CompleteModal = (props: props) => {
   const { handleToggleModal, isOpen, completeText } = props
 
   return (
-    <BaseModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
+    <PrimaryModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
         <>
           <PrimaryHeadline tag="h3">{completeText}</PrimaryHeadline>
@@ -28,6 +28,6 @@ export const completeModal = (props: props) => {
           </div>
         </>
       </section>
-    </BaseModal>
+    </PrimaryModal>
   )
 }

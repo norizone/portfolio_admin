@@ -1,15 +1,15 @@
-import BaseModal, { BaseModalProps } from './BaseModal'
+import PrimaryModal, { PrimaryModalProps } from './PrimaryModal'
 import { PrimaryHeadline } from '../headline/PrimaryHeadline'
 import { PrimaryBtn } from '../btn/PrimaryBtn'
 
-type props = Omit<BaseModalProps, 'children'> & {
+type props = Omit<PrimaryModalProps, 'children'> & {
   onSubmit: () => void
 }
 
 export const LogoutModal = (props: props) => {
   const { handleToggleModal, isOpen, onSubmit } = props
   return (
-    <BaseModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
+    <PrimaryModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
         <PrimaryHeadline tag="h3">ログアウトしますか？</PrimaryHeadline>
         <div className="flex-center flex-row gap-[1em] mt-[3em]">
@@ -33,6 +33,6 @@ export const LogoutModal = (props: props) => {
           </PrimaryBtn>
         </div>
       </section>
-    </BaseModal>
+    </PrimaryModal>
   )
 }
