@@ -16,6 +16,7 @@ export type BaseBtnProps = {
   btnProps?: ButtonHTMLAttributes<HTMLButtonElement>
   linkProps?: AnchorHTMLAttributes<HTMLAnchorElement>
   ariaLabel?: string
+  disabled?: boolean
 }
 
 const BaseBtn = forwardRef<ElementType, BaseBtnProps>((props, ref) => {
@@ -27,15 +28,17 @@ const BaseBtn = forwardRef<ElementType, BaseBtnProps>((props, ref) => {
     linkProps,
     btnClassName,
     ariaLabel,
+    disabled,
   } = props
   return (
     <CustomTag
       className={btnClassName}
-      {...btnProps}
-      {...linkProps}
       onClick={onClick}
       aria-label={ariaLabel}
       ref={ref}
+      disabled={disabled}
+      {...btnProps}
+      {...linkProps}
     >
       {children}
     </CustomTag>
