@@ -1,4 +1,5 @@
 export const routers = {
+  LOGIN: '/login',
   DASHBOARD: '/',
   WORKS: '/works',
   WORKS_CREATE: '/works/create',
