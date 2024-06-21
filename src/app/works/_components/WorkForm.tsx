@@ -2,16 +2,16 @@
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { createWorks } from '@/utils/validations'
-import { FormLabel } from '@/components/textBlock/FormLabel'
-import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
-import { PrimaryInput } from '@/components/input/PrimaryInput'
-import { PrimaryLabelCheckBox } from '@/components/checkBox/PrimaryLabelCheckBox'
+import { FormLabel } from '@/components/elements/textBlock/FormLabel'
+import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
+import { PrimaryInput } from '@/components/elements/input/PrimaryInput'
+import { PrimaryLabelCheckBox } from '@/components/elements/checkBox/PrimaryLabelCheckBox'
 import { twMerge } from 'tailwind-merge'
-import { PrimarySelectBox } from '@/components/selectBox/PrimarySelectBox'
-import { PrimaryTextArea } from '@/components/textArea/PrimaryTextArea'
+import { PrimarySelectBox } from '@/components/elements/selectBox/PrimarySelectBox'
+import { PrimaryTextArea } from '@/components/elements/textArea/PrimaryTextArea'
 import { PUBLICATION_STATUS, VIEW_PERMISSION } from '@/utils/enum'
 import { convertPublication, convertViewPermission } from '@/utils/converter'
-import { ImageInput } from '@/components/input/ImageInput'
+import { ImageInput } from '@/components/elements/input/ImageInput'
 import { CreateWorkBody } from '@/types/api/front'
 import { useGetToolList, useMutateCreateWork } from '@/hooks/api/front.hooks'
 import { useMemo, useState } from 'react'
@@ -80,6 +80,10 @@ export const WorkForm = (props: Props) => {
           customClassName={twMerge(inputMargin, minInputWidth)}
           type="number"
           placeholder="並び順"
+          inputProps={{
+            min:1,
+            max:9007199254740991
+          }}
           {...register('order')}
         />
       </FormLabel>

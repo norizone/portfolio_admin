@@ -1,4 +1,4 @@
-import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
+import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import { WorkForm } from '../_components/WorkForm'
 import type { Metadata } from 'next'
 

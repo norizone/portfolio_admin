@@ -1,5 +1,5 @@
-import { ListCard } from '@/components/card/ListCard'
-import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
+import { ListCard } from '@/components/elements/card/ListCard'
+import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import { title } from 'process'
 
 const mockData = [

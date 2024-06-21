@@ -1,8 +1,8 @@
 'use client'
-import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
-import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
-import { PrimaryPagination } from '@/components/pagination/PrimaryPagination'
-import PrimaryTable from '@/components/table/PrimaryTable'
+import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
+import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
+import { PrimaryPagination } from '@/components/elements/pagination/PrimaryPagination'
+import PrimaryTable from '@/components/elements/table/PrimaryTable'
 import Link from 'next/link'
 import { UserList } from './_components/UserList'
 

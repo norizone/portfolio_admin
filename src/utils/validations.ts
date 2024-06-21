@@ -17,18 +17,15 @@ const requiredMessage = (title: string, type: 'input' | 'select' = 'input') => {
 export const loginSchema = yup.object({
   email: yup
     .string()
-    .required(requiredMessage('メールアドレス'))
-    .matches(
-      /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/,
-      '無効なメールアドレスです'
-    ),
+    .email('無効なメールアドレスです')
+    .required(requiredMessage('メールアドレス')),
   password: yup.string().required(requiredMessage('パスワード')),
 })
 
-const toolSchema = yup.object().shape({
-  id: yup.number().required(),
-  toolName: yup.string().required(),
-})
+// const toolSchema = yup.object().shape({
+//   id: yup.number().required(),
+//   toolName: yup.string().required(),
+// })
 
 export const createToolSchema = yup.object({
   toolName: yup.string().required(requiredMessage('ツール名')),
@@ -38,6 +35,9 @@ export const createWorks = yup.object({
   order: yup
     .number()
     .typeError('数字で入力してください')
+    .integer('整数で入力してください')
+    .min(1 ,'1以上で入力してください' )
+    .max(9007199254740991,'最大値を超えています')
     .required(requiredMessage('並び順', 'select')),
   permission: yup
     .number()
@@ -55,7 +55,7 @@ export const createWorks = yup.object({
   archiveImg: yup.string().required(requiredMessage('一覧画像')),
   useTools: yup
     .array()
-    .of(toolSchema)
+    // .of(toolSchema)
     .min(1, requiredMessage('使用ツール', 'select'))
     .required(requiredMessage('使用ツール', 'select')),
   comment: yup.string().nullable(),
@@ -68,7 +68,7 @@ export const createWorks = yup.object({
 })
 
 export const createUserSchema = yup.object({
-  email: yup.string().required(requiredMessage('メールアドレス')),
+  email: yup.string().email('無効なメールアドレスです').required(requiredMessage('メールアドレス')),
   password: yup.string().min(5).required(requiredMessage('パスワード')),
   permissions: yup
     .number()

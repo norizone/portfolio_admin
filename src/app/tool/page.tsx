@@ -1,4 +1,4 @@
-import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
+import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
 import { ToolList } from './_components/ToolList'
 import { ToolCreate } from './_components/ToolCreate'

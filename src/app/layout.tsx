@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { M_PLUS_1, Montserrat } from 'next/font/google'
 import './globals.css'
-import { MainWrap } from '@/components/wrap/MainWrap'
+import { MainWrap } from '@/components/layouts/wrap/MainWrap'
 import { QueryProviders } from '@/providers/queryProvider'
 
 const mPlus = M_PLUS_1({

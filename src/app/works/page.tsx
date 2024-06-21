@@ -1,9 +1,9 @@
-import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
+import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import Link from 'next/link'
 import { routers } from '@/routers/routers'
 import type { Metadata } from 'next'
 import { WorkList } from './_components/WorkList'
-import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
+import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 
 export const metadata: Metadata = {
   title: '制作実績一覧',

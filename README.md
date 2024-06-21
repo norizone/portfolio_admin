@@ -15,4 +15,5 @@ bun dev
 ## component
 
 - Base~ リセット以外の style をつけない
-- 考慮中　 layout/ 使い回すことがなく処理もする
+- layouts/ レイアウトに使うもの component 内 api 処理可能
+- elements/　 component 内 api 処理させない

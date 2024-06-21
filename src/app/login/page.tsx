@@ -1,4 +1,4 @@
-import { PrimaryHeadline } from '@/components/headline/PrimaryHeadline'
+import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import { LoginForm } from './_components/LoginForm'
 import type { Metadata } from 'next'
 
