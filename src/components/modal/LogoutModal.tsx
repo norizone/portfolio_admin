@@ -4,10 +4,11 @@ import { PrimaryBtn } from '../btn/PrimaryBtn'
 
 type props = Omit<PrimaryModalProps, 'children'> & {
   onSubmit: () => void
+  isLoading?: boolean
 }
 
 export const LogoutModal = (props: props) => {
-  const { handleToggleModal, isOpen, onSubmit } = props
+  const { handleToggleModal, isOpen, onSubmit, isLoading } = props
   return (
     <PrimaryModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
@@ -19,6 +20,7 @@ export const LogoutModal = (props: props) => {
             }}
             onClick={onSubmit}
             btnColor="primary"
+            isLoading={isLoading}
           >
             はい
           </PrimaryBtn>

@@ -5,30 +5,39 @@ import { loginSchema } from '@/utils/validations'
 import { FormLabel } from '@/components/textBlock/FormLabel'
 import { PrimaryBtn } from '@/components/btn/PrimaryBtn'
 import { PrimaryInput } from '@/components/input/PrimaryInput'
-
-type LoginDate = {
-  email: string
-  password: string
-}
-
-const defaultValues = {
-  email: '',
-  password: '',
-}
+import { LoginBody } from '@/types/api/front'
+import { useMutateLogin } from '@/hooks/api/front.hooks'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { routers } from '@/routers/routers'
 
 export const LoginForm = () => {
+  const router = useRouter()
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginDate>({
+  } = useForm<LoginBody>({
     mode: 'onBlur',
-    defaultValues,
     resolver: yupResolver(loginSchema),
   })
 
-  const onSubmit = (data: LoginDate) => {
-    console.log(data)
+  const {
+    mutate: mutateLogin,
+    isPending: isLoginPending,
+    isError,
+  } = useMutateLogin()
+
+  const onSubmit = (data: LoginBody) => {
+    mutateLogin(data, {
+      onSuccess: () => {
+        router.replace(routers.DASHBOARD)
+      },
+      onError: (res) => {
+        setErrorMessage(res?.message)
+      },
+    })
   }
 
   return (
@@ -55,8 +64,10 @@ export const LoginForm = () => {
           <PrimaryInput type="password" {...register('password')} />
         </FormLabel>
       </div>
+      {isError && <p>{errorMessage}</p>}
       <div className="mt-[2em] flex-center">
         <PrimaryBtn
+          isLoading={isLoginPending}
           btnColor="primary"
           btnProps={{
             type: 'submit',

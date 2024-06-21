@@ -9,6 +9,9 @@ import { LogoutIcon } from '../icon/LogoutIcon'
 import { HomeIcon } from '../icon/HomeIcon'
 import { LogoutModal } from '../modal/LogoutModal'
 import { useToggleModal } from '@/hooks/useToggleModal'
+import { useMutationLogout } from '@/hooks/api/front.hooks'
+import { CompleteModal } from '../modal/CompletModal'
+import { useRouter } from 'next/navigation'
 
 const MENU_LIST = [
   {
@@ -39,8 +42,28 @@ const MENU_LIST = [
 
 export const SideBar = () => {
   const xWrap = 'px-[2em]'
+  const router = useRouter()
+  const { mutate: mutateLogout, isPending, isError } = useMutationLogout()
   const { isOpenModal: isOpenLogoutModal, toggleModal: toggleLogoutModal } =
     useToggleModal()
+  const { isOpenModal: isOpenCompleteModal, toggleModal: toggleCompleteModal } =
+    useToggleModal()
+
+  const onCloseCompleteModal = () => {
+    toggleCompleteModal()
+    router.replace(routers.LOGIN)
+  }
+
+  const onLogout = () => {
+    // TODO:UI 成功した場合モーダル変更 errorの場合はそのままのモーダルでエラーメッセージ表示？
+    mutateLogout(undefined, {
+      onSuccess: () => {
+        toggleLogoutModal()
+        toggleCompleteModal()
+      },
+      onError: () => {},
+    })
+  }
 
   return (
     <>
@@ -83,9 +106,15 @@ export const SideBar = () => {
         </div>
       </nav>
       <LogoutModal
+        isLoading={isPending}
         isOpen={isOpenLogoutModal}
         handleToggleModal={toggleLogoutModal}
-        onSubmit={() => {}}
+        onSubmit={onLogout}
+      />
+      <CompleteModal
+        isOpen={isOpenCompleteModal}
+        handleToggleModal={onCloseCompleteModal}
+        completeText="ログアウトしました"
       />
     </>
   )

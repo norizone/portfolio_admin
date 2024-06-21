@@ -1,5 +1,10 @@
 import { Work } from '@prisma/client'
 
+export type LoginBody = {
+  email: string
+  password: string
+}
+
 export type WorkTool = {
   id: number
   toolName: string
