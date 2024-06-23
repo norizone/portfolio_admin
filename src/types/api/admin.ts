@@ -1,13 +1,27 @@
-import { Work } from '@prisma/client'
+import { Work, User, Tool } from '@prisma/client'
+
+/**
+ * General
+ */
+export type ListBody = {
+  page: number
+  pageSize: number
+}
+
+/**
+ * login
+ */
 
 export type LoginBody = {
   email: string
   password: string
 }
 
+/**
+ * Work
+ */
 export type WorkTool = {
   id: number
-  toolName: string
 }
 
 export type CreateWorkBody = {
@@ -17,7 +31,9 @@ export type CreateWorkBody = {
   title: string
   titleEn: string
   archiveImg: string
-  useTools: Array<WorkTool>
+  useTools: {
+    id: number
+  }[]
   comment?: string | null
   url?: string | null
   gitUrl?: string | null
@@ -27,12 +43,26 @@ export type CreateWorkBody = {
   singleImgSub2?: string | null
 }
 
-export type CreateToolBody = {
-  toolName: string
-}
+/**
+ * User
+ */
+export type GetUser = Omit<User, 'hashedPassword'>
 
 export type CreateUserBody = {
   email: string
   password: string
   permission: number
 }
+
+/**
+ * Tool
+ */
+export type ToolData = Pick<Tool, 'id' | 'toolName'>
+
+export type CreateToolBody = Pick<ToolData, 'toolName'>
+
+export type UpdateToolsBody = {
+  tools: ToolData[]
+}
+
+export type DeleteToolParams = Pick<ToolData, 'id'>
