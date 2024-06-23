@@ -41,11 +41,15 @@ export const ToolList = (props: Props) => {
   }, [isEditMode])
 
   const onEditToolName = (editTool: ToolData) => {
-    const targetTool = editData.find((obj) => obj.id === editTool.id)
-    const newData = !targetTool
-      ? editTool
-      : { ...targetTool, toolName: editTool.toolName }
-    setEditData([...editData, newData])
+    const updatedData = editData.some((tool) => tool.id === editTool.id)
+      ? editData.map((tool) =>
+          tool.id === editTool.id
+            ? { ...tool, toolName: editTool.toolName }
+            : tool
+        )
+      : [...editData, editTool]
+
+    setEditData(updatedData)
   }
 
   const tableColumns: ColumnsType<ToolData>[] = [

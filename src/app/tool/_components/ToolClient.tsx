@@ -82,7 +82,18 @@ export const ToolClient = (props: Props) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false)
   const [editData, setEditData] = useState<ToolData[]>([])
   const onSubmitEdit = () => {
-    if (editData.length === 0) return setIsEditMode(false)
+    const emptyTools = editData.some((tool) => tool.toolName === '')
+
+    if (editData.length === 0) {
+      setCompleteMessage('変更がありませんでした')
+      toggleCompleteModal()
+      return
+    }
+    if (emptyTools) {
+      setCompleteMessage('入力漏れがあります')
+      toggleCompleteModal()
+      return
+    }
     mutateUpdate(
       { tools: editData },
       {
@@ -124,6 +135,7 @@ export const ToolClient = (props: Props) => {
           </PrimaryBtn>
         </div>
       )}
+
       {/* 新規作成モーダル */}
       <PrimaryModal
         isOpen={isOpenCreateModal}
