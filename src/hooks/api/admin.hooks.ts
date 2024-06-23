@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import {
   CreateToolBody,
   CreateWorkBody,
+  EditUserBody,
   ListBody,
   LoginBody,
   ToolData,
@@ -11,7 +12,7 @@ import {
 } from '@/types/api/admin'
 import { Tool, User, Work } from '@prisma/client'
 import { getCrfToken } from './useGetToken'
-import { CreateUserBody, GetUser } from '@/types/api/admin'
+import { CreateUserBody, UserData } from '@/types/api/admin'
 
 const ADMIN_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/admin`
 /*
@@ -58,8 +59,19 @@ export const useMutationLogout = () => {
 /*
   user
 */
-
-export const useGetUserList = () => {}
+export const useGetUserList = (SSRData?: UserData[]) => {
+  return useQuery({
+    queryKey: ['get-user-list'],
+    queryFn: async (): Promise<UserData[]> => {
+      const res = await axios.get(
+        `${ADMIN_API_URL}/user/list`,
+        await getCrfToken()
+      )
+      return res.data
+    },
+    initialData: SSRData,
+  })
+}
 
 export const useMutateCreateUser = () => {
   return useMutation({
@@ -74,7 +86,40 @@ export const useMutateCreateUser = () => {
   })
 }
 
-export const useMutateEditUser = () => {}
+export const useMutateEditUser = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (params: {
+      userId: number
+      body: EditUserBody
+    }): Promise<UserData> => {
+      const res = await axios.patch(
+        `${ADMIN_API_URL}/user/edit/${params.userId}`,
+        params.body,
+        await getCrfToken()
+      )
+      return res.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['get-user-list'] })
+    },
+  })
+}
+
+export const useMutateDeleteUser = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (userId: number): Promise<void> => {
+      const res = await axios.delete(
+        `${ADMIN_API_URL}/user/delete/${userId}`,
+        await getCrfToken()
+      )
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['get-user-list'] })
+    },
+  })
+}
 
 /*
   work

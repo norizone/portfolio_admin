@@ -46,11 +46,14 @@ export type CreateWorkBody = {
 /**
  * User
  */
-export type GetUser = Omit<User, 'hashedPassword'>
+export type UserData = Omit<User, 'hashedPassword'>
 
-export type CreateUserBody = {
-  email: string
+export type CreateUserBody = EditUserBody & {
   password: string
+}
+
+export type EditUserBody = {
+  email: string
   permission: number
 }
 
