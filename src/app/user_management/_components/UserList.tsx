@@ -1,66 +1,83 @@
 'use client'
-import { PrimaryPagination } from '@/components/elements/pagination/PrimaryPagination'
+
 import { useState } from 'react'
 import { DeleteModal } from '@/components/elements/modal/DeleatModal'
 import PrimaryTable from '@/components/elements/table/PrimaryTable'
 import { EditBtn } from '@/components/elements/btn/EditBtn'
 import { DeleteBtn } from '@/components/elements/btn/DeleteBtn'
 import { ColumnsType } from '@/components/elements/table/PrimaryTable/type'
-import { User } from '@prisma/client'
 import { useToggleModal } from '@/hooks/useToggleModal'
 import { USER_ROLE } from '@/utils/enum'
 import { convertUserRole } from '@/utils/converter'
 import PrimaryModal from '@/components/elements/modal/PrimaryModal'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
 import { UserForm } from './UserForm'
-import { styleModalFormWidth } from '@/styles/style'
+import { styleModalFormWidth, styleTableTRPadding } from '@/styles/style'
+import {
+  useGetUserList,
+  useMutateDeleteUser,
+  useMutateEditUser,
+} from '@/hooks/api/admin.hooks'
+import { EditUserBody, UserData } from '@/types/api/admin'
+import { COMPLETE_MESSAGE_DELETE, COMPLETE_MESSAGE_EDIT } from '@/utils/const'
 
-const tableElementClassName = 'p-[.6em]'
-
-type UserList = Pick<User, 'id' | 'email'> & {
-  permission: USER_ROLE
+type Props = {
+  SSRData: UserData[]
 }
 
-const data: UserList[] = [
-  {
-    id: 1,
-    email: 'Name1',
-    permission: 1,
-  },
-  {
-    id: 2,
-    email: 'Name2',
-    permission: 2,
-  },
-]
+export const UserList = (props: Props) => {
+  const { SSRData } = props
+  const { data: userList, isPending: isLoadingUserList } =
+    useGetUserList(SSRData)
 
-export const UserList = () => {
-  const [deleteId, setDeleteId] = useState<number>()
-  const [editId, setEditId] = useState<number>()
+  // 完了
   const [completeMessage, setCompleteMessage] = useState<string>()
-  const { isOpenModal: isOpenEditModal, toggleModal: toggleEditModal } =
-    useToggleModal()
-  const { isOpenModal: isOpenDeleteModal, toggleModal: toggleDeleteModal } =
-    useToggleModal()
   const { isOpenModal: isOpenCompleteModal, toggleModal: toggleCompleteModal } =
     useToggleModal()
 
-  const onDeleteSubmit = () => {
-    setCompleteMessage('削除しました')
-    toggleDeleteModal()
-    toggleCompleteModal()
-    console.log(deleteId)
+  // 削除
+  const { mutate: mutateDelete, isPending: isLoadingDelete } =
+    useMutateDeleteUser()
+  const { isOpenModal: isOpenDeleteModal, toggleModal: toggleDeleteModal } =
+    useToggleModal()
+  const [deleteId, setDeleteId] = useState<number>()
+  const [deleteTitle, setDeleteTitle] = useState<string>()
+
+  const onSubmitDelete = () => {
+    if (!deleteId) return toggleDeleteModal()
+    mutateDelete(deleteId, {
+      onSuccess: () => {
+        setCompleteMessage(COMPLETE_MESSAGE_DELETE)
+        toggleDeleteModal()
+        toggleCompleteModal()
+      },
+    })
   }
 
-  const onCompleteEdit = () => {
-    toggleEditModal()
-    toggleCompleteModal()
+  // 編集
+  const { mutate: mutateEdit, isPending: isLoadingEdit } = useMutateEditUser()
+  const { isOpenModal: isOpenEditModal, toggleModal: toggleEditModal } =
+    useToggleModal()
+  const [editId, setEditId] = useState<number>()
+  const onSubmitEdit = (data: EditUserBody) => {
+    if (!editId) return toggleEditModal()
+    mutateEdit(
+      { userId: editId, body: data },
+      {
+        onSuccess: () => {
+          setCompleteMessage(COMPLETE_MESSAGE_EDIT)
+          toggleEditModal()
+          toggleCompleteModal()
+        },
+      }
+    )
   }
 
-  const tableColumns: ColumnsType<UserList>[] = [
+  const tableColumns: ColumnsType<UserData>[] = [
     {
       header: 'ID',
       key: 'id',
+      tHeaderTHClassName: styleTableTRPadding,
     },
     {
       header: 'email',
@@ -71,14 +88,14 @@ export const UserList = () => {
       header: '権限',
       key: 'permission',
       width: 2,
-      converter: (row) => convertUserRole[row.permission],
+      converter: (row) => convertUserRole[row.permission as USER_ROLE],
     },
     {
       header: '編集',
       key: 'action',
       renderCell: (row) => (
         <EditBtn
-          customClassName={tableElementClassName}
+          customClassName={styleTableTRPadding}
           onClick={() => {
             toggleEditModal()
             setEditId(row.id)
@@ -91,9 +108,10 @@ export const UserList = () => {
       key: 'action',
       renderCell: (row) => (
         <DeleteBtn
-          customClassName={tableElementClassName}
+          customClassName={styleTableTRPadding}
           onClick={() => {
             toggleDeleteModal()
+            setDeleteTitle(row.email)
             setDeleteId(row.id)
           }}
         />
@@ -104,31 +122,35 @@ export const UserList = () => {
   return (
     <>
       <div className="mt-[2em]">
-        <PrimaryTable columns={tableColumns} data={data} />
-      </div>
-      <div className="mt-[2em]">
-        <PrimaryPagination totalPage={20} currentPage={3} />
+        <PrimaryTable
+          columns={tableColumns}
+          data={userList}
+          isLoading={isLoadingUserList}
+        />
       </div>
 
-      <DeleteModal
-        isOpen={isOpenDeleteModal}
-        handleToggleModal={toggleDeleteModal}
-        onSubmit={onDeleteSubmit}
-      />
-
+      {/* 編集モーダル */}
       <PrimaryModal
         isOpen={isOpenEditModal}
         handleToggleModal={toggleEditModal}
       >
         <UserForm
           formType="edit"
-          defaultValues={data.find((user) => user.id === editId)}
+          defaultValues={userList?.find((user) => user.id === editId)}
           formClassName={styleModalFormWidth}
-          onComplete={onCompleteEdit}
-          setCompleteMessage={setCompleteMessage}
+          onSubmitEdit={onSubmitEdit}
         />
       </PrimaryModal>
 
+      {/* 削除モーダル */}
+      <DeleteModal
+        isOpen={isOpenDeleteModal}
+        handleToggleModal={toggleDeleteModal}
+        onSubmit={onSubmitDelete}
+        title={deleteTitle ? `${deleteTitle} を削除しますか？` : ''}
+      />
+
+      {/* 完了モーダル */}
       <CompleteModal
         isOpen={isOpenCompleteModal}
         completeText={completeMessage}

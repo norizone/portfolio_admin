@@ -1,11 +1,12 @@
 'use client'
+
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { createUserSchema } from '@/utils/validations'
 import { FormLabel } from '@/components/elements/textBlock/FormLabel'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import { PrimaryInput } from '@/components/elements/input/PrimaryInput'
-import { CreateUserBody } from '@/types/api/front'
+import { CreateUserBody, EditUserBody } from '@/types/api/admin'
 import { twMerge } from 'tailwind-merge'
 import { styleInputMargin, styleMinInputWidth } from '@/styles/style'
 import { PrimarySelectBox } from '@/components/elements/selectBox/PrimarySelectBox'
@@ -14,10 +15,10 @@ import { USER_ROLE } from '@/utils/enum'
 
 type Props = {
   formType: 'create' | 'edit'
-  defaultValues?: CreateUserBody
+  defaultValues?: EditUserBody
   formClassName?: string
-  onComplete?: () => void
-  setCompleteMessage?: (v: string) => void
+  onSubmitCreate?: (data: CreateUserBody) => void
+  onSubmitEdit?: (data: EditUserBody) => void
 }
 
 const permissionItems = Object.keys(convertUserRole).map((key) => ({
@@ -30,8 +31,8 @@ export const UserForm = (props: Props) => {
     defaultValues = {},
     formType,
     formClassName,
-    onComplete,
-    setCompleteMessage,
+    onSubmitCreate,
+    onSubmitEdit,
   } = props
   const {
     watch,
@@ -44,16 +45,19 @@ export const UserForm = (props: Props) => {
     resolver: yupResolver(createUserSchema),
   })
 
-  const onSubmit = async (data: CreateUserBody) => {
-    console.log(data)
-    onComplete && onComplete()
-    setCompleteMessage && setCompleteMessage('更新しました')
-    // formType === 'create' ? mutate(data) : ''
+  const handleOnSubmit = async (data: CreateUserBody) => {
+    formType === 'create'
+      ? onSubmitCreate && onSubmitCreate(data)
+      : onSubmitEdit &&
+        onSubmitEdit({
+          email: data.email,
+          permission: data.permission,
+        })
   }
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleOnSubmit)}
       noValidate
       className={twMerge(
         'text-left flex flex-col gap-[2em] p-[5%] m-auto',
@@ -69,17 +73,21 @@ export const UserForm = (props: Props) => {
         />
       </FormLabel>
 
-      <FormLabel
-        label="password"
-        required
-        errorMessage={errors?.password?.message}
-      >
-        <PrimaryInput
-          customClassName={styleInputMargin}
-          type="password"
-          {...register('password')}
-        />
-      </FormLabel>
+      {formType === 'create' ? (
+        <FormLabel
+          label="password"
+          required
+          errorMessage={errors?.password?.message}
+        >
+          <PrimaryInput
+            customClassName={styleInputMargin}
+            type="password"
+            {...register('password')}
+          />
+        </FormLabel>
+      ) : (
+        <input hidden {...register('password')} value={'**********'} />
+      )}
 
       <FormLabel
         label="ユーザー権限"
