@@ -12,14 +12,19 @@ import { PrimaryTextArea } from '@/components/elements/textArea/PrimaryTextArea'
 import { PUBLICATION_STATUS, VIEW_PERMISSION } from '@/utils/enum'
 import { convertPublication, convertViewPermission } from '@/utils/converter'
 import { ImageInput } from '@/components/elements/input/ImageInput'
-import { CreateWorkBody } from '@/types/api/front'
-import { useGetToolList, useMutateCreateWork } from '@/hooks/api/front.hooks'
+import { CreateWorkBody } from '@/types/api/admin'
+import { useGetToolList, useMutateCreateWork } from '@/hooks/api/admin.hooks'
 import { useMemo, useState } from 'react'
 import { selectItem } from '@/types/SelectItems'
+import { styleInputMargin, styleMinInputWidth } from '@/styles/style'
 
 type Props = {
   formType: 'create' | 'edit'
   defaultValues?: CreateWorkBody
+}
+
+type WorkFormValues = Omit<CreateWorkBody, 'useTools'> & {
+  useTools: number[]
 }
 
 const publicStatusItems = Object.keys(convertPublication).map((key) => ({
@@ -31,9 +36,6 @@ const permissionItems = Object.keys(convertViewPermission).map((key) => ({
   label: convertViewPermission[+key as VIEW_PERMISSION],
   value: key,
 }))
-
-const inputMargin = 'mx-[1em] mt-[.2em] w-[calc(100%_-_2em)]'
-const minInputWidth = 'w-[16em]'
 
 export const WorkForm = (props: Props) => {
   const { defaultValues = {}, formType } = props
@@ -55,14 +57,22 @@ export const WorkForm = (props: Props) => {
     watch,
     formState: { errors },
     control,
-  } = useForm<CreateWorkBody>({
+  } = useForm<WorkFormValues>({
     mode: 'onBlur',
     defaultValues,
     resolver: yupResolver(createWorks),
   })
 
-  const onSubmit = async (data: CreateWorkBody) => {
-    formType === 'create' ? mutate(data) : ''
+  const onSubmit = async (data: WorkFormValues) => {
+    const selectedTool = data.useTools
+    const body = {
+      ...data,
+      useTools: selectedTool.map((tool) => ({
+        id: tool,
+      })),
+    }
+    console.log(body)
+    formType === 'create' ? mutate(body) : ''
   }
 
   return (
@@ -77,12 +87,12 @@ export const WorkForm = (props: Props) => {
         errorMessage={errors?.order?.message}
       >
         <PrimaryInput
-          customClassName={twMerge(inputMargin, minInputWidth)}
+          customClassName={twMerge(styleInputMargin, styleMinInputWidth)}
           type="number"
           placeholder="並び順"
           inputProps={{
-            min:1,
-            max:9007199254740991
+            min: 1,
+            max: 9007199254740991,
           }}
           {...register('order')}
         />
@@ -94,7 +104,7 @@ export const WorkForm = (props: Props) => {
         errorMessage={errors?.permission?.message}
       >
         <PrimarySelectBox
-          customClassName={twMerge(inputMargin, minInputWidth)}
+          customClassName={twMerge(styleInputMargin, styleMinInputWidth)}
           optionItems={permissionItems}
           placeholder="選択してください"
           value={watch('permission')}
@@ -108,7 +118,7 @@ export const WorkForm = (props: Props) => {
         errorMessage={errors?.publication?.message}
       >
         <PrimarySelectBox
-          customClassName={twMerge(inputMargin, minInputWidth)}
+          customClassName={twMerge(styleInputMargin, styleMinInputWidth)}
           optionItems={publicStatusItems}
           placeholder="選択してください"
           value={watch('publication')}
@@ -122,7 +132,7 @@ export const WorkForm = (props: Props) => {
         errorMessage={errors?.title?.message}
       >
         <PrimaryInput
-          customClassName={inputMargin}
+          customClassName={styleInputMargin}
           type="text"
           placeholder="タイトル"
           {...register('title')}
@@ -137,7 +147,7 @@ export const WorkForm = (props: Props) => {
         <PrimaryInput
           type="text"
           placeholder="title"
-          customClassName={inputMargin}
+          customClassName={styleInputMargin}
           {...register('titleEn')}
         />
       </FormLabel>
@@ -147,8 +157,10 @@ export const WorkForm = (props: Props) => {
         required
         errorMessage={errors?.archiveImg?.message}
       >
-        <input hidden {...register('archiveImg')} value="img" />
-        {/* <ImageInput customClassName={inputMargin} {...register('archiveImg')} /> */}
+        <ImageInput
+          customClassName={styleInputMargin}
+          {...register('archiveImg')}
+        />
       </FormLabel>
 
       <FormLabel
@@ -159,8 +171,8 @@ export const WorkForm = (props: Props) => {
       >
         <div
           className={twMerge(
-            'flex flex-row flex-wrap gap-x-[2em] gap-y-[1em] w-full px-[.4em]',
-            inputMargin
+            'grid grid-cols-[repeat(4,max-content)] gap-y-[1em] w-full px-[.4em] justify-between max-w-[800px]',
+            styleInputMargin
           )}
         >
           {toolItems?.length > 0 &&
@@ -171,7 +183,11 @@ export const WorkForm = (props: Props) => {
                 control={control}
                 name="useTools"
                 render={({ field }) => (
-                  <PrimaryLabelCheckBox item={tool} {...register('useTools')} />
+                  <PrimaryLabelCheckBox
+                    customClassName="w-max mr-auto"
+                    item={tool}
+                    {...register('useTools')}
+                  />
                 )}
               />
             ))}
@@ -180,14 +196,14 @@ export const WorkForm = (props: Props) => {
 
       <FormLabel label="コメント" errorMessage={errors?.comment?.message}>
         <PrimaryTextArea
-          customClassName={inputMargin}
+          customClassName={styleInputMargin}
           {...register('comment')}
         />
       </FormLabel>
 
       <FormLabel label="url" errorMessage={errors?.url?.message}>
         <PrimaryInput
-          customClassName={inputMargin}
+          customClassName={styleInputMargin}
           type="url"
           placeholder="http://"
           {...register('url')}
@@ -196,7 +212,7 @@ export const WorkForm = (props: Props) => {
 
       <FormLabel label="git_url" errorMessage={errors?.gitUrl?.message}>
         <PrimaryInput
-          customClassName={inputMargin}
+          customClassName={styleInputMargin}
           type="url"
           placeholder="http://"
           {...register('gitUrl')}
@@ -205,7 +221,7 @@ export const WorkForm = (props: Props) => {
 
       <FormLabel label="役割" required errorMessage={errors?.role?.message}>
         <PrimaryInput
-          customClassName={inputMargin}
+          customClassName={styleInputMargin}
           type="url"
           placeholder="front-end"
           {...register('role')}
@@ -217,11 +233,10 @@ export const WorkForm = (props: Props) => {
         required
         errorMessage={errors?.singleImgMain?.message}
       >
-        <input hidden {...register('singleImgMain')} value="img" />
-        {/* <ImageInput
-          customClassName={inputMargin}
+        <ImageInput
+          customClassName={styleInputMargin}
           {...register('singleImgMain')}
-        /> */}
+        />
       </FormLabel>
 
       <FormLabel
@@ -229,23 +244,20 @@ export const WorkForm = (props: Props) => {
         required
         errorMessage={errors?.singleImgSub?.message}
       >
-        <input hidden {...register('singleImgSub')} value="img" />
-        {/* <ImageInput
-          customClassName={inputMargin}
+        <ImageInput
+          customClassName={styleInputMargin}
           {...register('singleImgSub')}
-        /> */}
+        />
       </FormLabel>
 
       <FormLabel
         label="詳細ページサブ画像2"
         errorMessage={errors?.singleImgSub2?.message}
       >
-        <input hidden {...register('singleImgSub2')} value="img" />
-        {/* <ImageInput
-        {/* <ImageInput
-          customClassName={inputMargin}
+        <ImageInput
+          customClassName={styleInputMargin}
           {...register('singleImgSub2')}
-        /> */}
+        />
       </FormLabel>
 
       <div className="flex-center mt-[2em]">

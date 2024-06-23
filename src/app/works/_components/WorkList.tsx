@@ -1,7 +1,6 @@
 'use client'
 import { PrimaryPagination } from '@/components/elements/pagination/PrimaryPagination'
-import { useState } from 'react'
-import { useFixBody } from '@/hooks/useFixeBody'
+import { useMemo, useState } from 'react'
 import { DeleteModal } from '@/components/elements/modal/DeleatModal'
 import { convertPublication } from '@/utils/converter'
 import PrimaryTable from '@/components/elements/table/PrimaryTable'
@@ -12,32 +11,23 @@ import { PUBLICATION_STATUS } from '@/utils/enum'
 import Link from 'next/link'
 import { routers } from '@/routers/routers'
 import { useToggleModal } from '@/hooks/useToggleModal'
+import { useGetWorkList } from '@/hooks/api/admin.hooks'
+import { styleTableTRPadding } from '@/styles/style'
 
-const tableElementClassName = 'p-[.6em]'
+const PAGE_SiZE = 1
+const DEFAULT_PAGE = 1
 
 type WorkList = {
   id: number
   title: string
   order: number
-  publicationStatus: PUBLICATION_STATUS
+  publication: PUBLICATION_STATUS
 }
 
-const data = [
-  {
-    id: 1,
-    title: 'spafooopa',
-    order: 1,
-    publicationStatus: 0,
-  },
-  {
-    id: 2,
-    title: 'spafooopa',
-    order: 2,
-    publicationStatus: 1,
-  },
-]
-
 export const WorkList = () => {
+  const [page, setPage] = useState(DEFAULT_PAGE)
+  const { data, isPending } = useGetWorkList({ page, pageSize: PAGE_SiZE })
+
   const { isOpenModal: isOpenDeleteModal, toggleModal: toggleDeleteModal } =
     useToggleModal()
   const [deleteId, setDeleteId] = useState<number>()
@@ -50,6 +40,7 @@ export const WorkList = () => {
     {
       header: 'ID',
       key: 'id',
+      tHeaderTHClassName: styleTableTRPadding,
     },
     {
       header: 'タイトル',
@@ -62,9 +53,9 @@ export const WorkList = () => {
     },
     {
       header: '公開状況',
-      key: 'publicationStatus',
+      key: 'publication',
       width: 2,
-      converter: (row) => convertPublication[row.publicationStatus],
+      converter: (row) => convertPublication[row.publication],
     },
     {
       header: '編集',
@@ -73,7 +64,7 @@ export const WorkList = () => {
         <EditBtn
           as={Link}
           linkProps={{ href: `${routers.WORKS_EDIT}${row.id}` }}
-          customClassName={tableElementClassName}
+          customClassName={styleTableTRPadding}
         />
       ),
     },
@@ -82,7 +73,7 @@ export const WorkList = () => {
       key: 'action',
       renderCell: (row) => (
         <DeleteBtn
-          customClassName={tableElementClassName}
+          customClassName={styleTableTRPadding}
           onClick={() => {
             toggleDeleteModal()
             setDeleteId(row.id)
@@ -95,10 +86,16 @@ export const WorkList = () => {
   return (
     <>
       <div className="mt-[2em]">
-        <PrimaryTable columns={tableColumns} data={data} />
+        <PrimaryTable columns={tableColumns} data={data?.items} />
       </div>
       <div className="mt-[2em]">
-        <PrimaryPagination totalPage={20} currentPage={3} />
+        {data?.totalPages > 1 && (
+          <PrimaryPagination
+            totalPage={data?.totalPages}
+            currentPage={page}
+            onClick={setPage}
+          />
+        )}
       </div>
       <DeleteModal
         isOpen={isOpenDeleteModal}
