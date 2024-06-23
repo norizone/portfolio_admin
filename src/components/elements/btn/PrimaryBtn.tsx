@@ -21,9 +21,10 @@ export const PrimaryBtn = (props: PrimaryBtnProps) => {
         clsx(
           btnColor === 'primary' &&
             'bg-primary-dark  hover:bg-primary text-white',
-          btnColor === 'success' && '',
+          btnColor === 'success' &&
+            'bg-success-dark  hover:bg-success text-white',
           btnColor === 'error' && 'bg-error-dark  hover:bg-error text-white',
-          btnColor === 'warning' && '',
+          btnColor === 'warning' && 'bg-warning-dark  hover:bg-warning text-fc',
           btnColor === 'cancel' && 'bg-[#b2b2b2] hover:bg-[#c4c4c4]',
           isLoading && 'opacity-60 pointer-events-none flex-center'
         ),

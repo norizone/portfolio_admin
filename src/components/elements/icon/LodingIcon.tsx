@@ -1,3 +1,5 @@
+'use client'
+
 export const LoadingIcon = () => (
   <svg
     className="w-[1em] h-[1em]"

@@ -6,11 +6,15 @@ export type ColumnsType<T> = {
   renderCell?: (row: T) => JSX.Element
   converter?: (row: T) => string
   preventKeys?: string[]
+  tHeaderTHClassName?: string
+  tBodyTDClassName?: string
 }
 
 export type PrimaryTableProps<T> = {
-  loading?: boolean
-  data: T[]
+  isLoading?: boolean
+  data?: T[]
+  theadTRClassName?: string
+  tBodyTRClassName?: string
   columns: ColumnsType<T>[]
   className?: string
   getRowId?: (data: T) => void

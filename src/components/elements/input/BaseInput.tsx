@@ -10,6 +10,7 @@ export type BaseInputProps = {
   value?: string | number
   inputClassName: string
   inputProps?: InputHTMLAttributes<HTMLInputElement>
+  defaultValue?: string | number
 }
 
 export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
@@ -23,6 +24,7 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       value,
       inputClassName,
       inputProps,
+      defaultValue,
     } = props
     return (
       <input
@@ -32,6 +34,7 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         onChange={onChange}
         disabled={disabled}
         value={value}
+        defaultValue={defaultValue}
         {...inputProps}
         ref={ref}
         className={inputClassName}

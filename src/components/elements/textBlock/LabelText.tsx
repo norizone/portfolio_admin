@@ -21,19 +21,17 @@ export const LabelText = (props: LabelTextProps) => {
     labelProps,
   } = props
   return (
-    <CustomTag className="grid grid-cols-[.8em_1fr]" {...labelProps}>
-      {required ? (
-        <strong aria-label="必須" className="text-error font-en">
-          *
-        </strong>
-      ) : (
-        <span></span>
-      )}
+    <CustomTag {...labelProps}>
       <span
         className={twMerge(clsx(lang === 'en' && 'font-en'), labelClassName)}
       >
         {label}
       </span>
+      {required && (
+        <strong aria-label="必須" className="text-error font-en ml-[.2em]">
+          *
+        </strong>
+      )}
     </CustomTag>
   )
 }

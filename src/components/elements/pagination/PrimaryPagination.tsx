@@ -5,25 +5,35 @@ import { twMerge } from 'tailwind-merge'
 type Props = {
   totalPage: number
   currentPage: number
+  onClick: (e: number) => void
+}
+
+type ListBlockProps = {
+  blockNumber: number
+  children: ReactNode
+  onClick: (e: number) => void
+  current?: boolean
+  ariaLabel?: string
+  hidden?: boolean
 }
 const MAX_PAGINATION = 5
 
 const RenderListBlock = ({
+  blockNumber,
   children,
   onClick,
   current,
   ariaLabel,
-}: {
-  children: ReactNode
-  onClick?: () => void
-  current?: boolean
-  ariaLabel?: string
-}) => {
+  hidden,
+}: ListBlockProps) => {
   return (
     <li
       className={twMerge(
         'w-[2em] aspect-square border border-border text-center font-en flex-center',
-        clsx(current ? 'bg-active' : ' hover:bg-hover transition-all')
+        clsx(
+          current ? 'bg-active' : 'hover:bg-hover transition-all',
+          hidden && 'invisible'
+        )
       )}
     >
       <button
@@ -31,6 +41,7 @@ const RenderListBlock = ({
         className="w-full h-full flex-center"
         aria-label={ariaLabel}
         disabled={current}
+        onClick={() => onClick(blockNumber)}
       >
         {children}
       </button>
@@ -39,7 +50,7 @@ const RenderListBlock = ({
 }
 
 export const PrimaryPagination = (props: Props) => {
-  const { totalPage = 20, currentPage = 5 } = props
+  const { totalPage = 20, currentPage = 5, onClick } = props
   const [pageArray, setPageArray] = useState<Array<number>>([])
 
   useMemo(() => {
@@ -64,7 +75,12 @@ export const PrimaryPagination = (props: Props) => {
   return totalPage === 1 ? null : (
     <nav aria-label="ページネーション">
       <ul className="flex flex-row flex-nowrap gap-[.4em] w-max mx-auto">
-        <RenderListBlock ariaLabel={'最初のページへ'}>
+        <RenderListBlock
+          ariaLabel={'最初のページへ'}
+          blockNumber={1}
+          onClick={onClick}
+          hidden={1 === currentPage}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"
@@ -77,14 +93,21 @@ export const PrimaryPagination = (props: Props) => {
         </RenderListBlock>
         {pageArray.map((pIndex) => (
           <RenderListBlock
+            onClick={onClick}
             ariaLabel={`${pIndex}ページ目へ`}
             key={pIndex}
             current={pIndex === currentPage}
+            blockNumber={pIndex}
           >
             {pIndex}
           </RenderListBlock>
         ))}
-        <RenderListBlock ariaLabel={'最後のページへ'}>
+        <RenderListBlock
+          ariaLabel={'最後のページへ'}
+          blockNumber={totalPage}
+          onClick={onClick}
+          hidden={totalPage === currentPage}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"

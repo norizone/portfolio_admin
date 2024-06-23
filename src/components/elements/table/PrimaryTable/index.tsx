@@ -1,13 +1,28 @@
 'use client'
 import { twMerge } from 'tailwind-merge'
 import { PrimaryTableProps } from './type'
+import { LoadingIcon } from '../../icon/LodingIcon'
 
 const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
-  const { loading, data, columns, className, getRowId, onRowClick } = props
+  const {
+    isLoading = false,
+    data,
+    columns,
+    className,
+    getRowId,
+    onRowClick,
+    theadTRClassName,
+    tBodyTRClassName,
+  } = props
 
   const tHead = () => (
     <thead>
-      <tr className="bg-active transition-all shadow-sm rounded-md p-0">
+      <tr
+        className={twMerge(
+          'bg-active transition-all shadow-sm rounded-md p-0',
+          theadTRClassName
+        )}
+      >
         {columns.map((col, index) => (
           <th
             style={{
@@ -15,7 +30,10 @@ const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
                 ((col?.width ? col.width : 1) / columns.length) * 100
               }%`,
             }}
-            className={`border-r border-border-op last-of-type:border-none font-normal`}
+            className={twMerge(
+              `border-r border-border-op last-of-type:border-none font-normal`,
+              col?.tHeaderTHClassName
+            )}
             key={index}
           >
             <span className={twMerge('block')}>{col.header}</span>
@@ -28,10 +46,13 @@ const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
   const tBody = () => {
     return (
       <tbody>
-        {data.map((row, rowIndex) => (
+        {data?.map((row, rowIndex) => (
           <tr
             key={`row-${rowIndex}`}
-            className="bg-white  shadow-sm rounded-md border-t border-border-op"
+            className={twMerge(
+              'bg-white  shadow-sm rounded-md border-t border-border-op',
+              tBodyTRClassName
+            )}
           >
             {columns.map((col, colIndex) => {
               const colValue = col?.converter
@@ -42,7 +63,10 @@ const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
               return (
                 <td
                   key={`col-${colIndex}`}
-                  className="text-center border-r border-border-op last-of-type:border-none font-normal p-0"
+                  className={twMerge(
+                    'text-center border-r border-border-op last-of-type:border-none font-normal p-0',
+                    col?.tBodyTDClassName
+                  )}
                 >
                   {col.renderCell ? (
                     col.renderCell(row)

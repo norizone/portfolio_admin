@@ -5,15 +5,22 @@ import { PrimaryBtn } from '../btn/PrimaryBtn'
 type props = Omit<PrimaryModalProps, 'children'> & {
   onSubmit: () => void
   isLoading?: boolean
+  title?: string
 }
 
 export const DeleteModal = (props: props) => {
-  const { handleToggleModal, isOpen, onSubmit, isLoading } = props
+  const {
+    handleToggleModal,
+    isOpen,
+    onSubmit,
+    isLoading,
+    title = '削除しますか？',
+  } = props
 
   return (
     <PrimaryModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
-        <PrimaryHeadline tag="h3">削除しますか？</PrimaryHeadline>
+        <PrimaryHeadline tag="h3">{title}</PrimaryHeadline>
         <div className="flex-center flex-row gap-[1em] mt-[3em]">
           <PrimaryBtn
             onClick={() => {

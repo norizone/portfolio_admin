@@ -9,7 +9,7 @@ import { LogoutIcon } from '../icon/LogoutIcon'
 import { HomeIcon } from '../icon/HomeIcon'
 import { LogoutModal } from '../modal/LogoutModal'
 import { useToggleModal } from '@/hooks/useToggleModal'
-import { useMutationLogout } from '@/hooks/api/front.hooks'
+import { useMutationLogout } from '@/hooks/api/admin.hooks'
 import { CompleteModal } from '../modal/CompletModal'
 import { useRouter } from 'next/navigation'
 
