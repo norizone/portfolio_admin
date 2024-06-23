@@ -5,16 +5,18 @@ import { PrimaryBtn } from '../btn/PrimaryBtn'
 
 type props = Omit<PrimaryModalProps, 'children'> & {
   completeText: ReactNode | string
+  children?: ReactNode
 }
 
 export const CompleteModal = (props: props) => {
-  const { handleToggleModal, isOpen, completeText } = props
+  const { handleToggleModal, isOpen, completeText, children } = props
 
   return (
     <PrimaryModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
         <>
           <PrimaryHeadline tag="h3">{completeText}</PrimaryHeadline>
+          {children}
           <div className="flex-center flex-row gap-[2em] mt-[3em]">
             <PrimaryBtn
               btnProps={{

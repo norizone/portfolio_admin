@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { SignForm } from '@/components/layouts/sign/SignForm'
 
 export const metadata: Metadata = {
-  title: 'ログイン',
+  title: 'サインイン',
 }
 
 export default function AdminSetting() {
