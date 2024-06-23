@@ -1,93 +1,95 @@
 'use client'
 
-import { PrimaryPagination } from '@/components/elements/pagination/PrimaryPagination'
-import { useState } from 'react'
-import { useFixBody } from '@/hooks/useFixeBody'
-import { DeleteModal } from '@/components/elements/modal/DeleatModal'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import PrimaryTable from '@/components/elements/table/PrimaryTable'
-import { EditBtn } from '@/components/elements/btn/EditBtn'
 import { DeleteBtn } from '@/components/elements/btn/DeleteBtn'
 import { ColumnsType } from '@/components/elements/table/PrimaryTable/type'
-import Link from 'next/link'
-import { routers } from '@/routers/routers'
-import { Tool } from '@prisma/client'
-import PrimaryModal from '@/components/elements/modal/PrimaryModal'
-import { ToolForm } from './ToolForm'
-import { styleModalFormWidth } from '@/styles/style'
-import { useToggleModal } from '@/hooks/useToggleModal'
-import { CompleteModal } from '@/components/elements/modal/CompletModal'
+import { styleTableTRPadding } from '@/styles/style'
+import BaseInput from '@/components/elements/input/BaseInput'
+import { ToolData } from '@/types/api/admin'
 
-const tableElementClassName = 'p-[.6em]'
+type Props = {
+  toolItems?: ToolData[]
+  isEditMode?: boolean
+  isLoading?: boolean
+  onClickDelete: (id: number, title: string) => void
+  setEditData: (value: ToolData[]) => void
+  editData: ToolData[]
+}
 
-type ToolListData = Pick<Tool, 'id' | 'toolName'>
+export const ToolList = (props: Props) => {
+  const {
+    toolItems,
+    isEditMode,
+    isLoading,
+    onClickDelete,
+    setEditData,
+    editData,
+  } = props
 
-const data = [
-  {
-    id: 1,
-    toolName: 'React',
-  },
-  {
-    id: 2,
-    toolName: 'Vue',
-  },
-]
+  const [firstRow, setFirstRow] = useState(0)
+  const firstRowInput = useRef<HTMLInputElement | null>(null)
 
-export const ToolList = () => {
-  const [deleteId, setDeleteId] = useState<number>()
-  const [editId, setEditId] = useState<number>()
-  const [completeMessage, setCompleteMessage] = useState<string>()
-  const { isOpenModal: isOpenEditModal, toggleModal: toggleEditModal } =
-    useToggleModal()
-  const { isOpenModal: isOpenDeleteModal, toggleModal: toggleDeleteModal } =
-    useToggleModal()
-  const { isOpenModal: isOpenCompleteModal, toggleModal: toggleCompleteModal } =
-    useToggleModal()
+  useMemo(() => {
+    if (!toolItems || toolItems.length === 0) return setFirstRow(0)
+    setFirstRow(toolItems[0].id)
+  }, [toolItems])
 
-  const onDeleteSubmit = () => {
-    setCompleteMessage('削除しました')
-    toggleDeleteModal()
-    toggleCompleteModal()
-    console.log(deleteId)
+  useEffect(() => {
+    if (!isEditMode) return
+    firstRowInput.current?.focus()
+  }, [isEditMode])
+
+  const onEditToolName = (editTool: ToolData) => {
+    const targetTool = editData.find((obj) => obj.id === editTool.id)
+    const newData = !targetTool
+      ? editTool
+      : { ...targetTool, toolName: editTool.toolName }
+    setEditData([...editData, newData])
   }
 
-  const onCompleteEdit = () => {
-    toggleEditModal()
-    toggleCompleteModal()
-  }
-
-  const tableColumns: ColumnsType<ToolListData>[] = [
+  const tableColumns: ColumnsType<ToolData>[] = [
     {
       header: 'ID',
       key: 'id',
+      tHeaderTHClassName: styleTableTRPadding,
+      tBodyTDClassName: isEditMode ? 'bg-hover' : '',
     },
     {
       header: 'タイトル',
       key: 'toolName',
       width: 8,
-    },
-    {
-      header: '編集',
-      key: 'action',
-      renderCell: (row) => (
-        <EditBtn
-          customClassName={tableElementClassName}
-          onClick={() => {
-            toggleEditModal()
-            setEditId(row.id)
-          }}
-        />
-      ),
+      tBodyTDClassName: `text-left px-[1em]`,
+      renderCell: (row) => {
+        const isFirstRow = firstRow === row.id
+        return isEditMode ? (
+          <BaseInput
+            type="input"
+            defaultValue={row.toolName}
+            inputClassName={`w-full h-full bg-transparent ${styleTableTRPadding}`}
+            name={`toolName${row.id}`}
+            onChange={(e) =>
+              onEditToolName({ id: row.id, toolName: e.target.value })
+            }
+            ref={isFirstRow ? firstRowInput : null}
+          />
+        ) : (
+          <>{row.toolName}</>
+        )
+      },
     },
     {
       header: '削除',
       key: 'action',
+      tBodyTDClassName: isEditMode ? 'hidden' : '',
+      tHeaderTHClassName: isEditMode ? 'hidden' : '',
       renderCell: (row) => (
         <DeleteBtn
-          customClassName={tableElementClassName}
+          customClassName={styleTableTRPadding}
           onClick={() => {
-            toggleDeleteModal()
-            setDeleteId(row.id)
+            onClickDelete(row.id, row.toolName)
           }}
+          disabled={isEditMode}
         />
       ),
     },
@@ -96,36 +98,12 @@ export const ToolList = () => {
   return (
     <>
       <div className="mt-[2em]">
-        <PrimaryTable columns={tableColumns} data={data} />
-      </div>
-      <div className="mt-[2em]">
-        <PrimaryPagination totalPage={20} currentPage={3} />
-      </div>
-
-      <DeleteModal
-        isOpen={isOpenDeleteModal}
-        handleToggleModal={toggleDeleteModal}
-        onSubmit={onDeleteSubmit}
-      />
-
-      <PrimaryModal
-        isOpen={isOpenEditModal}
-        handleToggleModal={toggleEditModal}
-      >
-        <ToolForm
-          formType="edit"
-          defaultValues={data.find((tool) => tool.id === editId)}
-          formClassName={styleModalFormWidth}
-          onComplete={onCompleteEdit}
-          setCompleteMessage={setCompleteMessage}
+        <PrimaryTable
+          columns={tableColumns}
+          isLoading={isLoading}
+          data={toolItems}
         />
-      </PrimaryModal>
-
-      <CompleteModal
-        isOpen={isOpenCompleteModal}
-        completeText={completeMessage}
-        handleToggleModal={toggleCompleteModal}
-      />
+      </div>
     </>
   )
 }

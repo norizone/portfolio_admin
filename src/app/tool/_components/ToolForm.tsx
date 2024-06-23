@@ -5,26 +5,20 @@ import { createToolSchema } from '@/utils/validations'
 import { FormLabel } from '@/components/elements/textBlock/FormLabel'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import { PrimaryInput } from '@/components/elements/input/PrimaryInput'
-import { CreateToolBody } from '@/types/api/front'
+import { CreateToolBody } from '@/types/api/admin'
 import { twMerge } from 'tailwind-merge'
 import { styleInputMargin } from '@/styles/style'
 
 type Props = {
-  formType: 'create' | 'edit'
   defaultValues?: CreateToolBody
   formClassName?: string
-  onComplete?: () => void
-  setCompleteMessage?: (v: string) => void
+  onSubmit: (data: CreateToolBody) => void
+  isLoading?: boolean
 }
 
 export const ToolForm = (props: Props) => {
-  const {
-    defaultValues = {},
-    formType,
-    formClassName,
-    onComplete,
-    setCompleteMessage,
-  } = props
+  const { defaultValues = {}, formClassName, onSubmit, isLoading } = props
+
   const {
     register,
     handleSubmit,
@@ -35,16 +29,11 @@ export const ToolForm = (props: Props) => {
     resolver: yupResolver(createToolSchema),
   })
 
-  const onSubmit = async (data: CreateToolBody) => {
-    console.log(data)
-    onComplete && onComplete()
-    setCompleteMessage && setCompleteMessage('更新しました')
-    // formType === 'create' ? mutate(data) : ''
-  }
+  const handlerSubmit = (data: CreateToolBody) => onSubmit(data)
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handlerSubmit)}
       noValidate
       className={twMerge(
         'text-left flex flex-col gap-[2em] p-[5%] m-auto',
@@ -66,12 +55,13 @@ export const ToolForm = (props: Props) => {
 
       <div className="flex-center mt-[2em]">
         <PrimaryBtn
+          isLoading={isLoading}
           btnColor="primary"
           btnProps={{
             type: 'submit',
           }}
         >
-          {formType === 'create' ? '保存' : '更新'}
+          保存
         </PrimaryBtn>
       </div>
     </form>
