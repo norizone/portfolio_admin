@@ -25,6 +25,9 @@ const config: Config = {
         sm: '14px', //デフォルとに想定*
         xs: '10px', //その他デフォルトより小さいフォント
       },
+      borderRadius: {
+        sm: '.4rem',
+      },
       colors: {
         background: '#f6f6f6',
         active: '#e4e4e4',
@@ -49,14 +52,16 @@ const config: Config = {
           dark: '#2177d2',
         },
         success: {
-          DEFAULT: '#13cd87',
+          DEFAULT: '#11c782',
+          dark: '#0faa6f',
         },
         error: {
           DEFAULT: '#fd0f0f',
           dark: '#df1010',
         },
         warning: {
-          DEFAULT: '#dcd209',
+          DEFAULT: '#f0e60d',
+          dark: '#e6dc08',
         },
       },
     },
