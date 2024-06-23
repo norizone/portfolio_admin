@@ -5,13 +5,18 @@ import { loginSchema } from '@/utils/validations'
 import { FormLabel } from '@/components/elements/textBlock/FormLabel'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import { PrimaryInput } from '@/components/elements/input/PrimaryInput'
-import { LoginBody } from '@/types/api/front'
-import { useMutateLogin } from '@/hooks/api/front.hooks'
+import { LoginBody } from '@/types/api/admin'
+import { useMutateLogin, useMutateSignUp } from '@/hooks/api/admin.hooks'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { routers } from '@/routers/routers'
 
-export const LoginForm = () => {
+type Props = {
+  formType: 'login' | 'signUp'
+}
+
+export const SignForm = (props: Props) => {
+  const { formType = 'login' } = props
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState<string>('')
   const {
@@ -26,18 +31,33 @@ export const LoginForm = () => {
   const {
     mutate: mutateLogin,
     isPending: isLoginPending,
-    isError,
+    isError: isLoginError,
   } = useMutateLogin()
 
+  const {
+    mutate: mutateSignUp,
+    isPending: isSignUpPending,
+    isError: isLSignUpError,
+  } = useMutateSignUp()
+
   const onSubmit = (data: LoginBody) => {
-    mutateLogin(data, {
-      onSuccess: () => {
-        router.replace(routers.DASHBOARD)
-      },
-      onError: (res) => {
-        setErrorMessage(res?.message)
-      },
-    })
+    formType === 'signUp'
+      ? mutateSignUp(data, {
+          onSuccess: () => {
+            router.replace(routers.LOGIN)
+          },
+          onError: (res) => {
+            setErrorMessage(res?.message)
+          },
+        })
+      : mutateLogin(data, {
+          onSuccess: () => {
+            router.replace(routers.DASHBOARD)
+          },
+          onError: (res) => {
+            setErrorMessage(res?.message)
+          },
+        })
   }
 
   return (
@@ -64,17 +84,17 @@ export const LoginForm = () => {
           <PrimaryInput type="password" {...register('password')} />
         </FormLabel>
       </div>
-      {isError && <p>{errorMessage}</p>}
+      {isLoginError || (isLSignUpError && <p>{errorMessage}</p>)}
       <div className="mt-[2em] flex-center">
         <PrimaryBtn
-          isLoading={isLoginPending}
+          isLoading={isLoginPending || isSignUpPending}
           btnColor="primary"
           btnProps={{
             type: 'submit',
           }}
           onClick={() => {}}
         >
-          login
+          {formType}
         </PrimaryBtn>
       </div>
     </form>

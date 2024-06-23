@@ -11,9 +11,9 @@ export default function AdminSetting() {
     <section className="max-w-[420px] p-[2em] text-center mx-auto h-full flex-center">
       <div className="bg-white w-full p-[2em] text-center mx-auto">
         <PrimaryHeadline lang="en" tag="h1">
-          login
+          sign up
         </PrimaryHeadline>
-        <SignForm formType="login" />
+        <SignForm formType="signUp" />
       </div>
     </section>
   )
