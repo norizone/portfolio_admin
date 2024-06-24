@@ -55,6 +55,7 @@ export const WorkForm = (props: Props) => {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
     control,
   } = useForm<WorkFormValues>({
@@ -159,6 +160,10 @@ export const WorkForm = (props: Props) => {
       >
         <ImageInput
           customClassName={styleInputMargin}
+          isNullable={false}
+          onChangeFile={(value: File) =>
+            setValue('archiveImg', value, { shouldValidate: true })
+          }
           {...register('archiveImg')}
         />
       </FormLabel>
@@ -235,6 +240,10 @@ export const WorkForm = (props: Props) => {
       >
         <ImageInput
           customClassName={styleInputMargin}
+          isNullable={false}
+          onChangeFile={(value: File) =>
+            setValue('singleImgMain', value, { shouldValidate: true })
+          }
           {...register('singleImgMain')}
         />
       </FormLabel>
@@ -246,6 +255,10 @@ export const WorkForm = (props: Props) => {
       >
         <ImageInput
           customClassName={styleInputMargin}
+          isNullable={false}
+          onChangeFile={(value: File) =>
+            setValue('singleImgSub', value, { shouldValidate: true })
+          }
           {...register('singleImgSub')}
         />
       </FormLabel>
@@ -256,6 +269,10 @@ export const WorkForm = (props: Props) => {
       >
         <ImageInput
           customClassName={styleInputMargin}
+          isNullable={false}
+          onChangeFile={(value: File | undefined) =>
+            setValue('singleImgSub2', value, { shouldValidate: true })
+          }
           {...register('singleImgSub2')}
         />
       </FormLabel>

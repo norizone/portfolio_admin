@@ -14,6 +14,30 @@ const requiredMessage = (title: string, type: 'input' | 'select' = 'input') => {
   }
 }
 
+export const fileSchema = yup
+  .mixed<File>()
+  .test({
+    name: 'format',
+    message: 'ファイルは png、jpg、jpeg 形式のみを対応しています。',
+    test(file: unknown) {
+      if (file && file instanceof File) {
+        const supportedFormats = ['image/jpeg', 'image/png', 'image/jpg']
+        return supportedFormats.includes(file.type)
+      }
+      return true
+    },
+  })
+  .test({
+    name: 'size',
+    message: 'ファイルサイズは2.5MBを超えることはできません。',
+    test(file: unknown) {
+      if (file && file instanceof File) {
+        return file.size <= 2.5 * 1024 * 1024
+      }
+      return true
+    },
+  })
+
 export const loginSchema = yup.object({
   email: yup
     .string()
@@ -47,7 +71,7 @@ export const createWorks = yup.object({
     .string()
     .matches(/^[a-zA-Z0-9]*$/, '英数字のみを入力してください')
     .required(requiredMessage('英文字タイトル')),
-  archiveImg: yup.string().required(requiredMessage('一覧画像')),
+  archiveImg: fileSchema.required(requiredMessage('一覧画像')),
   useTools: yup
     .array()
     .min(1, requiredMessage('使用ツール', 'select'))
@@ -56,9 +80,9 @@ export const createWorks = yup.object({
   url: yup.string().url('url形式で入力してください').nullable(),
   gitUrl: yup.string().url('url形式で入力してください').nullable(),
   role: yup.string().required(requiredMessage('役割')),
-  singleImgMain: yup.string().required(requiredMessage('詳細ページメイン画像')),
-  singleImgSub: yup.string().required(requiredMessage('詳細ページサブ画像')),
-  singleImgSub2: yup.string().nullable(),
+  singleImgMain: fileSchema.required(requiredMessage('詳細ページメイン画像')),
+  singleImgSub: fileSchema.required(requiredMessage('詳細ページサブ画像')),
+  singleImgSub2: fileSchema.nullable(),
 })
 
 export const createUserSchema = yup.object({

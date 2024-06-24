@@ -30,7 +30,7 @@ export type CreateWorkBody = {
   publication: number
   title: string
   titleEn: string
-  archiveImg: string
+  archiveImg: File
   useTools: {
     id: number
   }[]
@@ -38,9 +38,9 @@ export type CreateWorkBody = {
   url?: string | null
   gitUrl?: string | null
   role: string
-  singleImgMain: string
-  singleImgSub: string
-  singleImgSub2?: string | null
+  singleImgMain: File
+  singleImgSub: File
+  singleImgSub2?: File | null
 }
 
 /**
