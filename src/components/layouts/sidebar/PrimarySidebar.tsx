@@ -1,21 +1,21 @@
 'use client'
 import Link from 'next/link'
-import { LogoIcon } from '../icon/LogoIcon'
-import { UserIcon } from '../icon/UserIcon'
+import { LogoIcon } from '@/components/elements/icon/LogoIcon'
+import { UserIcon } from '@/components/elements/icon/UserIcon'
 import { routers } from '@/routers/routers'
-import { WorksIcon } from '../icon/WorksIcon'
-import { SettingIcon } from '../icon/SettingIcon'
-import { LogoutIcon } from '../icon/LogoutIcon'
-import { HomeIcon } from '../icon/HomeIcon'
-import { LogoutModal } from '../modal/LogoutModal'
+import { WorksIcon } from '@/components/elements/icon/WorksIcon'
+import { SettingIcon } from '@/components/elements/icon/SettingIcon'
+import { LogoutIcon } from '@/components/elements/icon/LogoutIcon'
+import { HomeIcon } from '@/components/elements/icon/HomeIcon'
+import { LogoutModal } from '@/components/elements/modal/LogoutModal'
 import { useToggleModal } from '@/hooks/useToggleModal'
 import { useMutationLogout } from '@/hooks/api/admin.hooks'
-import { CompleteModal } from '../modal/CompletModal'
+import { CompleteModal } from '@/components/elements/modal/CompletModal'
 import { useRouter } from 'next/navigation'
 
 const MENU_LIST = [
   {
-    title: 'ダッシュボード',
+    title: '管理者情報',
     url: routers.DASHBOARD,
     icon: <HomeIcon />,
     chilled: [{ title: '', url: '' }],
@@ -73,21 +73,15 @@ export const SideBar = () => {
             <LogoIcon />
           </div>
 
-          <div className={`bg-background ${xWrap} mb-[2em] pt-[2em]`}>
-            <div className="w-[60px] mx-auto aspect-square rounded-full overflow-hidden">
-              <span className="w-full h-full bg-red-500 block"></span>
-            </div>
-            <div className="flex flex-row items-center pb-[1em] mt-[.5em] w-max mx-auto gap-2">
-              <p className="">userMame</p>
-              <button
-                className="fill-black hover:fill-primary transition-all"
-                type="button"
-                aria-label="ログアウト"
-                onClick={toggleLogoutModal}
-              >
-                <LogoutIcon />
-              </button>
-            </div>
+          <div className={`bg-background ${xWrap} mb-[2em] py-[1em] mt-[.5em]`}>
+            <button
+              className="fill-black hover:fill-primary transition-all flex flex-row items-center w-max mx-auto gap-[1em]"
+              type="button"
+              onClick={toggleLogoutModal}
+            >
+              <p>ログアウト</p>
+              <LogoutIcon />
+            </button>
           </div>
 
           <ul className={`h-max overflow-auto flex flex-col`}>
@@ -105,6 +99,7 @@ export const SideBar = () => {
           </ul>
         </div>
       </nav>
+
       <LogoutModal
         isLoading={isPending}
         isOpen={isOpenLogoutModal}

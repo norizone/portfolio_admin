@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { M_PLUS_1, Montserrat } from 'next/font/google'
 import './globals.css'
 import { MainWrap } from '@/components/layouts/wrap/MainWrap'
-import { QueryProviders } from '@/providers/queryProvider'
+import { QueryProviders } from '@/providers/QueryProvider'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const mPlus = M_PLUS_1({
