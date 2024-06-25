@@ -25,12 +25,11 @@ export type WorkTool = {
 }
 
 export type CreateWorkBody = {
-  order: number
   permission: number
   publication: number
   title: string
   titleEn: string
-  archiveImg: File
+  archiveImg: string
   useTools: {
     id: number
   }[]
@@ -38,9 +37,22 @@ export type CreateWorkBody = {
   url?: string | null
   gitUrl?: string | null
   role: string
-  singleImgMain: File
-  singleImgSub: File
-  singleImgSub2?: File | null
+  singleImgMain: string
+  singleImgSub: string
+  singleImgSub2?: string | null
+}
+
+export type uploadImageRes = {
+  archiveImg: string
+  singleImgMain: string
+  singleImgSub: string
+  singleImgSub2: string
+}
+
+export type WorkListRes = {
+  items: Work[]
+  totalPages: number
+  totalCount: number
 }
 
 /**

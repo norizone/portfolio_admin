@@ -12,8 +12,12 @@ import { PrimaryTextArea } from '@/components/elements/textArea/PrimaryTextArea'
 import { PUBLICATION_STATUS, VIEW_PERMISSION } from '@/utils/enum'
 import { convertPublication, convertViewPermission } from '@/utils/converter'
 import { ImageInput } from '@/components/elements/input/ImageInput'
-import { CreateWorkBody } from '@/types/api/admin'
-import { useGetToolList, useMutateCreateWork } from '@/hooks/api/admin.hooks'
+import { CreateWorkBody, ToolData } from '@/types/api/admin'
+import {
+  useGetToolList,
+  useMutateCreateWork,
+  useMutateUploadImages,
+} from '@/hooks/api/admin.hooks'
 import { useMemo, useState } from 'react'
 import { selectItem } from '@/types/SelectItems'
 import { styleInputMargin, styleMinInputWidth } from '@/styles/style'
@@ -21,10 +25,18 @@ import { styleInputMargin, styleMinInputWidth } from '@/styles/style'
 type Props = {
   formType: 'create' | 'edit'
   defaultValues?: CreateWorkBody
+  SSRToolData?: ToolData[]
 }
 
-type WorkFormValues = Omit<CreateWorkBody, 'useTools'> & {
+type WorkFormValues = Omit<
+  CreateWorkBody,
+  'useTools' | 'archiveImg' | 'singleImgMain' | 'singleImgSub' | 'singleImgSub2'
+> & {
   useTools: number[]
+  archiveImg: File
+  singleImgMain: File
+  singleImgSub: File
+  singleImgSub2?: File | null
 }
 
 const publicStatusItems = Object.keys(convertPublication).map((key) => ({
@@ -38,10 +50,10 @@ const permissionItems = Object.keys(convertViewPermission).map((key) => ({
 }))
 
 export const WorkForm = (props: Props) => {
-  const { defaultValues = {}, formType } = props
-  const { data: toolList } = useGetToolList()
+  const { defaultValues = {}, formType, SSRToolData } = props
   const [toolItems, setToolItems] = useState<selectItem[]>([])
-  const { mutate } = useMutateCreateWork()
+  const { data: toolList, isPending: isLoadingToolList } =
+    useGetToolList(SSRToolData)
 
   useMemo(() => {
     const tool =
@@ -64,16 +76,33 @@ export const WorkForm = (props: Props) => {
     resolver: yupResolver(createWorks),
   })
 
+  const { mutate: mutateCreateWork } = useMutateCreateWork()
+  const { mutate: mutateUploadImages, isPending } = useMutateUploadImages()
+
   const onSubmit = async (data: WorkFormValues) => {
     const selectedTool = data.useTools
-    const body = {
-      ...data,
-      useTools: selectedTool.map((tool) => ({
-        id: tool,
-      })),
+    const useTools = selectedTool.map((tool) => ({
+      id: tool,
+    }))
+
+    const formData = new FormData()
+    formData.append('archiveImg', data.archiveImg)
+    formData.append('singleImgMain', data.singleImgMain)
+    formData.append('singleImgSub', data.singleImgSub)
+    if (data.singleImgSub2) {
+      formData.append('singleImgSub2', data.singleImgSub2)
     }
-    console.log(body)
-    formType === 'create' ? mutate(body) : ''
+
+    mutateUploadImages(formData, {
+      onSuccess: (res) => {
+        const body = {
+          ...data,
+          useTools,
+          ...res,
+        }
+        mutateCreateWork(body)
+      },
+    })
   }
 
   return (
@@ -82,23 +111,6 @@ export const WorkForm = (props: Props) => {
       noValidate
       className="text-left flex flex-col gap-[2em] w-[90%] p-[5%] m-auto bg-white shadow-md"
     >
-      <FormLabel
-        label="表示権限"
-        required
-        errorMessage={errors?.order?.message}
-      >
-        <PrimaryInput
-          customClassName={twMerge(styleInputMargin, styleMinInputWidth)}
-          type="number"
-          placeholder="並び順"
-          inputProps={{
-            min: 1,
-            max: 9007199254740991,
-          }}
-          {...register('order')}
-        />
-      </FormLabel>
-
       <FormLabel
         label="表示権限"
         required
@@ -158,13 +170,19 @@ export const WorkForm = (props: Props) => {
         required
         errorMessage={errors?.archiveImg?.message}
       >
-        <ImageInput
-          customClassName={styleInputMargin}
-          isNullable={false}
-          onChangeFile={(value: File) =>
-            setValue('archiveImg', value, { shouldValidate: true })
-          }
-          {...register('archiveImg')}
+        <Controller
+          name="archiveImg"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <ImageInput
+              customClassName={styleInputMargin}
+              isNullable={false}
+              onChangeFile={(value: File) => {
+                onChange(value)
+                setValue('archiveImg', value, { shouldValidate: true })
+              }}
+            />
+          )}
         />
       </FormLabel>
 
@@ -238,13 +256,19 @@ export const WorkForm = (props: Props) => {
         required
         errorMessage={errors?.singleImgMain?.message}
       >
-        <ImageInput
-          customClassName={styleInputMargin}
-          isNullable={false}
-          onChangeFile={(value: File) =>
-            setValue('singleImgMain', value, { shouldValidate: true })
-          }
-          {...register('singleImgMain')}
+        <Controller
+          name="singleImgMain"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <ImageInput
+              customClassName={styleInputMargin}
+              isNullable={false}
+              onChangeFile={(value: File) => {
+                onChange(value)
+                setValue('singleImgMain', value, { shouldValidate: true })
+              }}
+            />
+          )}
         />
       </FormLabel>
 
@@ -253,13 +277,19 @@ export const WorkForm = (props: Props) => {
         required
         errorMessage={errors?.singleImgSub?.message}
       >
-        <ImageInput
-          customClassName={styleInputMargin}
-          isNullable={false}
-          onChangeFile={(value: File) =>
-            setValue('singleImgSub', value, { shouldValidate: true })
-          }
-          {...register('singleImgSub')}
+        <Controller
+          name="singleImgSub"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <ImageInput
+              customClassName={styleInputMargin}
+              isNullable={false}
+              onChangeFile={(value: File) => {
+                onChange(value)
+                setValue('singleImgSub', value, { shouldValidate: true })
+              }}
+            />
+          )}
         />
       </FormLabel>
 
@@ -267,13 +297,19 @@ export const WorkForm = (props: Props) => {
         label="詳細ページサブ画像2"
         errorMessage={errors?.singleImgSub2?.message}
       >
-        <ImageInput
-          customClassName={styleInputMargin}
-          isNullable={false}
-          onChangeFile={(value: File | undefined) =>
-            setValue('singleImgSub2', value, { shouldValidate: true })
-          }
-          {...register('singleImgSub2')}
+        <Controller
+          name="singleImgSub2"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <ImageInput
+              customClassName={styleInputMargin}
+              isNullable={true}
+              onChangeFile={(value: File) => {
+                onChange(value)
+                setValue('singleImgSub2', value, { shouldValidate: true })
+              }}
+            />
+          )}
         />
       </FormLabel>
 

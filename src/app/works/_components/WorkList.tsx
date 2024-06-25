@@ -13,9 +13,13 @@ import { routers } from '@/routers/routers'
 import { useToggleModal } from '@/hooks/useToggleModal'
 import { useGetWorkList } from '@/hooks/api/admin.hooks'
 import { styleTableTRPadding } from '@/styles/style'
+import { WorkListRes } from '@/types/api/admin'
 
-const PAGE_SiZE = 1
-const DEFAULT_PAGE = 1
+type Props = {
+  SSRData?: WorkListRes
+  pageSize?: number
+  defaultPage?: number
+}
 
 type WorkList = {
   id: number
@@ -24,13 +28,14 @@ type WorkList = {
   publication: PUBLICATION_STATUS
 }
 
-export const WorkList = () => {
-  const [page, setPage] = useState(DEFAULT_PAGE)
-  const { data, isPending } = useGetWorkList({ page, pageSize: PAGE_SiZE })
+export const WorkList = (props: Props) => {
+  const { SSRData, pageSize = 1, defaultPage = 1 } = props
+  const [page, setPage] = useState(defaultPage)
+  const [deleteId, setDeleteId] = useState<number>()
+  const { data, isPending } = useGetWorkList({ page, pageSize }, SSRData)
 
   const { isOpenModal: isOpenDeleteModal, toggleModal: toggleDeleteModal } =
     useToggleModal()
-  const [deleteId, setDeleteId] = useState<number>()
 
   const onDeleteSubmit = () => {
     console.log(deleteId)
@@ -89,7 +94,7 @@ export const WorkList = () => {
         <PrimaryTable columns={tableColumns} data={data?.items} />
       </div>
       <div className="mt-[2em]">
-        {data?.totalPages > 1 && (
+        {data && data?.totalPages > 1 && (
           <PrimaryPagination
             totalPage={data?.totalPages}
             currentPage={page}

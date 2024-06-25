@@ -1,6 +1,4 @@
-import { forwardRef, useRef, useState } from 'react'
-import BaseInput, { BaseInputProps } from './BaseInput'
-import { twMerge } from 'tailwind-merge'
+import React, { forwardRef, useState, useRef } from 'react'
 import { PrimaryBtn } from '../btn/PrimaryBtn'
 
 export type Props<T> = {
@@ -9,9 +7,12 @@ export type Props<T> = {
   isNullable?: boolean
 }
 
-export const ImageInput = <T extends File | undefined>(props: Props<T>) => {
+const ImageInputInner = <T extends File | undefined>(
+  props: Props<T>,
+  ref: React.Ref<HTMLDivElement>
+) => {
+  const { customClassName, onChangeFile, isNullable = false } = props
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const { customClassName, onChangeFile, isNullable } = props
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imageSource, setImageSource] = useState('')
 
@@ -32,20 +33,19 @@ export const ImageInput = <T extends File | undefined>(props: Props<T>) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files || files.length <= 0) return
-    // img要素のsrc属性に渡す画像データを生成
     generateImageSource(files)
     setImageFile(files[0])
     onChangeFile(files[0] as T)
   }
 
-  const handleDeleteFIle = () => {
-    setImageFile(null)
+  const handleDeleteFile = () => {
     setImageSource('')
+    setImageFile(null)
     onChangeFile(undefined as T)
   }
 
   return (
-    <div className={customClassName}>
+    <div className={customClassName} ref={ref}>
       {imageFile && (
         <div className="mb-[.6em] max-h-[200px] max-w-[200px]">
           {
@@ -53,7 +53,7 @@ export const ImageInput = <T extends File | undefined>(props: Props<T>) => {
             <img
               src={imageSource}
               alt=""
-              className=" object-cover w-full h-full block"
+              className="object-cover w-full h-full block"
             />
           }
         </div>
@@ -64,15 +64,15 @@ export const ImageInput = <T extends File | undefined>(props: Props<T>) => {
           btnColor="success"
           onClick={selectFile}
         >
-          アップロード
+          {imageFile ? '変更' : 'アップロード'}
         </PrimaryBtn>
-        {imageFile && (
+        {imageFile && isNullable && (
           <PrimaryBtn
             btnProps={{ type: 'button' }}
-            btnColor={isNullable ? 'cancel' : 'primary'}
-            onClick={isNullable ? handleDeleteFIle : selectFile}
+            btnColor="cancel"
+            onClick={handleDeleteFile}
           >
-            {isNullable ? '削除' : '削除'}
+            削除
           </PrimaryBtn>
         )}
       </div>
@@ -86,3 +86,7 @@ export const ImageInput = <T extends File | undefined>(props: Props<T>) => {
     </div>
   )
 }
+
+export const ImageInput = forwardRef(ImageInputInner) as <T>(
+  props: Props<T> & { ref?: React.Ref<HTMLDivElement> }
+) => ReturnType<typeof ImageInputInner>

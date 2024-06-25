@@ -9,10 +9,13 @@ import {
   LoginBody,
   ToolData,
   UpdateToolsBody,
+  WorkListRes,
+  uploadImageRes,
 } from '@/types/api/admin'
 import { Tool, User, Work } from '@prisma/client'
 import { getCrfToken } from './useGetToken'
 import { CreateUserBody, UserData } from '@/types/api/admin'
+import { headers } from 'next/headers'
 
 const ADMIN_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/admin`
 /*
@@ -125,14 +128,47 @@ export const useMutateDeleteUser = () => {
   work
 */
 
-export const useGetWorkList = (ListBody: ListBody) => {
-  return useQuery<Work[]>({
+export const useGetWorkList = (ListBody: ListBody, SSRData?: WorkListRes) => {
+  return useQuery<WorkListRes>({
     queryKey: ['get-work-list', ListBody],
-    queryFn: async (): Promise<Work[]> => {
+    queryFn: async (): Promise<WorkListRes> => {
       const res = await axios.post(
         `${ADMIN_API_URL}/work/list`,
         ListBody,
         await getCrfToken()
+      )
+      return res.data
+    },
+    initialData: SSRData,
+  })
+}
+
+export const useGetWork = (id: number, SSRData?: Work) => {
+  return useQuery<Work>({
+    queryKey: ['get-work', id],
+    queryFn: async (): Promise<Work> => {
+      const res = await axios.get(
+        `${ADMIN_API_URL}/work/${id}`,
+        await getCrfToken()
+      )
+      return res.data
+    },
+    initialData: SSRData,
+  })
+}
+
+export const useMutateUploadImages = () => {
+  return useMutation({
+    mutationFn: async (files: FormData): Promise<uploadImageRes> => {
+      const res = await axios.post(
+        `${ADMIN_API_URL}/work/upload_images`,
+        files,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            ...(await getCrfToken()).headers,
+          },
+        }
       )
       return res.data
     },
@@ -142,7 +178,7 @@ export const useGetWorkList = (ListBody: ListBody) => {
 export const useMutateCreateWork = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (data: CreateWorkBody): Promise<Work> => {
+    mutationFn: async (data: CreateWorkBody | any): Promise<Work> => {
       const res = await axios.post(
         `${ADMIN_API_URL}/work/create`,
         data,
@@ -152,7 +188,7 @@ export const useMutateCreateWork = () => {
     },
     onSuccess: () => {
       console.log('ok')
-      // queryClient.invalidateQueries('works-list');
+      queryClient.invalidateQueries({ queryKey: ['get-work-list'] })
     },
   })
 }

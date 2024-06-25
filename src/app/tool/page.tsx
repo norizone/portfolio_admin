@@ -9,7 +9,7 @@ import { ToolData } from '@/types/api/admin'
 export const metadata: Metadata = {
   title: 'ツール一覧',
 }
-const getWorkList = async (): Promise<ToolData[]> => {
+const getToolList = async (): Promise<ToolData[]> => {
   const cookie = cookies()
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
@@ -25,7 +25,7 @@ const getWorkList = async (): Promise<ToolData[]> => {
 }
 
 export default async function Tool() {
-  const data = await getWorkList()
+  const data = await getToolList()
   return (
     <section>
       <PrimaryHeadline lang="jp" tag="h1">

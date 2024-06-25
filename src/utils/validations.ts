@@ -51,13 +51,6 @@ export const createToolSchema = yup.object({
 })
 
 export const createWorks = yup.object({
-  order: yup
-    .number()
-    .typeError('数字で入力してください')
-    .integer('整数で入力してください')
-    .min(1, '1以上で入力してください')
-    .max(9007199254740991, '最大値を超えています')
-    .required(requiredMessage('並び順', 'select')),
   permission: yup
     .number()
     .typeError(requiredMessage('表示権限', 'select'))
