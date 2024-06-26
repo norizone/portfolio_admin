@@ -14,6 +14,7 @@ import {
 import { Tool, User, Work } from '@prisma/client'
 import { getCrfToken } from './useGetToken'
 import { CreateUserBody, UserData } from '@/types/api/admin'
+import { axiosClient } from '@/utils/axios'
 
 const ADMIN_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/admin`
 /*
@@ -198,7 +199,7 @@ export const useGetToolList = (SSRData?: ToolData[]) => {
   return useQuery<ToolData[]>({
     queryKey: ['get-tool-list'],
     queryFn: async (): Promise<ToolData[]> => {
-      const res = await axios.get(
+      const res = await axiosClient.get(
         `${ADMIN_API_URL}/tool/list`,
         await getCrfToken()
       )
