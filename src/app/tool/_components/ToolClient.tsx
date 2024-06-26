@@ -114,6 +114,7 @@ export const ToolClient = (props: Props) => {
         toggleEdit={() => setIsEditMode(!isEditMode)}
         onClickSubmitEdit={onSubmitEdit}
         isLoadingUpdate={isLoadingUpdate}
+        dataLength={toolListData?.length}
       />
       <ToolList
         toolItems={toolListData}

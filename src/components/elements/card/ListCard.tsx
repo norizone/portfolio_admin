@@ -8,9 +8,5 @@ type Props = {
 
 export const ListCard = (props: Props) => {
   const { children, link } = props
-  return (
-    <li className="bg-white hover:bg-hover transition-all shadow-sm rounded-md p-[1em]">
-      {children}
-    </li>
-  )
+  return <li className="bg-white shadow-sm rounded-md p-[1em]">{children}</li>
 }

@@ -1,3 +1,4 @@
+import { axiosClient } from '@/utils/axios'
 import axios from 'axios'
 
 export const getCrfToken = async () => {

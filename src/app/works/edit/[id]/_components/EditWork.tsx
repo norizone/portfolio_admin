@@ -17,5 +17,12 @@ export const EditWork = (props: Props) => {
   const { data } = useGetWork(id, SSRWorkData)
   console.log(data)
 
-  return <WorkForm SSRToolData={SSRToolData} formType={'edit'} />
+  const defaultValues = {}
+
+  return (
+    <>
+      <WorkForm SSRToolData={SSRToolData} formType={'edit'} />
+      <img src={`${process.env.NEXT_PUBLIC_API_URL}/${data?.archiveImg}`} />
+    </>
+  )
 }

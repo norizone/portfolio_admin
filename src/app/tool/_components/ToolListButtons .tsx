@@ -8,6 +8,7 @@ type Props = {
   onClickCreate: () => void
   onClickSubmitEdit: () => void
   isLoadingUpdate?: boolean
+  dataLength?: number
 }
 
 export const ToolListButtons = (props: Props) => {
@@ -17,19 +18,21 @@ export const ToolListButtons = (props: Props) => {
     onClickCreate,
     onClickSubmitEdit,
     isLoadingUpdate,
+    dataLength = 0,
   } = props
 
   return (
     <>
       <div className="mt-[2em] w-max ml-auto flex flex-row gap-x-[2em]">
-        <PrimaryBtn
-          btnColor={!isEditMode ? 'success' : 'cancel'}
-          btnProps={{ type: 'button' }}
-          onClick={toggleEdit}
-        >
-          {!isEditMode ? '編集' : 'キャンセル'}
-        </PrimaryBtn>
-
+        {dataLength > 0 && (
+          <PrimaryBtn
+            btnColor={!isEditMode ? 'success' : 'cancel'}
+            btnProps={{ type: 'button' }}
+            onClick={toggleEdit}
+          >
+            {!isEditMode ? '編集' : 'キャンセル'}
+          </PrimaryBtn>
+        )}
         {isEditMode ? (
           <PrimaryBtn
             btnColor="primary"

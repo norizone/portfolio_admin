@@ -1,6 +1,5 @@
 import { ReactNode } from 'react'
-import { SideBar } from '../../elements/sidebar/PrimarySidebar'
-import { PrimaryHeader } from '../header/PrimaryHeader'
+import { SideBar } from '../sidebar/PrimarySidebar'
 
 type Props = {
   children: ReactNode

@@ -1,6 +1,5 @@
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { useRouter } from 'next/router'
 import {
   CreateToolBody,
   CreateWorkBody,
@@ -15,7 +14,6 @@ import {
 import { Tool, User, Work } from '@prisma/client'
 import { getCrfToken } from './useGetToken'
 import { CreateUserBody, UserData } from '@/types/api/admin'
-import { headers } from 'next/headers'
 
 const ADMIN_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/admin`
 /*
@@ -38,7 +36,7 @@ export const useMutateLogin = () => {
   return useMutation({
     mutationFn: async (data: LoginBody): Promise<any> => {
       const res = await axios.post(
-        `${ADMIN_API_URL}/auth/login`,
+        `${process.env.NEXT_PUBLIC_API_URL}${ADMIN_API_URL}/auth/login`,
         data,
         await getCrfToken()
       )
@@ -193,7 +191,9 @@ export const useMutateCreateWork = () => {
   })
 }
 
-// tool_list
+/**
+ * tool
+ */
 export const useGetToolList = (SSRData?: ToolData[]) => {
   return useQuery<ToolData[]>({
     queryKey: ['get-tool-list'],
