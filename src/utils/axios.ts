@@ -1,5 +1,5 @@
 import { logout } from '@/hooks/api/admin.api'
-import { authLogout } from '@/hooks/api/auth'
+// import { authLogout } from '@/hooks/api/auth'
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 
 export const axiosClient: AxiosInstance = axios.create({})
