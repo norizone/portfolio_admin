@@ -10,8 +10,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        jp: ['var(--font-mplus)'],
-        en: ['var(--font-montserrat)'],
+        jp: ['var(--font-jp)'],
+        en: ['var(--font-en)'],
       },
       fontWeight: {
         normal: '300',
