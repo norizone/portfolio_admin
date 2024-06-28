@@ -21,6 +21,8 @@ import {
 import { useMemo, useState } from 'react'
 import { selectItem } from '@/types/SelectItems'
 import { styleInputMargin, styleMinInputWidth } from '@/styles/style'
+import { AddToolModal } from './AddToolModal'
+import { useToggleModal } from '@/hooks/useToggleModal'
 
 type Props = {
   formType: 'create' | 'edit'
@@ -51,6 +53,8 @@ const permissionItems = Object.keys(convertViewPermission).map((key) => ({
 
 export const WorkForm = (props: Props) => {
   const { defaultValues = {}, formType, SSRToolData } = props
+  const { isOpenModal: isOpenCreateModal, toggleModal: toggleCreateModal } =
+    useToggleModal()
   const [toolItems, setToolItems] = useState<selectItem[]>([])
   const { data: toolList, isPending: isLoadingToolList } =
     useGetToolList(SSRToolData)
@@ -106,223 +110,238 @@ export const WorkForm = (props: Props) => {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      noValidate
-      className="text-left flex flex-col gap-[2em] w-[90%] p-[5%] m-auto bg-white shadow-md"
-    >
-      <FormLabel
-        label="表示権限"
-        required
-        errorMessage={errors?.permission?.message}
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="text-left flex flex-col gap-[2em] w-[90%] p-[5%] m-auto bg-white shadow-md"
       >
-        <PrimarySelectBox
-          customClassName={twMerge(styleInputMargin, styleMinInputWidth)}
-          optionItems={permissionItems}
-          placeholder="選択してください"
-          value={watch('permission')}
-          {...register('permission')}
-        />
-      </FormLabel>
-
-      <FormLabel
-        label="公開状態"
-        required
-        errorMessage={errors?.publication?.message}
-      >
-        <PrimarySelectBox
-          customClassName={twMerge(styleInputMargin, styleMinInputWidth)}
-          optionItems={publicStatusItems}
-          placeholder="選択してください"
-          value={watch('publication')}
-          {...register('publication')}
-        />
-      </FormLabel>
-
-      <FormLabel
-        label="タイトル"
-        required
-        errorMessage={errors?.title?.message}
-      >
-        <PrimaryInput
-          customClassName={styleInputMargin}
-          type="text"
-          placeholder="タイトル"
-          {...register('title')}
-        />
-      </FormLabel>
-
-      <FormLabel
-        label="英文字タイトル"
-        required
-        errorMessage={errors?.titleEn?.message}
-      >
-        <PrimaryInput
-          type="text"
-          placeholder="title"
-          customClassName={styleInputMargin}
-          {...register('titleEn')}
-        />
-      </FormLabel>
-
-      <FormLabel
-        label="一覧画像"
-        required
-        errorMessage={errors?.archiveImg?.message}
-      >
-        <Controller
-          name="archiveImg"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <ImageInput
-              customClassName={styleInputMargin}
-              isNullable={false}
-              onChangeFile={(value: File) => {
-                onChange(value)
-                setValue('archiveImg', value, { shouldValidate: true })
-              }}
-            />
-          )}
-        />
-      </FormLabel>
-
-      <FormLabel
-        label="使用ツール"
-        required
-        errorMessage={errors?.useTools?.message}
-        as="p"
-      >
-        <div
-          className={twMerge(
-            'grid grid-cols-[repeat(4,max-content)] gap-y-[1em] w-full px-[.4em] justify-between max-w-[800px]',
-            styleInputMargin
-          )}
+        <FormLabel
+          label="表示権限"
+          required
+          errorMessage={errors?.permission?.message}
         >
-          {toolItems?.length > 0 &&
-            toolItems.map((tool, index) => (
-              <Controller
-                key={index}
-                defaultValue={[]}
-                control={control}
-                name="useTools"
-                render={({ field }) => (
-                  <PrimaryLabelCheckBox
-                    customClassName="w-max mr-auto"
-                    item={tool}
-                    {...register('useTools')}
-                  />
-                )}
+          <PrimarySelectBox
+            customClassName={twMerge(styleInputMargin, styleMinInputWidth)}
+            optionItems={permissionItems}
+            placeholder="選択してください"
+            value={watch('permission')}
+            {...register('permission')}
+          />
+        </FormLabel>
+
+        <FormLabel
+          label="公開状態"
+          required
+          errorMessage={errors?.publication?.message}
+        >
+          <PrimarySelectBox
+            customClassName={twMerge(styleInputMargin, styleMinInputWidth)}
+            optionItems={publicStatusItems}
+            placeholder="選択してください"
+            value={watch('publication')}
+            {...register('publication')}
+          />
+        </FormLabel>
+
+        <FormLabel
+          label="タイトル"
+          required
+          errorMessage={errors?.title?.message}
+        >
+          <PrimaryInput
+            customClassName={styleInputMargin}
+            type="text"
+            placeholder="タイトル"
+            {...register('title')}
+          />
+        </FormLabel>
+
+        <FormLabel
+          label="英文字タイトル"
+          required
+          errorMessage={errors?.titleEn?.message}
+        >
+          <PrimaryInput
+            type="text"
+            placeholder="title"
+            customClassName={styleInputMargin}
+            {...register('titleEn')}
+          />
+        </FormLabel>
+
+        <FormLabel
+          label="一覧画像"
+          required
+          errorMessage={errors?.archiveImg?.message}
+        >
+          <Controller
+            name="archiveImg"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <ImageInput
+                customClassName={styleInputMargin}
+                isNullable={false}
+                onChangeFile={(value: File) => {
+                  onChange(value)
+                  setValue('archiveImg', value, { shouldValidate: true })
+                }}
               />
-            ))}
-        </div>
-      </FormLabel>
+            )}
+          />
+        </FormLabel>
 
-      <FormLabel label="コメント" errorMessage={errors?.comment?.message}>
-        <PrimaryTextArea
-          customClassName={styleInputMargin}
-          {...register('comment')}
-        />
-      </FormLabel>
+        <FormLabel
+          label="使用ツール"
+          required
+          errorMessage={errors?.useTools?.message}
+          as="p"
+        >
+          <div
+            className={twMerge(
+              'grid grid-cols-[repeat(4,max-content)] gap-y-[1em] w-full px-[.4em] justify-between max-w-[800px]',
+              styleInputMargin
+            )}
+          >
+            {toolItems?.length > 0 &&
+              toolItems.map((tool, index) => (
+                <Controller
+                  key={index}
+                  defaultValue={[]}
+                  control={control}
+                  name="useTools"
+                  render={({ field }) => (
+                    <PrimaryLabelCheckBox
+                      customClassName="w-max mr-auto"
+                      item={tool}
+                      {...register('useTools')}
+                    />
+                  )}
+                />
+              ))}
+          </div>
+        </FormLabel>
 
-      <FormLabel label="url" errorMessage={errors?.url?.message}>
-        <PrimaryInput
-          customClassName={styleInputMargin}
-          type="url"
-          placeholder="http://"
-          {...register('url')}
-        />
-      </FormLabel>
-
-      <FormLabel label="git_url" errorMessage={errors?.gitUrl?.message}>
-        <PrimaryInput
-          customClassName={styleInputMargin}
-          type="url"
-          placeholder="http://"
-          {...register('gitUrl')}
-        />
-      </FormLabel>
-
-      <FormLabel label="役割" required errorMessage={errors?.role?.message}>
-        <PrimaryInput
-          customClassName={styleInputMargin}
-          type="url"
-          placeholder="front-end"
-          {...register('role')}
-        />
-      </FormLabel>
-
-      <FormLabel
-        label="詳細ページメイン画像"
-        required
-        errorMessage={errors?.singleImgMain?.message}
-      >
-        <Controller
-          name="singleImgMain"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <ImageInput
-              customClassName={styleInputMargin}
-              isNullable={false}
-              onChangeFile={(value: File) => {
-                onChange(value)
-                setValue('singleImgMain', value, { shouldValidate: true })
-              }}
-            />
-          )}
-        />
-      </FormLabel>
-
-      <FormLabel
-        label="詳細ページサブ画像1"
-        required
-        errorMessage={errors?.singleImgSub?.message}
-      >
-        <Controller
-          name="singleImgSub"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <ImageInput
-              customClassName={styleInputMargin}
-              isNullable={false}
-              onChangeFile={(value: File) => {
-                onChange(value)
-                setValue('singleImgSub', value, { shouldValidate: true })
-              }}
-            />
-          )}
-        />
-      </FormLabel>
-
-      <FormLabel
-        label="詳細ページサブ画像2"
-        errorMessage={errors?.singleImgSub2?.message}
-      >
-        <Controller
-          name="singleImgSub2"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <ImageInput
-              customClassName={styleInputMargin}
-              isNullable={true}
-              onChangeFile={(value: File) => {
-                onChange(value)
-                setValue('singleImgSub2', value, { shouldValidate: true })
-              }}
-            />
-          )}
-        />
-      </FormLabel>
-
-      <div className="flex-center mt-[2em]">
         <PrimaryBtn
           btnColor="primary"
-          btnProps={{
-            type: 'submit',
-          }}
+          onClick={toggleCreateModal}
+          btnProps={{ type: 'button' }}
+          customClassName="w-max p-[.2em] min-w-[8em] min-h-[2.4em] text-sm ml-auto"
         >
-          {formType === 'create' ? '保存' : '更新'}
+          ツール追加
         </PrimaryBtn>
-      </div>
-    </form>
+
+        <FormLabel label="コメント" errorMessage={errors?.comment?.message}>
+          <PrimaryTextArea
+            customClassName={styleInputMargin}
+            {...register('comment')}
+          />
+        </FormLabel>
+
+        <FormLabel label="url" errorMessage={errors?.url?.message}>
+          <PrimaryInput
+            customClassName={styleInputMargin}
+            type="url"
+            placeholder="http://"
+            {...register('url')}
+          />
+        </FormLabel>
+
+        <FormLabel label="git_url" errorMessage={errors?.gitUrl?.message}>
+          <PrimaryInput
+            customClassName={styleInputMargin}
+            type="url"
+            placeholder="http://"
+            {...register('gitUrl')}
+          />
+        </FormLabel>
+
+        <FormLabel label="役割" required errorMessage={errors?.role?.message}>
+          <PrimaryInput
+            customClassName={styleInputMargin}
+            type="url"
+            placeholder="front-end"
+            {...register('role')}
+          />
+        </FormLabel>
+
+        <FormLabel
+          label="詳細ページメイン画像"
+          required
+          errorMessage={errors?.singleImgMain?.message}
+        >
+          <Controller
+            name="singleImgMain"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <ImageInput
+                customClassName={styleInputMargin}
+                isNullable={false}
+                onChangeFile={(value: File) => {
+                  onChange(value)
+                  setValue('singleImgMain', value, { shouldValidate: true })
+                }}
+              />
+            )}
+          />
+        </FormLabel>
+
+        <FormLabel
+          label="詳細ページサブ画像1"
+          required
+          errorMessage={errors?.singleImgSub?.message}
+        >
+          <Controller
+            name="singleImgSub"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <ImageInput
+                customClassName={styleInputMargin}
+                isNullable={false}
+                onChangeFile={(value: File) => {
+                  onChange(value)
+                  setValue('singleImgSub', value, { shouldValidate: true })
+                }}
+              />
+            )}
+          />
+        </FormLabel>
+
+        <FormLabel
+          label="詳細ページサブ画像2"
+          errorMessage={errors?.singleImgSub2?.message}
+        >
+          <Controller
+            name="singleImgSub2"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <ImageInput
+                customClassName={styleInputMargin}
+                isNullable={true}
+                onChangeFile={(value: File) => {
+                  onChange(value)
+                  setValue('singleImgSub2', value, { shouldValidate: true })
+                }}
+              />
+            )}
+          />
+        </FormLabel>
+
+        <div className="flex-center mt-[2em]">
+          <PrimaryBtn
+            btnColor="primary"
+            btnProps={{
+              type: 'submit',
+            }}
+          >
+            {formType === 'create' ? '保存' : '更新'}
+          </PrimaryBtn>
+        </div>
+      </form>
+      <AddToolModal
+        isOpenCreateModal={isOpenCreateModal}
+        toggleCreateModal={toggleCreateModal}
+      />
+    </>
   )
 }

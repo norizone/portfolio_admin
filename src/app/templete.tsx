@@ -12,7 +12,7 @@ export default function Template({
   children: React.ReactNode
 }>) {
   const path = usePathname()
-  //auth　gardでやる？
+  //TODO: auth　gardでやる login状態ならMain 実ログインならAUth
   const Wrapper =
     path !== routers.LOGIN && path !== routers.SIGNUP ? MainWrap : AuthWrap
 

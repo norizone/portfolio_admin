@@ -15,6 +15,7 @@ import { Tool, User, Work } from '@prisma/client'
 import { getCrfToken } from './useGetToken'
 import { CreateUserBody, UserData } from '@/types/api/admin'
 import { axiosClient } from '@/utils/axios'
+import { toolKeys, workKeys, userKeys } from './queryKey'
 
 const ADMIN_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/admin`
 /*
@@ -37,7 +38,7 @@ export const useMutateLogin = () => {
   return useMutation({
     mutationFn: async (data: LoginBody): Promise<any> => {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}${ADMIN_API_URL}/auth/login`,
+        `${ADMIN_API_URL}/auth/login`,
         data,
         await getCrfToken()
       )
@@ -63,7 +64,7 @@ export const useMutationLogout = () => {
 */
 export const useGetUserList = (SSRData?: UserData[]) => {
   return useQuery({
-    queryKey: ['get-user-list'],
+    queryKey: userKeys.all,
     queryFn: async (): Promise<UserData[]> => {
       const res = await axios.get(
         `${ADMIN_API_URL}/user/list`,
@@ -103,7 +104,7 @@ export const useMutateEditUser = () => {
       return res.data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['get-user-list'] })
+      queryClient.invalidateQueries({ queryKey: userKeys.all })
     },
   })
 }
@@ -118,7 +119,7 @@ export const useMutateDeleteUser = () => {
       )
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['get-user-list'] })
+      queryClient.invalidateQueries({ queryKey: userKeys.all })
     },
   })
 }
@@ -129,7 +130,7 @@ export const useMutateDeleteUser = () => {
 
 export const useGetWorkList = (ListBody: ListBody, SSRData?: WorkListRes) => {
   return useQuery<WorkListRes>({
-    queryKey: ['get-work-list', ListBody],
+    queryKey: workKeys.list(ListBody),
     queryFn: async (): Promise<WorkListRes> => {
       const res = await axios.post(
         `${ADMIN_API_URL}/work/list`,
@@ -144,10 +145,10 @@ export const useGetWorkList = (ListBody: ListBody, SSRData?: WorkListRes) => {
 
 export const useGetWork = (id: number, SSRData?: Work) => {
   return useQuery<Work>({
-    queryKey: ['get-work', id],
+    queryKey: workKeys.detail(id),
     queryFn: async (): Promise<Work> => {
       const res = await axios.get(
-        `${ADMIN_API_URL}/work/${id}`,
+        `${ADMIN_API_URL}/work/detail/${id}`,
         await getCrfToken()
       )
       return res.data
@@ -187,7 +188,7 @@ export const useMutateCreateWork = () => {
     },
     onSuccess: () => {
       console.log('ok')
-      queryClient.invalidateQueries({ queryKey: ['get-work-list'] })
+      queryClient.invalidateQueries({ queryKey: workKeys.all })
     },
   })
 }
@@ -197,12 +198,9 @@ export const useMutateCreateWork = () => {
  */
 export const useGetToolList = (SSRData?: ToolData[]) => {
   return useQuery<ToolData[]>({
-    queryKey: ['get-tool-list'],
+    queryKey: toolKeys.all,
     queryFn: async (): Promise<ToolData[]> => {
-      const res = await axiosClient.get(
-        `${ADMIN_API_URL}/tool/list`,
-        await getCrfToken()
-      )
+      const res = await axios.get(`${ADMIN_API_URL}/tool`, await getCrfToken())
       return res.data
     },
     initialData: SSRData,
@@ -221,7 +219,7 @@ export const useMutateDeleteTool = () => {
       return res.data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['get-tool-list'] })
+      queryClient.invalidateQueries({ queryKey: toolKeys.all })
     },
   })
 }
@@ -240,7 +238,7 @@ export const useMutateCreateTool = () => {
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['get-tool-list'] })
+      queryClient.invalidateQueries({ queryKey: toolKeys.all })
     },
   })
 }
@@ -258,7 +256,7 @@ export const useMutateUpdateTools = () => {
       return res.data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['get-tool-list'] })
+      queryClient.invalidateQueries({ queryKey: toolKeys.all })
     },
   })
 }
