@@ -1,29 +1,45 @@
 import { logout } from '@/hooks/api/admin.api'
 // import { authLogout } from '@/hooks/api/auth'
+
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 
-export const axiosClient: AxiosInstance = axios.create({})
+export const axiosClient: AxiosInstance = axios.create({
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/admin`,
+  withCredentials: true,
+})
 
 axiosClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response
   },
-  async (error: AxiosError) => {
+  async (
+    error: AxiosError<{
+      error?: string
+      message?: string
+      statusCode?: number
+    }>
+  ) => {
+    let message = ''
     switch (error?.response?.status) {
       case 401:
-        error.message = '認証エラー'
+        message = '認証エラー'
         await logout()
         window.location.href = '/login'
         break
       case 403:
-        error.message = 'アクセスが拒否されました'
+        message = error.response?.data?.message ?? 'アクセスが拒否されました'
         break
       case 500:
-        error.message = 'サーバーエラー'
+        message = 'サーバーエラーが発生しました'
         break
       default:
+        message = error.response?.data?.message ?? ''
         break
     }
-    return Promise.reject(error.message)
+    console.log(error)
+    return Promise.reject({
+      ...error.response?.data,
+      message,
+    })
   }
 )
