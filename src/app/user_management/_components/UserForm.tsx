@@ -12,6 +12,7 @@ import { styleInputMargin, styleMinInputWidth } from '@/styles/style'
 import { PrimarySelectBox } from '@/components/elements/selectBox/PrimarySelectBox'
 import { convertUserRole } from '@/utils/converter'
 import { USER_ROLE } from '@/utils/enum'
+import { ErrorMessageBox } from '@/components/elements/textBlock/ErrorMessageBox'
 
 type Props = {
   formType: 'create' | 'edit'
@@ -19,6 +20,9 @@ type Props = {
   formClassName?: string
   onSubmitCreate?: (data: CreateUserBody) => void
   onSubmitEdit?: (data: EditUserBody) => void
+  isError?: boolean
+  submitErrorMessage?: string
+  isLoading?: boolean
 }
 
 const permissionItems = Object.keys(convertUserRole).map((key) => ({
@@ -33,6 +37,9 @@ export const UserForm = (props: Props) => {
     formClassName,
     onSubmitCreate,
     onSubmitEdit,
+    isError,
+    submitErrorMessage,
+    isLoading,
   } = props
   const {
     watch,
@@ -102,9 +109,15 @@ export const UserForm = (props: Props) => {
           {...register('permission')}
         />
       </FormLabel>
-
-      <div className="flex-center mt-[2em]">
+      <div className="flex-center flex-col">
+        {isError && (
+          <ErrorMessageBox customClassName="max-w-[400px]">
+            {submitErrorMessage}
+          </ErrorMessageBox>
+        )}
         <PrimaryBtn
+          customClassName="mt-[2em]"
+          isLoading={isLoading}
           btnColor="primary"
           btnProps={{
             type: 'submit',

@@ -51,14 +51,22 @@ export const UserList = (props: Props) => {
         toggleDeleteModal()
         toggleCompleteModal()
       },
+      onError: (error) => {
+        setEditErrorMessage(error.message)
+      },
     })
   }
 
   // 編集
-  const { mutate: mutateEdit, isPending: isLoadingEdit } = useMutateEditUser()
+  const {
+    mutate: mutateEdit,
+    isPending: isLoadingEdit,
+    isError: isErrorEdit,
+  } = useMutateEditUser()
   const { isOpenModal: isOpenEditModal, toggleModal: toggleEditModal } =
     useToggleModal()
   const [editId, setEditId] = useState<number>()
+  const [editErrorMessage, setEditErrorMessage] = useState('')
   const onSubmitEdit = (data: EditUserBody) => {
     if (!editId) return toggleEditModal()
     mutateEdit(
@@ -68,6 +76,10 @@ export const UserList = (props: Props) => {
           setCompleteMessage(COMPLETE_MESSAGE_EDIT)
           toggleEditModal()
           toggleCompleteModal()
+        },
+        onError: (error) => {
+          console.log(error)
+          setEditErrorMessage(error.message)
         },
       }
     )
@@ -139,6 +151,9 @@ export const UserList = (props: Props) => {
           defaultValues={userList?.find((user) => user.id === editId)}
           formClassName={styleModalFormWidth}
           onSubmitEdit={onSubmitEdit}
+          isLoading={isLoadingEdit}
+          isError={isErrorEdit}
+          submitErrorMessage={editErrorMessage}
         />
       </PrimaryModal>
 
@@ -148,6 +163,7 @@ export const UserList = (props: Props) => {
         handleToggleModal={toggleDeleteModal}
         onSubmit={onSubmitDelete}
         title={deleteTitle ? `${deleteTitle} を削除しますか？` : ''}
+        isLoading={isLoadingDelete}
       />
 
       {/* 完了モーダル */}

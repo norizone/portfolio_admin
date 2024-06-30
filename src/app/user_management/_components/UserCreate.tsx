@@ -15,16 +15,23 @@ export const UserCreate = () => {
   const router = useRouter()
   const { isOpenModal: isOpenCompleteModal, toggleModal: toggleCompleteModal } =
     useToggleModal()
-  const { mutate: mutateCreateUser, isPending: isLoadingCreateUser } =
-    useMutateCreateUser()
+  const {
+    mutate: mutateCreateUser,
+    isPending: isLoadingCreateUser,
+    isError: isErrorCreateUser,
+  } = useMutateCreateUser()
 
   const [isSuccess, setIsSuccess] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const onSubmit = (data: CreateUserBody) => {
     mutateCreateUser(data, {
       onSuccess: () => {
         toggleCompleteModal()
         setIsSuccess(true)
+      },
+      onError: (error) => {
+        setErrorMessage(error.message)
       },
     })
   }
@@ -35,6 +42,9 @@ export const UserCreate = () => {
         formType="create"
         formClassName={`mt-[2em] ${styleFormBgWhite} ${stylePageFormWidth}`}
         onSubmitCreate={onSubmit}
+        isLoading={isLoadingCreateUser}
+        isError={isErrorCreateUser}
+        submitErrorMessage={errorMessage}
       />
       <CompleteModal
         isOpen={isOpenCompleteModal}

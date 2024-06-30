@@ -22,6 +22,7 @@ import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import PrimaryModal from '@/components/elements/modal/PrimaryModal'
 import { ToolForm } from './ToolForm'
 import { styleModalFormWidth } from '@/styles/style'
+import { ErrorMessageBox } from '@/components/elements/textBlock/ErrorMessageBox'
 
 type Props = {
   SSRData: ToolData[]
@@ -62,8 +63,12 @@ export const ToolClient = (props: Props) => {
   }
 
   // 新規作成
-  const { mutate: mutateCreate, isPending: isLoadingCreate } =
-    useMutateCreateTool()
+  const {
+    mutate: mutateCreate,
+    isPending: isLoadingCreate,
+    isError: isErrorCreate,
+  } = useMutateCreateTool()
+  const [createErrorMessage, setCreateErrorMessage] = useState('')
   const { isOpenModal: isOpenCreateModal, toggleModal: toggleCreateModal } =
     useToggleModal()
   const onSubmitCreate = (data: CreateToolBody) => {
@@ -73,14 +78,25 @@ export const ToolClient = (props: Props) => {
         toggleCreateModal()
         toggleCompleteModal()
       },
+      onError: (error) => {
+        setCreateErrorMessage(error.message)
+      },
     })
   }
 
   // 編集
-  const { mutate: mutateUpdate, isPending: isLoadingUpdate } =
-    useMutateUpdateTools()
+  const {
+    mutate: mutateUpdate,
+    isPending: isLoadingUpdate,
+    isError: isErrorUpdate,
+  } = useMutateUpdateTools()
   const [isEditMode, setIsEditMode] = useState<boolean>(false)
+  const [editErrorMessage, setEditErrorMessage] = useState('')
   const [editData, setEditData] = useState<ToolData[]>([])
+  const handleEditMode = () => {
+    setIsEditMode(!isEditMode)
+    setEditErrorMessage('')
+  }
   const onSubmitEdit = () => {
     const emptyTools = editData.some((tool) => tool.toolName === '')
 
@@ -102,6 +118,9 @@ export const ToolClient = (props: Props) => {
           setCompleteMessage(COMPLETE_MESSAGE_EDIT)
           toggleCompleteModal()
         },
+        onError: (error) => {
+          setEditErrorMessage(error.message)
+        },
       }
     )
   }
@@ -111,11 +130,16 @@ export const ToolClient = (props: Props) => {
       <ToolListButtons
         onClickCreate={toggleCreateModal}
         isEditMode={isEditMode}
-        toggleEdit={() => setIsEditMode(!isEditMode)}
+        toggleEdit={handleEditMode}
         onClickSubmitEdit={onSubmitEdit}
         isLoadingUpdate={isLoadingUpdate}
         dataLength={toolListData?.length}
       />
+      {isEditMode && isErrorUpdate && (
+        <ErrorMessageBox customClassName="max-w-[400px] mx-auto mt-[2em]">
+          {editErrorMessage}
+        </ErrorMessageBox>
+      )}
       <ToolList
         toolItems={toolListData}
         isEditMode={isEditMode}
@@ -125,8 +149,14 @@ export const ToolClient = (props: Props) => {
         editData={editData}
       />
       {isEditMode && (
-        <div className="mt-[2em] flex-center">
+        <div className="mt-[2em] flex-center flex-col">
+          {isErrorUpdate && (
+            <ErrorMessageBox customClassName="max-w-[400px]">
+              {editErrorMessage}
+            </ErrorMessageBox>
+          )}
           <PrimaryBtn
+            customClassName="mt-[2em]"
             btnColor="primary"
             btnProps={{ type: 'button' }}
             onClick={onSubmitEdit}
@@ -140,12 +170,17 @@ export const ToolClient = (props: Props) => {
       {/* 新規作成モーダル */}
       <PrimaryModal
         isOpen={isOpenCreateModal}
-        handleToggleModal={toggleCreateModal}
+        handleToggleModal={() => {
+          toggleCreateModal()
+          setCreateErrorMessage('')
+        }}
       >
         <ToolForm
           formClassName={styleModalFormWidth}
           onSubmit={onSubmitCreate}
           isLoading={isLoadingCreate}
+          isError={isErrorCreate}
+          submitErrorMessage={createErrorMessage}
         />
       </PrimaryModal>
 

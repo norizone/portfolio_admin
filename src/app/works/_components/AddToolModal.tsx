@@ -18,10 +18,14 @@ type Props = {
 export const AddToolModal = (props: Props) => {
   const { isOpenCreateModal, toggleCreateModal } = props
   const [completeMessage, setCompleteMessage] = useState<string>()
+  const [createErrorMessage, setCreateErrorMessage] = useState('')
   const { isOpenModal: isOpenCompleteModal, toggleModal: toggleCompleteModal } =
     useToggleModal()
-  const { mutate: mutateCreate, isPending: isLoadingCreate } =
-    useMutateCreateTool()
+  const {
+    mutate: mutateCreate,
+    isPending: isLoadingCreate,
+    isError,
+  } = useMutateCreateTool()
   const onSubmitCreate = (data: CreateToolBody) => {
     mutateCreate(data, {
       onSuccess: () => {
@@ -29,20 +33,27 @@ export const AddToolModal = (props: Props) => {
         toggleCreateModal()
         toggleCompleteModal()
       },
+      onError: (error) => {
+        setCreateErrorMessage(error.message)
+      },
     })
+  }
+
+  const handleModal = () => {
+    toggleCreateModal()
+    setCreateErrorMessage('')
   }
 
   return (
     <>
       {/* 新規作成モーダル */}
-      <PrimaryModal
-        isOpen={isOpenCreateModal}
-        handleToggleModal={toggleCreateModal}
-      >
+      <PrimaryModal isOpen={isOpenCreateModal} handleToggleModal={handleModal}>
         <ToolForm
           formClassName={styleModalFormWidth}
           onSubmit={onSubmitCreate}
           isLoading={isLoadingCreate}
+          isError={isError}
+          submitErrorMessage={createErrorMessage}
         />
       </PrimaryModal>
 

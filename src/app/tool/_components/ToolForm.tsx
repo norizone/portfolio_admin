@@ -8,16 +8,27 @@ import { PrimaryInput } from '@/components/elements/input/PrimaryInput'
 import { CreateToolBody } from '@/types/api/admin'
 import { twMerge } from 'tailwind-merge'
 import { styleInputMargin } from '@/styles/style'
+import { ErrorMessageBox } from '@/components/elements/textBlock/ErrorMessageBox'
+import { useEffect } from 'react'
 
 type Props = {
   defaultValues?: CreateToolBody
   formClassName?: string
   onSubmit: (data: CreateToolBody) => void
   isLoading?: boolean
+  isError?: boolean
+  submitErrorMessage?: string
 }
 
 export const ToolForm = (props: Props) => {
-  const { defaultValues = {}, formClassName, onSubmit, isLoading } = props
+  const {
+    defaultValues = {},
+    formClassName,
+    onSubmit,
+    isLoading,
+    isError,
+    submitErrorMessage,
+  } = props
 
   const {
     register,
@@ -35,15 +46,13 @@ export const ToolForm = (props: Props) => {
     <form
       onSubmit={handleSubmit(handlerSubmit)}
       noValidate
-      className={twMerge(
-        'text-left flex flex-col gap-[2em] p-[5%] m-auto',
-        formClassName
-      )}
+      className={twMerge('text-left p-[5%] m-auto', formClassName)}
     >
       <FormLabel
         label="ツール名"
         required
         errorMessage={errors?.toolName?.message}
+        customClassName="mb-[2em]"
       >
         <PrimaryInput
           customClassName={styleInputMargin}
@@ -52,6 +61,12 @@ export const ToolForm = (props: Props) => {
           {...register('toolName')}
         />
       </FormLabel>
+
+      {isError && (
+        <ErrorMessageBox customClassName="">
+          {submitErrorMessage}
+        </ErrorMessageBox>
+      )}
 
       <div className="flex-center mt-[2em]">
         <PrimaryBtn
