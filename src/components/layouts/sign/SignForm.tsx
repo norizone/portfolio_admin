@@ -10,6 +10,8 @@ import { useMutateLogin, useMutateSignUp } from '@/hooks/api/admin.hooks'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { routers } from '@/routers/routers'
+import { ErrorMessageBox } from '@/components/elements/textBlock/ErrorMessageBox'
+import { PasswordInput } from '@/components/elements/input/PasswordInput'
 
 type Props = {
   formType: 'login' | 'signUp'
@@ -55,6 +57,7 @@ export const SignForm = (props: Props) => {
             router.replace(routers.DASHBOARD)
           },
           onError: (res) => {
+            console.log(res)
             setErrorMessage(res?.message)
           },
         })
@@ -72,6 +75,7 @@ export const SignForm = (props: Props) => {
           <PrimaryInput
             type="email"
             placeholder="example.mail.com"
+            autocomplete="email"
             {...register('email')}
           />
         </FormLabel>
@@ -81,10 +85,19 @@ export const SignForm = (props: Props) => {
           required
           errorMessage={errors?.password?.message}
         >
-          <PrimaryInput type="password" {...register('password')} />
+          <PasswordInput
+            autocomplete={
+              formType === 'signUp' ? 'new-password' : 'current-password'
+            }
+            {...register('password')}
+          />
         </FormLabel>
       </div>
-      {isLoginError || (isLSignUpError && <p>{errorMessage}</p>)}
+      {(isLoginError || isLSignUpError) && (
+        <ErrorMessageBox customClassName="mt-[1em]">
+          {errorMessage}
+        </ErrorMessageBox>
+      )}
       <div className="mt-[2em] flex-center">
         <PrimaryBtn
           isLoading={isLoginPending || isSignUpPending}
