@@ -1,5 +1,10 @@
 'use client'
-import { InputHTMLAttributes, HTMLInputTypeAttribute, forwardRef } from 'react'
+import {
+  InputHTMLAttributes,
+  HTMLInputAutoCompleteAttribute,
+  HTMLInputTypeAttribute,
+  forwardRef,
+} from 'react'
 
 export type BaseInputProps = {
   type: HTMLInputTypeAttribute
@@ -11,6 +16,7 @@ export type BaseInputProps = {
   inputClassName: string
   inputProps?: InputHTMLAttributes<HTMLInputElement>
   defaultValue?: string | number
+  autocomplete?: HTMLInputAutoCompleteAttribute
 }
 
 export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
@@ -25,7 +31,19 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       inputClassName,
       inputProps,
       defaultValue,
+      autocomplete,
     } = props
+
+    // type="number"でスクロール対策
+    const onWheelHandler = (e: React.WheelEvent<HTMLInputElement>) => {
+      e.currentTarget.blur()
+      e.stopPropagation()
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      ;['-', '+', 'e', 'E'].includes(e.key) && e.preventDefault()
+    }
+
     return (
       <input
         type={type}
@@ -35,6 +53,9 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         disabled={disabled}
         value={value}
         defaultValue={defaultValue}
+        autoComplete={autocomplete}
+        // onWheel={onWheelHandler}
+        // onKeyDown={type==='number' ? handleKeyDown : ()=>{}}
         {...inputProps}
         ref={ref}
         className={inputClassName}

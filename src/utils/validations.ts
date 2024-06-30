@@ -14,6 +14,9 @@ const requiredMessage = (title: string, type: 'input' | 'select' = 'input') => {
   }
 }
 
+/**
+ * image_file
+ */
 export const fileSchema = yup
   .mixed<File>()
   .test({
@@ -38,18 +41,16 @@ export const fileSchema = yup
     },
   })
 
-export const loginSchema = yup.object({
-  email: yup
-    .string()
-    .email('無効なメールアドレスです')
-    .required(requiredMessage('メールアドレス')),
-  password: yup.string().required(requiredMessage('パスワード')),
-})
-
+/**
+ * tool フォーム
+ */
 export const createToolSchema = yup.object({
   toolName: yup.string().required(requiredMessage('ツール名')),
 })
 
+/**
+ * works フォーム
+ */
 export const createWorks = yup.object({
   permission: yup
     .number()
@@ -78,14 +79,31 @@ export const createWorks = yup.object({
   singleImgSub2: fileSchema.nullable(),
 })
 
+/**
+ * userフォーム
+ */
 export const createUserSchema = yup.object({
   email: yup
     .string()
     .email('無効なメールアドレスです')
     .required(requiredMessage('メールアドレス')),
-  password: yup.string().min(5).required(requiredMessage('パスワード')),
+  password: yup
+    .string()
+    .required(requiredMessage('パスワード'))
+    .min(5, '５文字以上入力してください'),
   permission: yup
     .number()
     .typeError(requiredMessage('権限', 'select'))
     .required(requiredMessage('権限', 'select')),
+})
+
+/**
+ * loginフォーム
+ */
+export const loginSchema = yup.object({
+  email: yup
+    .string()
+    .email('無効なメールアドレスです')
+    .required(requiredMessage('メールアドレス')),
+  password: yup.string().required(requiredMessage('パスワード')),
 })
