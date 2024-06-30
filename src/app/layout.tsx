@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { Montserrat, Noto_Sans_JP } from 'next/font/google'
 import './globals.css'
-import { QueryProviders } from '@/providers/QueryProvider'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient } from '@tanstack/react-query'
 import Template from './templete'
+import Providers from '@/providers/Providers'
 
 const NotoSans = Noto_Sans_JP({
   weight: ['300', '700'],
@@ -38,10 +38,10 @@ export default function RootLayout({
       <body
         className={`${NotoSans.variable} ${montserrat.variable} font-sm font-jp bg-background text-fc font-normal min-w-[1200px] overflow-auto`}
       >
-        <QueryProviders>
+        <Providers>
           <Template>{children}</Template>
           <ReactQueryDevtools />
-        </QueryProviders>
+        </Providers>
       </body>
     </html>
   )

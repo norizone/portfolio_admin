@@ -8,3 +8,8 @@ export const logout = async (): Promise<any> => {
     await getCrfToken()
   )
 }
+
+export const getAuth = async (): Promise<any> => {
+  const res = await axiosClient.get('/auth', await getCrfToken())
+  return res.data
+}
