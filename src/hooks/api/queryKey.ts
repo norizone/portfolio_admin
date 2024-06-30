@@ -23,3 +23,7 @@ export const userKeys = {
   details: () => [...userKeys.all, 'detail'] as const,
   detail: (id: number) => [...userKeys.details(), id] as const,
 }
+
+export const ddashboardKey = {
+  all: ['ddashboard'] as const,
+}
