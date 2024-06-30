@@ -1,10 +1,10 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
 import { ToolClient } from './_components/ToolClient'
-import axios from 'axios'
+
 import { cookies } from 'next/headers'
-import { ADMIN_API_URL } from '@/utils/const'
 import { ToolData } from '@/types/api/admin'
+import { axiosClient } from '@/utils/axios'
 
 export const metadata: Metadata = {
   title: 'ツール一覧',
@@ -15,7 +15,7 @@ const getToolList = async (): Promise<ToolData[]> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.get(`${ADMIN_API_URL}/tool/list`, {
+    const res = await axiosClient.get(`/tool`, {
       headers: { cookie },
     })
     return res.data

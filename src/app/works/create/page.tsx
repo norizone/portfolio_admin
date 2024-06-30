@@ -16,7 +16,7 @@ const getToolList = async (): Promise<ToolData[]> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.get(`${ADMIN_API_URL}/tool/list`, {
+    const res = await axios.get(`${ADMIN_API_URL}/tools`, {
       headers: { cookie },
     })
     return res.data
