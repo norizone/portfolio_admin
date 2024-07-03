@@ -11,7 +11,9 @@ import { LogoutModal } from '@/components/elements/modal/LogoutModal'
 import { useToggleModal } from '@/hooks/useToggleModal'
 import { useMutationLogout } from '@/hooks/api/admin.hooks'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
+import { twMerge } from 'tailwind-merge'
+import clsx from 'clsx'
 
 const MENU_LIST = [
   {
@@ -53,6 +55,8 @@ export const SideBar = () => {
     toggleCompleteModal()
     router.replace(routers.LOGIN)
   }
+  const pathname = usePathname()
+  const parentPath = `/${pathname.split('/')[1] ?? ''}`
 
   const onLogout = () => {
     // TODO:UI 成功した場合モーダル変更 errorの場合はそのままのモーダルでエラーメッセージ表示？
@@ -89,7 +93,13 @@ export const SideBar = () => {
               <li className="" key={index}>
                 <Link
                   href={menu.url}
-                  className={`${xWrap} py-[.5em] grid grid-cols-[1em_1fr] gap-x-[2em] fill-black hover:fill-primary transition-all bg-transparent hover:bg-hover`}
+                  className={twMerge(
+                    `${xWrap} py-[.5em] grid grid-cols-[1em_1fr] gap-x-[2em] fill-black hover:fill-primary transition-all bg-transparent hover:bg-hover`,
+                    clsx(
+                      menu.url === parentPath && 'fill-primary bg-hover',
+                      menu.url === pathname && 'cursor-default'
+                    )
+                  )}
                 >
                   <span>{menu.icon}</span>
                   <span>{menu.title}</span>
