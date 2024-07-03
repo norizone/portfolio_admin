@@ -24,7 +24,13 @@ export function middleware(request: NextRequest) {
       const res = await axios.get(`${ADMIN_API_URL}/auth`, {
         headers: { cookie },
       })
-      return response
+      if (res.status === 200) {
+        return response
+      } else {
+        return NextResponse.redirect(
+          `${request.nextUrl.origin}${routers.LOGIN}`
+        )
+      }
     } catch (error) {
       return NextResponse.redirect(`${request.nextUrl.origin}${routers.LOGIN}`)
     }

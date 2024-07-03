@@ -11,11 +11,6 @@ export const metadata: Metadata = {
   title: '管理者情報',
 }
 
-const getAuth = async (): Promise<any> => {
-  const token = cookies().get('access_token')
-  if (!token) redirect('/login')
-}
-
 const getDashboard = async (): Promise<any> => {
   const cookie = cookies()
     .getAll()
@@ -27,7 +22,7 @@ const getDashboard = async (): Promise<any> => {
     })
     return res.data
   } catch (error) {
-    redirect('/login')
+    return []
   }
 }
 
@@ -42,12 +37,11 @@ const getAuthData = async (): Promise<any> => {
     })
     return res.data
   } catch (error) {
-    redirect('/login')
+    return []
   }
 }
 
 export default async function Home() {
-  const token = await getAuth()
   const userData = await getAuthData()
   const accountData = [
     ,
