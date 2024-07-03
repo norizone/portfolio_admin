@@ -24,6 +24,10 @@ export const userKeys = {
   detail: (id: number) => [...userKeys.details(), id] as const,
 }
 
-export const ddashboardKey = {
-  all: ['ddashboard'] as const,
+export const dashboard = {
+  all: ['dashboard'] as const,
+}
+
+export const auth = {
+  all: ['auth'] as const,
 }

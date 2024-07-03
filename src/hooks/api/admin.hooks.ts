@@ -15,13 +15,17 @@ import { Tool, User, Work } from '@prisma/client'
 import { getCrfToken } from './useGetToken'
 import { CreateUserBody, UserData } from '@/types/api/admin'
 import { axiosClient } from '@/utils/axios'
-import { toolKeys, workKeys, userKeys, ddashboardKey } from './queryKey'
+import { toolKeys, workKeys, userKeys, dashboard, auth } from './queryKey'
 import { getAuth } from './admin.api'
 
-export const useGetAuth = () => {
+export const useGetAuth = (enabled: boolean = true) => {
   return useQuery({
-    queryKey: ['auth'],
-    queryFn: getAuth,
+    queryKey: auth.all,
+    queryFn: async (): Promise<any> => {
+      const res = await axiosClient.get('/auth', await getCrfToken())
+      return res.data
+    },
+    enabled,
   })
 }
 
@@ -260,13 +264,13 @@ export const useMutateUpdateTools = () => {
   })
 }
 
-// ddashboard
+// dashboard
 export const useGetDashBordData = () => {
   return useQuery({
     queryFn: async (): Promise<any> => {
-      const res = await axiosClient.get(`/ddashboard`, await getCrfToken())
+      const res = await axiosClient.get(`/dashboard`, await getCrfToken())
       return res.data
     },
-    queryKey: ddashboardKey.all,
+    queryKey: dashboard.all,
   })
 }
