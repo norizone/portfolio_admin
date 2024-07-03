@@ -4,9 +4,16 @@ import { Metadata } from 'next'
 import axios from 'axios'
 import { cookies } from 'next/headers'
 import { ADMIN_API_URL } from '@/utils/const'
+import { axiosClient } from '@/utils/axios'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: '管理者情報',
+}
+
+const getAuth = async (): Promise<any> => {
+  const token = cookies().get('access_token')
+  if (!token) redirect('/login')
 }
 
 const getDashboard = async (): Promise<any> => {
@@ -15,12 +22,12 @@ const getDashboard = async (): Promise<any> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.get(`${ADMIN_API_URL}/dashboard`, {
+    const res = await axiosClient.get(`${ADMIN_API_URL}/dashboard`, {
       headers: { cookie },
     })
     return res.data
   } catch (error) {
-    return {}
+    redirect('/login')
   }
 }
 
@@ -35,11 +42,12 @@ const getAuthData = async (): Promise<any> => {
     })
     return res.data
   } catch (error) {
-    return {}
+    redirect('/login')
   }
 }
 
 export default async function Home() {
+  const token = await getAuth()
   const userData = await getAuthData()
   const accountData = [
     ,
