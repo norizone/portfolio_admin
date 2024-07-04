@@ -9,9 +9,16 @@ export type ListBody = {
 }
 
 /**
+ * auth
+ */
+export type AuthData = {
+  id?: number
+  email?: string
+}
+
+/**
  * login
  */
-
 export type LoginBody = {
   email: string
   password: string
@@ -81,3 +88,12 @@ export type UpdateToolsBody = {
 }
 
 export type DeleteToolParams = Pick<ToolData, 'id'>
+
+/**
+ * Dashboard
+ */
+export type ResDashboardData = {
+  workCount?: number
+  userCount?: number
+  toolCount?: number
+}

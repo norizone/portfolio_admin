@@ -1,11 +1,13 @@
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import {
+  AuthData,
   CreateToolBody,
   CreateWorkBody,
   EditUserBody,
   ListBody,
   LoginBody,
+  ResDashboardData,
   ToolData,
   UpdateToolsBody,
   WorkListRes,
@@ -21,7 +23,7 @@ import { getAuth } from './admin.api'
 export const useGetAuth = (enabled: boolean = true) => {
   return useQuery({
     queryKey: auth.all,
-    queryFn: async (): Promise<any> => {
+    queryFn: async (): Promise<AuthData> => {
       const res = await axiosClient.get('/auth', await getCrfToken())
       return res.data
     },
@@ -34,11 +36,11 @@ export const useGetAuth = (enabled: boolean = true) => {
 */
 export const useMutateSignUp = () => {
   return useMutation({
-    mutationFn: async (data: LoginBody): Promise<any> => {
+    mutationFn: async (data: LoginBody): Promise<AuthData> => {
       const res = await axiosClient.post(
         `/auth/signup`,
         data,
-        await getCrfToken()
+        await getCrfToken(),
       )
       return res.data
     },
@@ -47,11 +49,11 @@ export const useMutateSignUp = () => {
 
 export const useMutateLogin = () => {
   return useMutation({
-    mutationFn: async (data: LoginBody): Promise<any> => {
+    mutationFn: async (data: LoginBody): Promise<AuthData> => {
       const res = await axiosClient.post(
         `/auth/login`,
         data,
-        await getCrfToken()
+        await getCrfToken(),
       )
       return res.data
     },
@@ -60,11 +62,11 @@ export const useMutateLogin = () => {
 
 export const useMutationLogout = () => {
   return useMutation({
-    mutationFn: async (): Promise<any> => {
+    mutationFn: async (): Promise<void> => {
       const res = await axiosClient.post(
         `/auth/logout`,
         undefined,
-        await getCrfToken()
+        await getCrfToken(),
       )
     },
   })
@@ -90,7 +92,7 @@ export const useMutateCreateUser = () => {
       const res = await axiosClient.post(
         `/user/create`,
         data,
-        await getCrfToken()
+        await getCrfToken(),
       )
       return res.data
     },
@@ -107,7 +109,7 @@ export const useMutateEditUser = () => {
       const res = await axiosClient.patch(
         `/user/edit/${params.userId}`,
         params.body,
-        await getCrfToken()
+        await getCrfToken(),
       )
       return res.data
     },
@@ -123,7 +125,7 @@ export const useMutateDeleteUser = () => {
     mutationFn: async (userId: number): Promise<void> => {
       const res = await axiosClient.delete(
         `/user/delete/${userId}`,
-        await getCrfToken()
+        await getCrfToken(),
       )
     },
     onSuccess: () => {
@@ -142,7 +144,7 @@ export const useGetWorkList = (ListBody: ListBody, SSRData?: WorkListRes) => {
       const res = await axiosClient.post(
         `/work/list`,
         ListBody,
-        await getCrfToken()
+        await getCrfToken(),
       )
       return res.data
     },
@@ -156,7 +158,7 @@ export const useGetWork = (id: number, SSRData?: Work) => {
     queryFn: async (): Promise<Work> => {
       const res = await axiosClient.get(
         `/work/detail/${id}`,
-        await getCrfToken()
+        await getCrfToken(),
       )
       return res.data
     },
@@ -185,7 +187,7 @@ export const useMutateCreateWork = () => {
       const res = await axiosClient.post(
         `/work/create`,
         data,
-        await getCrfToken()
+        await getCrfToken(),
       )
       return res.data
     },
@@ -217,7 +219,7 @@ export const useMutateDeleteTool = () => {
     mutationFn: async (id: number) => {
       const res = await axiosClient.delete(
         `/tool/delete/${id}`,
-        await getCrfToken()
+        await getCrfToken(),
       )
       return res.data
     },
@@ -235,7 +237,7 @@ export const useMutateCreateTool = () => {
       const res = await axiosClient.post(
         `/tool/create`,
         body,
-        await getCrfToken()
+        await getCrfToken(),
       )
       return res.data
     },
@@ -254,7 +256,7 @@ export const useMutateUpdateTools = () => {
       const res = await axiosClient.patch(
         `/tool/edit`,
         body,
-        await getCrfToken()
+        await getCrfToken(),
       )
       return res.data
     },
@@ -267,7 +269,7 @@ export const useMutateUpdateTools = () => {
 // dashboard
 export const useGetDashBordData = () => {
   return useQuery({
-    queryFn: async (): Promise<any> => {
+    queryFn: async (): Promise<ResDashboardData> => {
       const res = await axiosClient.get(`/dashboard`, await getCrfToken())
       return res.data
     },

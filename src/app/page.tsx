@@ -6,12 +6,13 @@ import { cookies } from 'next/headers'
 import { ADMIN_API_URL } from '@/utils/const'
 import { axiosClient } from '@/utils/axios'
 import { redirect } from 'next/navigation'
+import { AuthData, ResDashboardData } from '@/types/api/admin'
 
 export const metadata: Metadata = {
   title: '管理者情報',
 }
 
-const getDashboard = async (): Promise<any> => {
+const getDashboard = async (): Promise<ResDashboardData> => {
   const cookie = cookies()
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
@@ -22,11 +23,11 @@ const getDashboard = async (): Promise<any> => {
     })
     return res.data
   } catch (error) {
-    return []
+    return {}
   }
 }
 
-const getAuthData = async (): Promise<any> => {
+const getAuthData = async (): Promise<AuthData> => {
   const cookie = cookies()
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
@@ -37,7 +38,7 @@ const getAuthData = async (): Promise<any> => {
     })
     return res.data
   } catch (error) {
-    return []
+    return {}
   }
 }
 
@@ -53,12 +54,12 @@ export default async function Home() {
   const countData = [
     {
       title: '制作実績',
-      count: data.workCount,
+      count: data?.workCount ?? 0,
     },
-    { title: 'ユーザー', count: data.userCount },
+    { title: 'ユーザー', count: data?.userCount ?? 0 },
     {
       title: 'ツール',
-      count: data.toolCount,
+      count: data?.toolCount ?? 0,
     },
   ]
 
