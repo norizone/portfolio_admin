@@ -1,10 +1,10 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
-import { WorkForm } from '../_components/WorkForm'
+import { WorkForm } from '../../../features/works/main/components/WorkForm'
 import type { Metadata } from 'next'
 import axios from 'axios'
 import { cookies } from 'next/headers'
-import { ADMIN_API_URL } from '@/utils/const'
 import { ToolData } from '@/types/api/admin'
+import { baseURL, toolApiUrl } from '@/utils/apiUrl'
 
 export const metadata: Metadata = {
   title: '新規作成',
@@ -16,7 +16,7 @@ const getToolList = async (): Promise<ToolData[]> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.get(`${ADMIN_API_URL}/tools`, {
+    const res = await axios.get(`${baseURL}${toolApiUrl.all}`, {
       headers: { cookie },
     })
     return res.data

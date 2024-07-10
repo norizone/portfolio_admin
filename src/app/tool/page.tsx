@@ -1,6 +1,6 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
-import { ToolClient } from './_components/ToolClient'
+import { ToolClient } from '../../features/tool/root/components/ToolClient'
 
 import { cookies } from 'next/headers'
 import { ToolData } from '@/types/api/admin'

@@ -1,6 +1,6 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
-import { UserCreate } from '../_components/UserCreate'
+import { UserCreate } from '../../../features/user/create/components/UserCreate'
 
 export const metadata: Metadata = {
   title: 'ユーザー新規作成',

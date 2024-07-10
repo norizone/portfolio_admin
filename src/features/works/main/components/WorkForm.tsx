@@ -200,7 +200,7 @@ export const WorkForm = (props: Props) => {
           <div
             className={twMerge(
               'grid grid-cols-[repeat(4,max-content)] gap-y-[1em] w-full px-[.4em] justify-between max-w-[800px]',
-              styleInputMargin
+              styleInputMargin,
             )}
           >
             {toolItems?.length > 0 &&

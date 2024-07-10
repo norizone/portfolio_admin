@@ -1,5 +1,5 @@
 'use client'
-import { ToolForm } from '@/app/tool/_components/ToolForm'
+import { ToolForm } from '@/components/organism/form/ToolForm'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
 import PrimaryModal from '@/components/elements/modal/PrimaryModal'

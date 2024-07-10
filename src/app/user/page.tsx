@@ -1,7 +1,7 @@
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import Link from 'next/link'
-import { UserList } from './_components/UserList'
+import { UserList } from '../../features/user/root/components/UserList'
 import { routers } from '@/routers/routers'
 import { Metadata } from 'next'
 import { cookies } from 'next/headers'

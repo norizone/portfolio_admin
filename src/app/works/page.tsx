@@ -2,9 +2,8 @@ import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import Link from 'next/link'
 import { routers } from '@/routers/routers'
 import type { Metadata } from 'next'
-import { WorkList } from './_components/WorkList'
+import { WorkList } from '../../features/works/root/components/WorkList'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
-import { Work } from '@prisma/client'
 import axios from 'axios'
 import { cookies } from 'next/headers'
 import { ADMIN_API_URL } from '@/utils/const'
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
   title: '制作実績一覧',
 }
 
-const PAGE_SiZE = 1
+const PAGE_SiZE = 10
 const DEFAULT_PAGE = 1
 
 const getWorkList = async (): Promise<WorkListRes> => {
@@ -31,7 +30,7 @@ const getWorkList = async (): Promise<WorkListRes> => {
       },
       {
         headers: { cookie },
-      }
+      },
     )
     return res.data
   } catch (error) {
@@ -61,7 +60,11 @@ export default async function Works() {
           新規作成
         </PrimaryBtn>
       </div>
-      <WorkList SSRData={dataWorkList} pageSize={1} defaultPage={1} />
+      <WorkList
+        SSRData={dataWorkList}
+        pageSize={PAGE_SiZE}
+        defaultPage={DEFAULT_PAGE}
+      />
     </section>
   )
 }

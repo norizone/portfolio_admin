@@ -9,7 +9,6 @@ import { CreateToolBody } from '@/types/api/admin'
 import { twMerge } from 'tailwind-merge'
 import { styleInputMargin } from '@/styles/style'
 import { ErrorMessageBox } from '@/components/elements/textBlock/ErrorMessageBox'
-import { useEffect } from 'react'
 
 type Props = {
   defaultValues?: CreateToolBody

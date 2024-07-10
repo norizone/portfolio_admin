@@ -17,7 +17,7 @@ type Props = {
   formType: 'login' | 'signUp'
 }
 
-export const SignForm = (props: Props) => {
+export const AuthForm = (props: Props) => {
   const { formType = 'login' } = props
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState<string>('')

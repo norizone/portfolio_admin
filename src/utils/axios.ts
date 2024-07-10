@@ -1,10 +1,10 @@
 import { logout } from '@/hooks/api/admin.api'
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
+import { baseURL } from './apiUrl'
 // import { authLogout } from '@/hooks/api/auth'
 
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
-
 export const axiosClient: AxiosInstance = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/admin`,
+  baseURL: baseURL,
   withCredentials: true,
 })
 
@@ -17,7 +17,7 @@ axiosClient.interceptors.response.use(
       error?: string
       message?: string
       statusCode?: number
-    }>
+    }>,
   ) => {
     let message = ''
     switch (error?.response?.status) {
@@ -41,5 +41,5 @@ axiosClient.interceptors.response.use(
       ...error.response?.data,
       message,
     })
-  }
+  },
 )

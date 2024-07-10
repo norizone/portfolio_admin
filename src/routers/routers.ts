@@ -5,7 +5,7 @@ export const routers = {
   WORKS: '/works',
   WORKS_CREATE: '/works/create',
   WORKS_EDIT: '/works/edit/', //id
-  USER_MANAGEMENT: '/user_management',
-  USER_CREATE: '/user_management/create',
+  USER_MANAGEMENT: '/user',
+  USER_CREATE: '/user/create',
   TOOL: '/tool',
 } as const

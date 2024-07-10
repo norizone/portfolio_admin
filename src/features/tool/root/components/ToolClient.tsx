@@ -20,7 +20,7 @@ import {
 } from '@/utils/const'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import PrimaryModal from '@/components/elements/modal/PrimaryModal'
-import { ToolForm } from './ToolForm'
+import { ToolForm } from '../../../../components/organism/form/ToolForm'
 import { styleModalFormWidth } from '@/styles/style'
 import { ErrorMessageBox } from '@/components/elements/textBlock/ErrorMessageBox'
 
@@ -121,7 +121,7 @@ export const ToolClient = (props: Props) => {
         onError: (error) => {
           setEditErrorMessage(error.message)
         },
-      }
+      },
     )
   }
 

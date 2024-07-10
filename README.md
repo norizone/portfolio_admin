@@ -14,6 +14,6 @@ bun dev
 
 ## component
 
-- Base~ リセット以外の style をつけない
-- layouts/ レイアウトに使うもの component 内 api 処理可能
-- elements/　 component 内 api 処理させない
+- Base~ リセット以外のstyleをつけない
+- layouts/ レイアウトに使うもの component内でapi処理可能
+- elements/　 component内api処理させない

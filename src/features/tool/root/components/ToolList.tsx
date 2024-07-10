@@ -45,7 +45,7 @@ export const ToolList = (props: Props) => {
       ? editData.map((tool) =>
           tool.id === editTool.id
             ? { ...tool, toolName: editTool.toolName }
-            : tool
+            : tool,
         )
       : [...editData, editTool]
 

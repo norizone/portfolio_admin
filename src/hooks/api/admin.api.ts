@@ -6,11 +6,11 @@ export const logout = async (): Promise<void> => {
   const res = await axiosClient.post(
     `/auth/logout`,
     undefined,
-    await getCrfToken(),
+    // await getCrfToken(),
   )
 }
 
 export const getAuth = async (): Promise<AuthData> => {
-  const res = await axiosClient.get('/auth', await getCrfToken())
+  const res = await axiosClient.get('/auth')
   return res.data
 }
