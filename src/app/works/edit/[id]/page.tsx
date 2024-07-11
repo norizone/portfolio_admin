@@ -9,6 +9,7 @@ import { EditWork } from '../../../../features/works/edit/components/EditWork'
 import { Work } from '@prisma/client'
 import { notFound } from 'next/navigation'
 import { baseURL, toolApiUrl, workApiUrl } from '@/utils/apiUrl'
+import { axiosClient } from '@/utils/axios'
 
 export const metadata: Metadata = {
   title: '制作実績 編集',
@@ -22,14 +23,16 @@ const getSSRData = async (
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const toolRes = await axios.get(`${baseURL}${toolApiUrl.all}`, {
-      headers: { cookie },
-    })
-    const workRes = await axios.get(`${baseURL}${workApiUrl.detail(id)}`, {
+    const toolRes = []
+    // await axiosClient.get(toolApiUrl.all(), {
+    //   headers: { cookie },
+    // })
+    const workRes = await axiosClient.get(workApiUrl.detail(id), {
       headers: { cookie },
     })
     return {
-      tool: toolRes.data,
+      tool: [],
+      // toolRes.data,
       work: workRes.data,
     }
   } catch (error) {
@@ -47,11 +50,7 @@ export default async function Works({ params }: { params: { id: string } }) {
         制作実績 編集
       </PrimaryHeadline>
       <div className="mt-[3em]">
-        <EditWork
-          SSRToolData={SSRData.tool}
-          SSRWorkData={SSRData.work}
-          id={Number(id)}
-        />
+        <EditWork SSRToolData={[]} SSRWorkData={SSRData.work} id={Number(id)} />
       </div>
     </section>
   )

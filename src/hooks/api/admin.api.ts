@@ -1,13 +1,10 @@
 import { axiosClient } from '@/utils/axios'
 import { getCrfToken } from './useGetToken'
 import { AuthData } from '@/types/api/admin'
+import { authApiUrl } from '@/utils/apiUrl'
 
 export const logout = async (): Promise<void> => {
-  const res = await axiosClient.post(
-    `/auth/logout`,
-    undefined,
-    // await getCrfToken(),
-  )
+  const res = await axiosClient.post(authApiUrl.logout(), undefined)
 }
 
 export const getAuth = async (): Promise<AuthData> => {

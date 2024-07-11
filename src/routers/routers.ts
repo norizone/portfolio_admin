@@ -8,4 +8,5 @@ export const routers = {
   USER_MANAGEMENT: '/user',
   USER_CREATE: '/user/create',
   TOOL: '/tool',
+  NOT_FOUND: '/404',
 } as const

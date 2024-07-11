@@ -8,6 +8,7 @@ import { cookies } from 'next/headers'
 import { ADMIN_API_URL } from '@/utils/const'
 import { UserData } from '@/types/api/admin'
 import axios from 'axios'
+import { notFound } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'ユーザー一覧',
@@ -24,7 +25,8 @@ const getUserList = async (): Promise<UserData[]> => {
     })
     return res.data
   } catch (error) {
-    return []
+    console.log(error)
+    notFound()
   }
 }
 
