@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { routers } from './routers/routers'
 import axios from 'axios'
-import { ADMIN_API_URL } from './utils/const'
+import { authApiUrl, baseURL } from './utils/apiUrl'
 
 export const config = {
   matcher: ['/((?!login|signup|_next/static|_next/image|favicon.ico).*)'],
@@ -21,14 +21,14 @@ export function middleware(request: NextRequest) {
       .map((cookie) => `${cookie.name}=${cookie.value}`)
       .join('; ')
     try {
-      const res = await axios.get(`${ADMIN_API_URL}/auth`, {
+      const res = await axios.get(`${baseURL}${authApiUrl.default}`, {
         headers: { cookie },
       })
       if (res.status === 200) {
         return response
       } else {
         return NextResponse.redirect(
-          `${request.nextUrl.origin}${routers.LOGIN}`
+          `${request.nextUrl.origin}${routers.LOGIN}`,
         )
       }
     } catch (error) {

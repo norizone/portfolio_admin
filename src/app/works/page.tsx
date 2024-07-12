@@ -6,8 +6,8 @@ import { WorkList } from '../../features/works/root/components/WorkList'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import axios from 'axios'
 import { cookies } from 'next/headers'
-import { ADMIN_API_URL } from '@/utils/const'
 import { WorkListRes } from '@/types/api/admin'
+import { baseURL, workApiUrl } from '@/utils/apiUrl'
 
 export const metadata: Metadata = {
   title: '制作実績一覧',
@@ -23,7 +23,7 @@ const getWorkList = async (): Promise<WorkListRes> => {
     .join('; ')
   try {
     const res = await axios.post(
-      `${ADMIN_API_URL}/work/list`,
+      `${baseURL}${workApiUrl.list()}`,
       {
         page: DEFAULT_PAGE,
         pageSize: PAGE_SiZE,

@@ -1,15 +1,13 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
-import { WorkForm } from '../../../../features/works/main/components/WorkForm'
+import { WorkForm } from '../../../../features/works/components/WorkForm'
 import axios from 'axios'
 import { cookies } from 'next/headers'
-import { ADMIN_API_URL } from '@/utils/const'
 import { ToolData } from '@/types/api/admin'
 import { EditWork } from '../../../../features/works/edit/components/EditWork'
 import { Work } from '@prisma/client'
 import { notFound } from 'next/navigation'
 import { baseURL, toolApiUrl, workApiUrl } from '@/utils/apiUrl'
-import { axiosClient } from '@/utils/axios'
 
 export const metadata: Metadata = {
   title: '制作実績 編集',
@@ -23,16 +21,14 @@ const getSSRData = async (
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const toolRes = []
-    // await axiosClient.get(toolApiUrl.all(), {
-    //   headers: { cookie },
-    // })
-    const workRes = await axiosClient.get(workApiUrl.detail(id), {
+    const toolRes = await axios.get(`${baseURL}${toolApiUrl.all()}`, {
+      headers: { cookie },
+    })
+    const workRes = await axios.get(`${baseURL}${workApiUrl.detail(id)}`, {
       headers: { cookie },
     })
     return {
-      tool: [],
-      // toolRes.data,
+      tool: toolRes.data,
       work: workRes.data,
     }
   } catch (error) {

@@ -5,10 +5,10 @@ import { UserList } from '../../features/user/root/components/UserList'
 import { routers } from '@/routers/routers'
 import { Metadata } from 'next'
 import { cookies } from 'next/headers'
-import { ADMIN_API_URL } from '@/utils/const'
 import { UserData } from '@/types/api/admin'
 import axios from 'axios'
 import { notFound } from 'next/navigation'
+import { baseURL, userApiUrl } from '@/utils/apiUrl'
 
 export const metadata: Metadata = {
   title: 'ユーザー一覧',
@@ -20,7 +20,7 @@ const getUserList = async (): Promise<UserData[]> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.get(`${ADMIN_API_URL}/user/list`, {
+    const res = await axios.get(`${baseURL}${userApiUrl.all()}`, {
       headers: { cookie },
     })
     return res.data

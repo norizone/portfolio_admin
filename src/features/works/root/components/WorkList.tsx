@@ -11,9 +11,12 @@ import { PUBLICATION_STATUS } from '@/utils/enum'
 import Link from 'next/link'
 import { routers } from '@/routers/routers'
 import { useToggleModal } from '@/hooks/useToggleModal'
-import { useGetWorkList } from '@/hooks/api/admin.hooks'
+import { useGetWorkList, useMutateDeleteWork } from '@/hooks/api/admin.hooks'
 import { styleTableTRPadding } from '@/styles/style'
 import { WorkListRes } from '@/types/api/admin'
+import { CompleteModal } from '@/components/elements/modal/CompletModal'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { workKeys } from '@/hooks/api/queryKey'
 
 type Props = {
   SSRData?: WorkListRes
@@ -32,13 +35,27 @@ export const WorkList = (props: Props) => {
   const { SSRData, pageSize = 1, defaultPage = 1 } = props
   const [page, setPage] = useState(defaultPage)
   const [deleteId, setDeleteId] = useState<number>()
+  const [selectTitle, setSelectTitle] = useState<string>()
   const { data, isPending } = useGetWorkList({ page, pageSize }, SSRData)
+  const queryClient = useQueryClient()
 
   const { isOpenModal: isOpenDeleteModal, toggleModal: toggleDeleteModal } =
     useToggleModal()
 
+  const { mutate: mutateDelete, isPending: isLoadingDelete } =
+    useMutateDeleteWork()
+
   const onDeleteSubmit = () => {
-    console.log(deleteId)
+    if (!deleteId) return
+    mutateDelete(deleteId, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: workKeys.list({ page, pageSize }),
+        })
+        toggleDeleteModal()
+      },
+      onError: () => {},
+    })
   }
 
   const tableColumns: ColumnsType<WorkList>[] = [
@@ -81,6 +98,7 @@ export const WorkList = (props: Props) => {
           customClassName={styleTableTRPadding}
           onClick={() => {
             toggleDeleteModal()
+            setSelectTitle(row.title)
             setDeleteId(row.id)
           }}
         />
@@ -103,9 +121,10 @@ export const WorkList = (props: Props) => {
         )}
       </div>
       <DeleteModal
+        title={`${selectTitle}を削除しますか？`}
         isOpen={isOpenDeleteModal}
         handleToggleModal={toggleDeleteModal}
-        onSubmit={() => {}}
+        onSubmit={onDeleteSubmit}
       />
     </>
   )

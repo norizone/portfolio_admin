@@ -1,7 +1,6 @@
 'use client'
 
 import { MainWrap } from '@/components/layouts/wrap/MainWrap'
-import { useRouter } from 'next/router'
 import { AuthWrap } from '@/components/layouts/wrap/AuthWrap'
 import { routers } from '@/routers/routers'
 import { usePathname } from 'next/navigation'

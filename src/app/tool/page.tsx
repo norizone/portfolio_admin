@@ -4,9 +4,9 @@ import { ToolClient } from '../../features/tool/root/components/ToolClient'
 
 import { cookies } from 'next/headers'
 import { ToolData } from '@/types/api/admin'
-import { axiosClient } from '@/utils/axios'
-import { toolApiUrl } from '@/utils/apiUrl'
+import { baseURL, toolApiUrl } from '@/utils/apiUrl'
 import { notFound } from 'next/navigation'
+import axios from 'axios'
 
 export const metadata: Metadata = {
   title: 'ツール一覧',
@@ -17,13 +17,13 @@ const getToolList = async (): Promise<ToolData[]> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axiosClient.get(toolApiUrl.all(), {
+    const res = await axios.get(`${baseURL}${toolApiUrl.all()}`, {
       headers: { cookie },
     })
     return res.data
   } catch (error) {
     console.log(error)
-    return []
+    notFound()
   }
 }
 

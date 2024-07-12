@@ -1,7 +1,7 @@
 'use client'
 
 import { useMutateCreateUser } from '@/hooks/api/admin.hooks'
-import { UserForm } from '../../main/components/UserForm'
+import { UserForm } from '../../components/UserForm'
 import { styleFormBgWhite, stylePageFormWidth } from '@/styles/style'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
 import { useToggleModal } from '@/hooks/useToggleModal'

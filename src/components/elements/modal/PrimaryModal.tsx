@@ -8,6 +8,7 @@ export type PrimaryModalProps = {
   children: ReactNode
   handleToggleModal: () => void
   isOpen: boolean
+  isBackgroundClose?: boolean
 }
 
 const customStyles = {
@@ -37,7 +38,12 @@ ReactModal.setAppElement('body')
 
 const PrimaryModal = forwardRef<HTMLElement, PrimaryModalProps>(
   (props: PrimaryModalProps, ref) => {
-    const { children, handleToggleModal, isOpen } = props
+    const {
+      children,
+      handleToggleModal,
+      isOpen,
+      isBackgroundClose = true,
+    } = props
 
     return (
       <FocusLock ref={ref}>
@@ -46,7 +52,9 @@ const PrimaryModal = forwardRef<HTMLElement, PrimaryModalProps>(
           after:absolute after:top-0 after:left-0 after:backdrop-blur-[12px] after:bg-[#ffffffb5] after:w-full after:h-full after:contents-[""] after:block after:z-[-1]'
           style={customStyles}
           isOpen={isOpen}
-          onRequestClose={handleToggleModal}
+          onRequestClose={() => {
+            isBackgroundClose && handleToggleModal()
+          }}
           contentLabel="Modal"
           ariaHideApp={false}
         >
@@ -83,7 +91,7 @@ const PrimaryModal = forwardRef<HTMLElement, PrimaryModalProps>(
         </ReactModal>
       </FocusLock>
     )
-  }
+  },
 )
 
 PrimaryModal.displayName = 'PrimaryModal'

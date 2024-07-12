@@ -1,4 +1,4 @@
-import { axiosClient } from '@/utils/axios'
+import { axiosClient } from '@/utils/axiosClient'
 import { getCrfToken } from './useGetToken'
 import { AuthData } from '@/types/api/admin'
 import { authApiUrl } from '@/utils/apiUrl'

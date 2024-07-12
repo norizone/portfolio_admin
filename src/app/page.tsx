@@ -3,10 +3,8 @@ import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import { Metadata } from 'next'
 import axios from 'axios'
 import { cookies } from 'next/headers'
-import { ADMIN_API_URL } from '@/utils/const'
-import { axiosClient } from '@/utils/axios'
-import { redirect } from 'next/navigation'
 import { AuthData, ResDashboardData } from '@/types/api/admin'
+import { authApiUrl, baseURL, dashboardApiUrl } from '@/utils/apiUrl'
 
 export const metadata: Metadata = {
   title: '管理者情報',
@@ -18,7 +16,7 @@ const getDashboard = async (): Promise<ResDashboardData> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axiosClient.get(`${ADMIN_API_URL}/dashboard`, {
+    const res = await axios.get(`${baseURL}${dashboardApiUrl.default}`, {
       headers: { cookie },
     })
     return res.data
@@ -33,7 +31,7 @@ const getAuthData = async (): Promise<AuthData> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.get(`${ADMIN_API_URL}/auth`, {
+    const res = await axios.get(`${baseURL}${authApiUrl.default}`, {
       headers: { cookie },
     })
     return res.data

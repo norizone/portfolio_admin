@@ -1,6 +1,6 @@
 'use client'
 
-import { WorkForm } from '@/features/works/main/components/WorkForm'
+import { WorkForm } from '@/features/works/components/WorkForm'
 import { useGetWork } from '@/hooks/api/admin.hooks'
 import { ToolData } from '@/types/api/admin'
 import { Work } from '@prisma/client'

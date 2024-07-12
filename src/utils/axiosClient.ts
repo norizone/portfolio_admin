@@ -1,3 +1,4 @@
+'use client'
 import { logout } from '@/hooks/api/admin.api'
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 import { baseURL } from './apiUrl'
@@ -36,7 +37,6 @@ axiosClient.interceptors.response.use(
       case 404:
         message =
           error.response?.data?.message ?? 'ページが見つかりませんでした'
-        Router.push(routers.NOT_FOUND)
       default:
         message = error.response?.data?.message ?? ''
         break

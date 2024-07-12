@@ -11,7 +11,7 @@ import { USER_ROLE } from '@/utils/enum'
 import { convertUserRole } from '@/utils/converter'
 import PrimaryModal from '@/components/elements/modal/PrimaryModal'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
-import { UserForm } from '../../main/components/UserForm'
+import { UserForm } from '../../components/UserForm'
 import { styleModalFormWidth, styleTableTRPadding } from '@/styles/style'
 import {
   useGetUserList,

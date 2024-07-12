@@ -23,6 +23,8 @@ import { selectItem } from '@/types/SelectItems'
 import { styleInputMargin, styleMinInputWidth } from '@/styles/style'
 import { AddToolModal } from './AddToolModal'
 import { useToggleModal } from '@/hooks/useToggleModal'
+import { routers } from '@/routers/routers'
+import { useRouter } from 'next/navigation'
 
 type Props = {
   formType: 'create' | 'edit'
@@ -53,6 +55,7 @@ const permissionItems = Object.keys(convertViewPermission).map((key) => ({
 
 export const WorkForm = (props: Props) => {
   const { defaultValues = {}, formType, SSRToolData } = props
+  const router = useRouter()
   const { isOpenModal: isOpenCreateModal, toggleModal: toggleCreateModal } =
     useToggleModal()
   const [toolItems, setToolItems] = useState<selectItem[]>([])
@@ -104,7 +107,15 @@ export const WorkForm = (props: Props) => {
           useTools,
           ...res,
         }
-        mutateCreateWork(body)
+        mutateCreateWork(body, {
+          onSuccess: (res) => {
+            console.log(res)
+            router.push(routers.WORKS)
+          },
+          onError: (error) => {
+            console.error('Error in mutateCreateWork:', error)
+          },
+        })
       },
     })
   }

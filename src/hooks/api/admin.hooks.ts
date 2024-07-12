@@ -16,7 +16,7 @@ import {
 import { Tool, User, Work } from '@prisma/client'
 import { getCrfToken } from './useGetToken'
 import { CreateUserBody, UserData } from '@/types/api/admin'
-import { axiosClient } from '@/utils/axios'
+import { axiosClient } from '@/utils/axiosClient'
 import { toolKeys, workKeys, userKeys, dashboard, auth } from './queryKey'
 import {
   authApiUrl,
