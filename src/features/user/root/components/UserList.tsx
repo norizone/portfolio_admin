@@ -1,25 +1,21 @@
 'use client'
 
-import { useState } from 'react'
 import { DeleteModal } from '@/components/elements/modal/DeleatModal'
 import PrimaryTable from '@/components/elements/table/PrimaryTable'
 import { EditBtn } from '@/components/elements/btn/EditBtn'
 import { DeleteBtn } from '@/components/elements/btn/DeleteBtn'
 import { ColumnsType } from '@/components/elements/table/PrimaryTable/type'
-import { useToggleModal } from '@/hooks/useToggleModal'
 import { USER_ROLE } from '@/utils/enum'
 import { convertUserRole } from '@/utils/converter'
 import PrimaryModal from '@/components/elements/modal/PrimaryModal'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
 import { UserForm } from '../../components/UserForm'
 import { styleModalFormWidth, styleTableTRPadding } from '@/styles/style'
-import {
-  useGetUserList,
-  useMutateDeleteUser,
-  useMutateEditUser,
-} from '@/hooks/api/admin.hooks'
-import { EditUserBody, UserData } from '@/types/api/admin'
-import { COMPLETE_MESSAGE_DELETE, COMPLETE_MESSAGE_EDIT } from '@/utils/const'
+import { useGetUserList } from '@/hooks/api/admin.hooks'
+import { UserData } from '@/types/api/admin'
+import { useCompleteModal } from '@/hooks/useCompleteModal'
+import { useDeleteUser } from '../hooks/useDeleteUser'
+import { useEditUser } from '../hooks/useEditUser'
 
 type Props = {
   SSRData: UserData[]
@@ -30,60 +26,32 @@ export const UserList = (props: Props) => {
   const { data: userList, isPending: isLoadingUserList } =
     useGetUserList(SSRData)
 
-  // 完了
-  const [completeMessage, setCompleteMessage] = useState<string>()
-  const { isOpenModal: isOpenCompleteModal, toggleModal: toggleCompleteModal } =
-    useToggleModal()
-
-  // 削除
-  const { mutate: mutateDelete, isPending: isLoadingDelete } =
-    useMutateDeleteUser()
-  const { isOpenModal: isOpenDeleteModal, toggleModal: toggleDeleteModal } =
-    useToggleModal()
-  const [deleteId, setDeleteId] = useState<number>()
-  const [deleteTitle, setDeleteTitle] = useState<string>()
-
-  const onSubmitDelete = () => {
-    if (!deleteId) return toggleDeleteModal()
-    mutateDelete(deleteId, {
-      onSuccess: () => {
-        setCompleteMessage(COMPLETE_MESSAGE_DELETE)
-        toggleDeleteModal()
-        toggleCompleteModal()
-      },
-      onError: (error) => {
-        setEditErrorMessage(error.message)
-      },
-    })
-  }
-
-  // 編集
   const {
-    mutate: mutateEdit,
-    isPending: isLoadingEdit,
-    isError: isErrorEdit,
-  } = useMutateEditUser()
-  const { isOpenModal: isOpenEditModal, toggleModal: toggleEditModal } =
-    useToggleModal()
-  const [editId, setEditId] = useState<number>()
-  const [editErrorMessage, setEditErrorMessage] = useState('')
-  const onSubmitEdit = (data: EditUserBody) => {
-    if (!editId) return toggleEditModal()
-    mutateEdit(
-      { userId: editId, body: data },
-      {
-        onSuccess: () => {
-          setCompleteMessage(COMPLETE_MESSAGE_EDIT)
-          toggleEditModal()
-          toggleCompleteModal()
-        },
-        onError: (error) => {
-          console.log(error)
-          setEditErrorMessage(error.message)
-        },
-      },
-    )
-  }
+    completeMessage,
+    setCompleteMessage,
+    isOpenCompleteModal,
+    toggleCompleteModal,
+  } = useCompleteModal()
+
+  const {
+    deleteTitle,
+    isLoadingDelete,
+    isOpenDeleteModal,
+    toggleDeleteModal,
+    onClickDelete,
+    onSubmitDelete,
+  } = useDeleteUser(setCompleteMessage, toggleCompleteModal)
+
+  const {
+    editId,
+    setEditId,
+    isLoadingEdit,
+    isErrorEdit,
+    isOpenEditModal,
+    toggleEditModal,
+    onSubmitEdit,
+    editErrorMessage,
+  } = useEditUser(setCompleteMessage, toggleCompleteModal)
 
   const tableColumns: ColumnsType<UserData>[] = [
     {
@@ -122,9 +90,7 @@ export const UserList = (props: Props) => {
         <DeleteBtn
           customClassName={styleTableTRPadding}
           onClick={() => {
-            toggleDeleteModal()
-            setDeleteTitle(row.email)
-            setDeleteId(row.id)
+            onClickDelete(row.id, row.email)
           }}
         />
       ),

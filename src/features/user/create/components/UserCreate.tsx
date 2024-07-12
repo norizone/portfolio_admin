@@ -1,54 +1,43 @@
 'use client'
 
-import { useMutateCreateUser } from '@/hooks/api/admin.hooks'
 import { UserForm } from '../../components/UserForm'
 import { styleFormBgWhite, stylePageFormWidth } from '@/styles/style'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
-import { useToggleModal } from '@/hooks/useToggleModal'
-import { COMPLETE_MESSAGE_CREATE } from '@/utils/const'
-import { CreateUserBody } from '@/types/api/admin'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { routers } from '@/routers/routers'
+import { useCompleteModal } from '@/hooks/useCompleteModal'
+import { useCreateUser } from '../hooks/useCreateUser'
 
 export const UserCreate = () => {
   const router = useRouter()
-  const { isOpenModal: isOpenCompleteModal, toggleModal: toggleCompleteModal } =
-    useToggleModal()
   const {
-    mutate: mutateCreateUser,
-    isPending: isLoadingCreateUser,
-    isError: isErrorCreateUser,
-  } = useMutateCreateUser()
+    completeMessage,
+    setCompleteMessage,
+    isOpenCompleteModal,
+    toggleCompleteModal,
+  } = useCompleteModal()
 
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-
-  const onSubmit = (data: CreateUserBody) => {
-    mutateCreateUser(data, {
-      onSuccess: () => {
-        toggleCompleteModal()
-        setIsSuccess(true)
-      },
-      onError: (error) => {
-        setErrorMessage(error.message)
-      },
-    })
-  }
+  const {
+    isSuccess,
+    isErrorCreate,
+    errorMessage,
+    isLoadingCreateUser,
+    onSubmitCreate,
+  } = useCreateUser(setCompleteMessage, toggleCompleteModal)
 
   return (
     <>
       <UserForm
         formType="create"
         formClassName={`mt-[2em] ${styleFormBgWhite} ${stylePageFormWidth}`}
-        onSubmitCreate={onSubmit}
+        onSubmitCreate={onSubmitCreate}
         isLoading={isLoadingCreateUser}
-        isError={isErrorCreateUser}
+        isError={isErrorCreate}
         submitErrorMessage={errorMessage}
       />
       <CompleteModal
         isOpen={isOpenCompleteModal}
-        completeText={COMPLETE_MESSAGE_CREATE}
+        completeText={completeMessage}
         handleToggleModal={() => {
           toggleCompleteModal()
           isSuccess && router.push(routers.USER_MANAGEMENT)

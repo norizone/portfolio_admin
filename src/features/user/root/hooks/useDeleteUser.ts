@@ -1,24 +1,27 @@
 import { useState } from 'react'
-import { useMutateDeleteTool } from '@/hooks/api/admin.hooks'
 import { useToggleModal } from '@/hooks/useToggleModal'
+import { useMutateDeleteUser } from '@/hooks/api/admin.hooks'
 import { COMPLETE_MESSAGE_DELETE } from '@/utils/const'
 
-export const useDeleteTool = (
+export const useDeleteUser = (
   setCompleteMessage: (message: string) => void,
   toggleCompleteModal: () => void,
 ) => {
-  const [deleteId, setDeleteId] = useState<number>()
-  const [deleteTitle, setDeleteTitle] = useState<string>()
   const { mutate: mutateDelete, isPending: isLoadingDelete } =
-    useMutateDeleteTool()
+    useMutateDeleteUser()
   const { isOpenModal: isOpenDeleteModal, toggleModal: toggleDeleteModal } =
     useToggleModal()
+  const [deleteId, setDeleteId] = useState<number>()
+  const [deleteTitle, setDeleteTitle] = useState<string>()
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState<string>('')
+
   const onClickDelete = (id: number, title: string) => {
     if (!id) return
     setDeleteId(id)
     setDeleteTitle(title)
     toggleDeleteModal()
   }
+
   const onSubmitDelete = () => {
     if (!deleteId) return toggleDeleteModal()
     mutateDelete(deleteId, {
@@ -26,6 +29,9 @@ export const useDeleteTool = (
         setCompleteMessage(COMPLETE_MESSAGE_DELETE)
         toggleDeleteModal()
         toggleCompleteModal()
+      },
+      onError: (error) => {
+        setDeleteErrorMessage(error.message)
       },
     })
   }
@@ -38,5 +44,6 @@ export const useDeleteTool = (
     toggleDeleteModal,
     onClickDelete,
     onSubmitDelete,
+    deleteErrorMessage,
   }
 }

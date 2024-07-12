@@ -3,7 +3,10 @@ import { useMutateUpdateTools } from '@/hooks/api/admin.hooks'
 import { COMPLETE_MESSAGE_EDIT } from '@/utils/const'
 import { ToolData } from '@/types/api/admin'
 
-export const useEditTool = () => {
+export const useEditTool = (
+  setCompleteMessage: (message: string) => void,
+  toggleCompleteModal: () => void,
+) => {
   const {
     mutate: mutateUpdate,
     isPending: isLoadingUpdate,
@@ -19,10 +22,7 @@ export const useEditTool = () => {
     setEditErrorMessage('')
   }
 
-  const onSubmitEdit = (
-    setCompleteMessage: (message: string) => void,
-    toggleCompleteModal: () => void,
-  ) => {
+  const onSubmitEdit = () => {
     const emptyTools = editData.some((tool) => tool.toolName === '')
 
     if (editData.length === 0) {

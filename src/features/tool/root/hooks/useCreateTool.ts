@@ -4,7 +4,10 @@ import { useMutateCreateTool } from '@/hooks/api/admin.hooks'
 import { COMPLETE_MESSAGE_CREATE } from '@/utils/const'
 import { CreateToolBody } from '@/types/api/admin'
 
-export const useCreateTool = () => {
+export const useCreateTool = (
+  setCompleteMessage: (message: string) => void,
+  toggleCompleteModal: () => void,
+) => {
   const [createErrorMessage, setCreateErrorMessage] = useState('')
   const {
     mutate: mutateCreate,
@@ -14,11 +17,7 @@ export const useCreateTool = () => {
   const { isOpenModal: isOpenCreateModal, toggleModal: toggleCreateModal } =
     useToggleModal()
 
-  const onSubmitCreate = (
-    data: CreateToolBody,
-    setCompleteMessage: (message: string) => void,
-    toggleCompleteModal: () => void,
-  ) => {
+  const onSubmitCreate = (data: CreateToolBody) => {
     mutateCreate(data, {
       onSuccess: () => {
         setCompleteMessage(COMPLETE_MESSAGE_CREATE)

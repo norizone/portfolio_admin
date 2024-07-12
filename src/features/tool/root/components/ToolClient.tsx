@@ -5,13 +5,13 @@ import { ToolListButtons } from './ToolListButtons '
 import { useGetToolList } from '@/hooks/api/admin.hooks'
 import { DeleteModal } from '@/components/elements/modal/DeleatModal'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
-import { CreateToolBody, ToolData } from '@/types/api/admin'
+import { ToolData } from '@/types/api/admin'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import PrimaryModal from '@/components/elements/modal/PrimaryModal'
 import { ToolForm } from '../../../../components/organism/form/ToolForm'
 import { styleModalFormWidth } from '@/styles/style'
 import { ErrorMessageBox } from '@/components/elements/textBlock/ErrorMessageBox'
-import { useCompleteModal } from '../hooks/useCompleteModal'
+import { useCompleteModal } from '@/hooks/useCompleteModal'
 import { useDeleteTool } from '../hooks/useDeleteTool'
 import { useCreateTool } from '../hooks/useCreateTool'
 import { useEditTool } from '../hooks/useEditTool'
@@ -33,14 +33,13 @@ export const ToolClient = (props: Props) => {
   } = useCompleteModal()
 
   const {
-    deleteId,
     deleteTitle,
     isLoadingDelete,
     isOpenDeleteModal,
     toggleDeleteModal,
     onClickDelete,
     onSubmitDelete,
-  } = useDeleteTool()
+  } = useDeleteTool(setCompleteMessage, toggleCompleteModal)
 
   const {
     createErrorMessage,
@@ -50,7 +49,7 @@ export const ToolClient = (props: Props) => {
     setCreateErrorMessage,
     toggleCreateModal,
     onSubmitCreate,
-  } = useCreateTool()
+  } = useCreateTool(setCompleteMessage, toggleCompleteModal)
 
   const {
     isEditMode,
@@ -61,19 +60,7 @@ export const ToolClient = (props: Props) => {
     editData,
     setEditData,
     onSubmitEdit,
-  } = useEditTool()
-
-  const handlerSubmitEdit = () => {
-    onSubmitEdit(setCompleteMessage, toggleCompleteModal)
-  }
-
-  const handlerSubmitCreate = (data: CreateToolBody) => {
-    onSubmitCreate(data, setCompleteMessage, toggleCompleteModal)
-  }
-
-  const handlerSubmitDelete = () => {
-    onSubmitDelete(setCompleteMessage, toggleCompleteModal)
-  }
+  } = useEditTool(setCompleteMessage, toggleCompleteModal)
 
   return (
     <>
@@ -81,7 +68,7 @@ export const ToolClient = (props: Props) => {
         onClickCreate={toggleCreateModal}
         isEditMode={isEditMode}
         toggleEdit={handleEditMode}
-        onClickSubmitEdit={handlerSubmitEdit}
+        onClickSubmitEdit={onSubmitEdit}
         isLoadingUpdate={isLoadingUpdate}
         dataLength={toolListData?.length}
       />
@@ -109,7 +96,7 @@ export const ToolClient = (props: Props) => {
             customClassName="mt-[2em]"
             btnColor="primary"
             btnProps={{ type: 'button' }}
-            onClick={handlerSubmitEdit}
+            onClick={onSubmitEdit}
             isLoading={isLoadingUpdate}
           >
             保存
@@ -127,7 +114,7 @@ export const ToolClient = (props: Props) => {
       >
         <ToolForm
           formClassName={styleModalFormWidth}
-          onSubmit={handlerSubmitCreate}
+          onSubmit={onSubmitCreate}
           isLoading={isLoadingCreate}
           isError={isErrorCreate}
           submitErrorMessage={createErrorMessage}
@@ -138,7 +125,8 @@ export const ToolClient = (props: Props) => {
       <DeleteModal
         isOpen={isOpenDeleteModal}
         handleToggleModal={toggleDeleteModal}
-        onSubmit={handlerSubmitDelete}
+        onSubmit={onSubmitDelete}
+        isLoading={isLoadingDelete}
         title={deleteTitle ? `${deleteTitle} を削除しますか？` : ''}
       />
 
