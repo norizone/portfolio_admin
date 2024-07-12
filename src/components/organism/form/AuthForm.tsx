@@ -14,13 +14,22 @@ import { ErrorMessageBox } from '@/components/elements/textBlock/ErrorMessageBox
 import { PasswordInput } from '@/components/elements/input/PasswordInput'
 
 type Props = {
-  formType: 'login' | 'signUp'
+  handlerSubmit: (data: LoginBody) => void
+  isLoading?: boolean
+  errorMessage?: string
+  isError?: boolean
+  formType?: 'signUp' | 'login'
 }
 
 export const AuthForm = (props: Props) => {
-  const { formType = 'login' } = props
-  const router = useRouter()
-  const [errorMessage, setErrorMessage] = useState<string>('')
+  const {
+    handlerSubmit,
+    isLoading,
+    errorMessage,
+    isError,
+    formType = 'login',
+  } = props
+
   const {
     register,
     handleSubmit,
@@ -30,37 +39,8 @@ export const AuthForm = (props: Props) => {
     resolver: yupResolver(loginSchema),
   })
 
-  const {
-    mutate: mutateLogin,
-    isPending: isLoginPending,
-    isError: isLoginError,
-  } = useMutateLogin()
-
-  const {
-    mutate: mutateSignUp,
-    isPending: isSignUpPending,
-    isError: isLSignUpError,
-  } = useMutateSignUp()
-
   const onSubmit = (data: LoginBody) => {
-    formType === 'signUp'
-      ? mutateSignUp(data, {
-          onSuccess: () => {
-            router.replace(routers.LOGIN)
-          },
-          onError: (res) => {
-            setErrorMessage(res?.message)
-          },
-        })
-      : mutateLogin(data, {
-          onSuccess: () => {
-            router.replace(routers.DASHBOARD)
-          },
-          onError: (res) => {
-            console.log(res)
-            setErrorMessage(res?.message)
-          },
-        })
+    handlerSubmit(data)
   }
 
   return (
@@ -93,14 +73,14 @@ export const AuthForm = (props: Props) => {
           />
         </FormLabel>
       </div>
-      {(isLoginError || isLSignUpError) && (
+      {isError && (
         <ErrorMessageBox customClassName="mt-[1em]">
           {errorMessage}
         </ErrorMessageBox>
       )}
       <div className="mt-[2em] flex-center">
         <PrimaryBtn
-          isLoading={isLoginPending || isSignUpPending}
+          isLoading={isLoading}
           btnColor="primary"
           btnProps={{
             type: 'submit',

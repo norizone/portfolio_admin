@@ -1,6 +1,6 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
-import { AuthForm } from '@/components/organism/form/AuthForm'
+import { SingUpForm } from '@/features/singup/components/SingUpForm'
 
 export const metadata: Metadata = {
   title: 'サインアップ',
@@ -13,7 +13,7 @@ export default function AdminSetting() {
         <PrimaryHeadline lang="en" tag="h1">
           sign up
         </PrimaryHeadline>
-        <AuthForm formType="signUp" />
+        <SingUpForm />
       </div>
     </section>
   )
