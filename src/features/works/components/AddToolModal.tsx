@@ -1,9 +1,9 @@
 'use client'
-import { ToolForm } from '@/features/tool/components/ToolForm'
+import { CreateToolForm } from '@/components/common/form/CreateToolForm'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
 import PrimaryModal from '@/components/elements/modal/PrimaryModal'
 import { styleModalFormWidth } from '@/styles/style'
-import { useCreateTool } from '@/features/tool/hooks/useCreateTool'
+import { useCreateTool } from '@/hooks/common/useCreateTool'
 import { useCompleteModal } from '@/hooks/ui/useCompleteModal'
 
 type Props = {
@@ -36,7 +36,7 @@ export const AddToolModal = (props: Props) => {
   return (
     <>
       <PrimaryModal isOpen={isOpenCreateModal} handleToggleModal={handleModal}>
-        <ToolForm
+        <CreateToolForm
           formClassName={styleModalFormWidth}
           onSubmit={onSubmitCreate}
           isLoading={isLoadingCreate}

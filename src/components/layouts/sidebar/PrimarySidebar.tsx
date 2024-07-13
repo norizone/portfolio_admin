@@ -13,7 +13,9 @@ import { useRouter, usePathname } from 'next/navigation'
 import { twMerge } from 'tailwind-merge'
 import clsx from 'clsx'
 import { useCompleteModal } from '@/hooks/ui/useCompleteModal'
-import { useLogoutModal } from '@/hooks/ui/useLogoutModal'
+import { useLogout } from '@/hooks/auth/useLogout'
+import { useToggleModal } from '@/hooks/ui/useToggleModal'
+import { useState } from 'react'
 
 const MENU_LIST = [
   {
@@ -45,20 +47,31 @@ const MENU_LIST = [
 const xWrap = 'px-[2em]'
 
 export const SideBar = () => {
+  const { isOpenModal: isOpenLogoutModal, toggleModal: toggleLogoutModal } =
+    useToggleModal()
+  const [errorMessage, setErrorMessage] = useState('')
+
   const {
     completeMessage,
     setCompleteMessage,
     isOpenCompleteModal,
     toggleCompleteModal,
   } = useCompleteModal()
-  const {
-    onLogout,
-    isOpenLogoutModal,
-    toggleLogoutModal,
-    isLoadingLogout,
-    isErrorLogout,
-    errorMessage,
-  } = useLogoutModal(setCompleteMessage, toggleCompleteModal)
+
+  const onSuccessLogout = () => {
+    setCompleteMessage('ログアウトしました')
+    toggleLogoutModal()
+    toggleCompleteModal()
+  }
+
+  const onErrorLogout = () => {
+    setErrorMessage('ログアウトに失敗しました')
+  }
+
+  const { onLogout, isLoadingLogout, isErrorLogout } = useLogout({
+    onSuccessLogout,
+    onErrorLogout,
+  })
 
   const router = useRouter()
 
@@ -66,6 +79,7 @@ export const SideBar = () => {
     toggleCompleteModal()
     router.replace(routers.LOGIN)
   }
+
   const pathname = usePathname()
   const parentPath = `/${pathname.split('/')[1] ?? ''}`
 

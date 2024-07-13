@@ -19,7 +19,7 @@ type Props = {
   submitErrorMessage?: string
 }
 
-export const ToolForm = (props: Props) => {
+export const CreateToolForm = (props: Props) => {
   const {
     defaultValues = {},
     formClassName,

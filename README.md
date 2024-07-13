@@ -19,7 +19,7 @@ bun dev
 ├── components
 │   ├── elements　// Base~から始まるcomponentはリセット以外のstyleをつけない
 │   ├── layouts　 // どのページでも使うlayoutに関わるcomponent
-│   └── organism　//　複数のページで使われるcomponentのまとまり
+│   └── common //　複数のページで使われる共通component
 ├── features　// clientで使用する各ページ段位のcomponent、hooks
 │   └── index
 │       ├── components // このディレクトリメインで使用するcomponent
@@ -28,6 +28,9 @@ bun dev
 │           ├── components
 │           └── hooks
 ├── hooks
+│   ├── api //apiの処理
+│   ├── common // components/common に対する処理
+│   └── ui // ui周りの共通処理
 ├── middleware.ts
 ├── providers
 ├── routers

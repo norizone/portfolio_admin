@@ -8,12 +8,12 @@ import { CompleteModal } from '@/components/elements/modal/CompletModal'
 import { ToolData } from '@/types/api/admin'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import PrimaryModal from '@/components/elements/modal/PrimaryModal'
-import { ToolForm } from '../../components/ToolForm'
+import { CreateToolForm } from '../../../../components/common/form/CreateToolForm'
 import { styleModalFormWidth } from '@/styles/style'
 import { ErrorMessageBox } from '@/components/elements/textBlock/ErrorMessageBox'
 import { useCompleteModal } from '@/hooks/ui/useCompleteModal'
 import { useDeleteTool } from '../hooks/useDeleteTool'
-import { useCreateTool } from '../../hooks/useCreateTool'
+import { useCreateTool } from '../../../../hooks/common/useCreateTool'
 import { useEditTool } from '../hooks/useEditTool'
 
 type Props = {
@@ -112,7 +112,7 @@ export const ToolClient = (props: Props) => {
           setCreateErrorMessage('')
         }}
       >
-        <ToolForm
+        <CreateToolForm
           formClassName={styleModalFormWidth}
           onSubmit={onSubmitCreate}
           isLoading={isLoadingCreate}

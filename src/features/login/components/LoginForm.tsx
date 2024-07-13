@@ -1,5 +1,5 @@
 'use client'
-import { AuthForm } from '@/components/organism/form/AuthForm'
+import { AuthForm } from '@/components/common/form/AuthForm'
 import { useLogin } from '../hooks/useLogin'
 
 export const LoginForm = () => {
