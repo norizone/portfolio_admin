@@ -14,10 +14,15 @@ import {
   uploadImageRes,
 } from '@/types/api/admin'
 import { Tool, User, Work } from '@prisma/client'
-import { getCrfToken } from './useGetToken'
 import { CreateUserBody, UserData } from '@/types/api/admin'
 import { axiosClient } from '@/utils/axiosClient'
-import { toolKeys, workKeys, userKeys, dashboard, auth } from './queryKey'
+import {
+  toolKeys,
+  workKeys,
+  userKeys,
+  authKeys,
+  dashboardKeys,
+} from './queryKey'
 import {
   authApiUrl,
   dashboardApiUrl,
@@ -26,14 +31,18 @@ import {
   workApiUrl,
 } from '@/utils/apiUrl'
 
-export const useGetAuth = (enabled: boolean = true) => {
+export const useGetAuth = (
+  enabled: boolean = true,
+  refetchOnWindowFocus?: boolean,
+) => {
   return useQuery({
-    queryKey: auth.all,
+    queryKey: authKeys.default,
     queryFn: async (): Promise<AuthData> => {
       const res = await axiosClient.get('/auth')
       return res.data
     },
     enabled,
+    refetchOnWindowFocus,
   })
 }
 
@@ -59,9 +68,13 @@ export const useMutateLogin = () => {
 }
 
 export const useMutationLogout = () => {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (): Promise<void> => {
       const res = await axiosClient.post(authApiUrl.logout(), undefined)
+    },
+    onSuccess: () => {
+      queryClient.clear()
     },
   })
 }
@@ -239,6 +252,6 @@ export const useGetDashBordData = () => {
       const res = await axiosClient.get(dashboardApiUrl.default)
       return res.data
     },
-    queryKey: dashboard.all,
+    queryKey: dashboardKeys.default,
   })
 }

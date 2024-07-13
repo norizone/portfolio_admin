@@ -8,7 +8,7 @@ export type PrimaryModalProps = {
   children: ReactNode
   handleToggleModal: () => void
   isOpen: boolean
-  isBackgroundClose?: boolean
+  isOnlyBtn?: boolean
 }
 
 const customStyles = {
@@ -38,12 +38,7 @@ ReactModal.setAppElement('body')
 
 const PrimaryModal = forwardRef<HTMLElement, PrimaryModalProps>(
   (props: PrimaryModalProps, ref) => {
-    const {
-      children,
-      handleToggleModal,
-      isOpen,
-      isBackgroundClose = true,
-    } = props
+    const { children, handleToggleModal, isOpen, isOnlyBtn = false } = props
 
     return (
       <FocusLock ref={ref}>
@@ -53,40 +48,42 @@ const PrimaryModal = forwardRef<HTMLElement, PrimaryModalProps>(
           style={customStyles}
           isOpen={isOpen}
           onRequestClose={() => {
-            isBackgroundClose && handleToggleModal()
+            !isOnlyBtn && handleToggleModal()
           }}
           contentLabel="Modal"
           ariaHideApp={false}
         >
-          <div className="absolute top-4 right-5 z-[55] cursor-pointer">
-            <button onClick={handleToggleModal}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="23.486"
-                height="23.486"
-                viewBox="0 0 23.486 23.486"
-              >
-                <g transform="translate(4.243 4.243)">
-                  <line
-                    x2="15"
-                    y2="15"
-                    fill="none"
-                    stroke="#707070"
-                    strokeLinecap="round"
-                    strokeWidth="6"
-                  />
-                  <line
-                    x1="15"
-                    y2="15"
-                    fill="none"
-                    stroke="#707070"
-                    strokeLinecap="round"
-                    strokeWidth="6"
-                  />
-                </g>
-              </svg>
-            </button>
-          </div>
+          {!isOnlyBtn && (
+            <div className="absolute top-4 right-5 z-[55] cursor-pointer">
+              <button onClick={handleToggleModal}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="23.486"
+                  height="23.486"
+                  viewBox="0 0 23.486 23.486"
+                >
+                  <g transform="translate(4.243 4.243)">
+                    <line
+                      x2="15"
+                      y2="15"
+                      fill="none"
+                      stroke="#707070"
+                      strokeLinecap="round"
+                      strokeWidth="6"
+                    />
+                    <line
+                      x1="15"
+                      y2="15"
+                      fill="none"
+                      stroke="#707070"
+                      strokeLinecap="round"
+                      strokeWidth="6"
+                    />
+                  </g>
+                </svg>
+              </button>
+            </div>
+          )}
           {children}
         </ReactModal>
       </FocusLock>

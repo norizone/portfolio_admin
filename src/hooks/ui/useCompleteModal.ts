@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useToggleModal } from '@/hooks/useToggleModal'
+import { useToggleModal } from '@/hooks/ui/useToggleModal'
 
 export const useCompleteModal = () => {
   const [completeMessage, setCompleteMessage] = useState<string>()

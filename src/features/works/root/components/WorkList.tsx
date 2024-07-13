@@ -1,6 +1,6 @@
 'use client'
 import { PrimaryPagination } from '@/components/elements/pagination/PrimaryPagination'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { DeleteModal } from '@/components/elements/modal/DeleatModal'
 import { convertPublication } from '@/utils/converter'
 import PrimaryTable from '@/components/elements/table/PrimaryTable'
@@ -10,13 +10,12 @@ import { ColumnsType } from '@/components/elements/table/PrimaryTable/type'
 import { PUBLICATION_STATUS } from '@/utils/enum'
 import Link from 'next/link'
 import { routers } from '@/routers/routers'
-import { useToggleModal } from '@/hooks/useToggleModal'
-import { useGetWorkList, useMutateDeleteWork } from '@/hooks/api/admin.hooks'
+import { useGetWorkList } from '@/hooks/api/admin.hooks'
 import { styleTableTRPadding } from '@/styles/style'
 import { WorkListRes } from '@/types/api/admin'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { workKeys } from '@/hooks/api/queryKey'
+import { useCompleteModal } from '@/hooks/ui/useCompleteModal'
+import { useDeleteWork } from '../hooks/useDeleteWork'
 
 type Props = {
   SSRData?: WorkListRes
@@ -34,29 +33,24 @@ type WorkList = {
 export const WorkList = (props: Props) => {
   const { SSRData, pageSize = 1, defaultPage = 1 } = props
   const [page, setPage] = useState(defaultPage)
-  const [deleteId, setDeleteId] = useState<number>()
-  const [selectTitle, setSelectTitle] = useState<string>()
   const { data, isPending } = useGetWorkList({ page, pageSize }, SSRData)
-  const queryClient = useQueryClient()
 
-  const { isOpenModal: isOpenDeleteModal, toggleModal: toggleDeleteModal } =
-    useToggleModal()
-
-  const { mutate: mutateDelete, isPending: isLoadingDelete } =
-    useMutateDeleteWork()
-
-  const onDeleteSubmit = () => {
-    if (!deleteId) return
-    mutateDelete(deleteId, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: workKeys.list({ page, pageSize }),
-        })
-        toggleDeleteModal()
-      },
-      onError: () => {},
-    })
-  }
+  const {
+    completeMessage,
+    setCompleteMessage,
+    isOpenCompleteModal,
+    toggleCompleteModal,
+  } = useCompleteModal()
+  const {
+    deleteTitle,
+    onDeleteSubmit,
+    isLoadingDelete,
+    isOpenDeleteModal,
+    onClickDelete,
+    isErrorDelete,
+    deleteError,
+    toggleDeleteModal,
+  } = useDeleteWork(setCompleteMessage, toggleCompleteModal)
 
   const tableColumns: ColumnsType<WorkList>[] = [
     {
@@ -96,11 +90,12 @@ export const WorkList = (props: Props) => {
       renderCell: (row) => (
         <DeleteBtn
           customClassName={styleTableTRPadding}
-          onClick={() => {
-            toggleDeleteModal()
-            setSelectTitle(row.title)
-            setDeleteId(row.id)
-          }}
+          onClick={() =>
+            onClickDelete({
+              id: row.id,
+              title: row.title,
+            })
+          }
         />
       ),
     },
@@ -121,10 +116,18 @@ export const WorkList = (props: Props) => {
         )}
       </div>
       <DeleteModal
-        title={`${selectTitle}を削除しますか？`}
+        title={`${deleteTitle}を削除しますか？`}
         isOpen={isOpenDeleteModal}
         handleToggleModal={toggleDeleteModal}
-        onSubmit={onDeleteSubmit}
+        onSubmit={() => onDeleteSubmit({ page, pageSize })}
+        isLoading={isLoadingDelete}
+        isError={isErrorDelete}
+        errorMessage={deleteError}
+      />
+      <CompleteModal
+        isOpen={isOpenCompleteModal}
+        completeText={completeMessage}
+        handleToggleModal={toggleCompleteModal}
       />
     </>
   )

@@ -12,8 +12,27 @@ pnpm dev
 bun dev
 ```
 
-## component
+## ディレクトリ構造
 
-- Base~ リセット以外のstyleをつけない
-- layouts/ レイアウトに使うもの component内でapi処理可能
-- elements/　 component内api処理させない
+```
+├── app // routing,サーバーサイドの処理が必要なもの
+├── components
+│   ├── elements　// Base~から始まるcomponentはリセット以外のstyleをつけない
+│   ├── layouts　 // どのページでも使うlayoutに関わるcomponent
+│   └── organism　//　複数のページで使われるcomponentのまとまり
+├── features　// clientで使用する各ページ段位のcomponent、hooks
+│   └── index
+│       ├── components // このディレクトリメインで使用するcomponent
+│       ├── hooks　// このディレクトリメインで使用するhooks
+│       └── root　// 各ディレクトリごとのcomponent/hooks
+│           ├── components
+│           └── hooks
+├── hooks
+├── middleware.ts
+├── providers
+├── routers
+├── styles
+├── types
+└── utils
+
+```

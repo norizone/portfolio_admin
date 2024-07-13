@@ -24,10 +24,13 @@ export const userKeys = {
   detail: (id: number) => [...userKeys.details(), id] as const,
 }
 
-export const dashboard = {
-  all: ['dashboard'] as const,
+export const dashboardKeys = {
+  default: ['dashboard'] as const,
 }
 
-export const auth = {
-  all: ['auth'] as const,
+export const authKeys = {
+  default: ['auth'] as const,
+  login: () => [...authKeys.default, 'login'] as const,
+  logout: () => [...authKeys.default, 'logout'] as const,
+  signup: () => [...authKeys.default, 'signup'] as const,
 }

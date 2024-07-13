@@ -9,10 +9,11 @@ type props = Omit<PrimaryModalProps, 'children'> & {
 }
 
 export const CompleteModal = (props: props) => {
-  const { handleToggleModal, isOpen, completeText, children } = props
+  const { handleToggleModal, completeText, children, ...primaryModalProps } =
+    props
 
   return (
-    <PrimaryModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
+    <PrimaryModal handleToggleModal={handleToggleModal} {...primaryModalProps}>
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
         <>
           <PrimaryHeadline tag="h3">{completeText}</PrimaryHeadline>

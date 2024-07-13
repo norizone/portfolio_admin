@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutateDeleteTool } from '@/hooks/api/admin.hooks'
-import { useToggleModal } from '@/hooks/useToggleModal'
+import { useToggleModal } from '@/hooks/ui/useToggleModal'
 import { COMPLETE_MESSAGE_DELETE } from '@/utils/const'
 
 export const useDeleteTool = (

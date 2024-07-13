@@ -8,12 +8,12 @@ import { SettingIcon } from '@/components/elements/icon/SettingIcon'
 import { LogoutIcon } from '@/components/elements/icon/LogoutIcon'
 import { HomeIcon } from '@/components/elements/icon/HomeIcon'
 import { LogoutModal } from '@/components/elements/modal/LogoutModal'
-import { useToggleModal } from '@/hooks/useToggleModal'
-import { useMutationLogout } from '@/hooks/api/admin.hooks'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
 import { useRouter, usePathname } from 'next/navigation'
 import { twMerge } from 'tailwind-merge'
 import clsx from 'clsx'
+import { useCompleteModal } from '@/hooks/ui/useCompleteModal'
+import { useLogoutModal } from '@/hooks/ui/useLogoutModal'
 
 const MENU_LIST = [
   {
@@ -42,14 +42,25 @@ const MENU_LIST = [
   },
 ]
 
+const xWrap = 'px-[2em]'
+
 export const SideBar = () => {
-  const xWrap = 'px-[2em]'
+  const {
+    completeMessage,
+    setCompleteMessage,
+    isOpenCompleteModal,
+    toggleCompleteModal,
+  } = useCompleteModal()
+  const {
+    onLogout,
+    isOpenLogoutModal,
+    toggleLogoutModal,
+    isLoadingLogout,
+    isErrorLogout,
+    errorMessage,
+  } = useLogoutModal(setCompleteMessage, toggleCompleteModal)
+
   const router = useRouter()
-  const { mutate: mutateLogout, isPending, isError } = useMutationLogout()
-  const { isOpenModal: isOpenLogoutModal, toggleModal: toggleLogoutModal } =
-    useToggleModal()
-  const { isOpenModal: isOpenCompleteModal, toggleModal: toggleCompleteModal } =
-    useToggleModal()
 
   const onCloseCompleteModal = () => {
     toggleCompleteModal()
@@ -57,17 +68,6 @@ export const SideBar = () => {
   }
   const pathname = usePathname()
   const parentPath = `/${pathname.split('/')[1] ?? ''}`
-
-  const onLogout = () => {
-    // TODO:UI 成功した場合モーダル変更 errorの場合はそのままのモーダルでエラーメッセージ表示？
-    mutateLogout(undefined, {
-      onSuccess: () => {
-        toggleLogoutModal()
-        toggleCompleteModal()
-      },
-      onError: () => {},
-    })
-  }
 
   return (
     <>
@@ -97,8 +97,8 @@ export const SideBar = () => {
                     `${xWrap} py-[.5em] grid grid-cols-[1em_1fr] gap-x-[2em] fill-black hover:fill-primary transition-all bg-transparent hover:bg-hover`,
                     clsx(
                       menu.url === parentPath && 'fill-primary bg-hover',
-                      menu.url === pathname && 'cursor-default'
-                    )
+                      menu.url === pathname && 'cursor-default',
+                    ),
                   )}
                 >
                   <span>{menu.icon}</span>
@@ -111,15 +111,18 @@ export const SideBar = () => {
       </nav>
 
       <LogoutModal
-        isLoading={isPending}
+        isLoading={isLoadingLogout}
         isOpen={isOpenLogoutModal}
         handleToggleModal={toggleLogoutModal}
         onSubmit={onLogout}
+        isError={isErrorLogout}
+        errorMessage={errorMessage}
       />
       <CompleteModal
         isOpen={isOpenCompleteModal}
         handleToggleModal={onCloseCompleteModal}
-        completeText="ログアウトしました"
+        isOnlyBtn={true}
+        completeText={completeMessage}
       />
     </>
   )

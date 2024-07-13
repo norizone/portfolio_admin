@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useToggleModal } from '@/hooks/useToggleModal'
+import { useToggleModal } from '@/hooks/ui/useToggleModal'
 import { useMutateEditUser } from '@/hooks/api/admin.hooks'
 import { COMPLETE_MESSAGE_EDIT } from '@/utils/const'
 import { EditUserBody } from '@/types/api/admin'

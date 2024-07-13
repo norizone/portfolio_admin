@@ -1,16 +1,26 @@
 import PrimaryModal, { PrimaryModalProps } from './PrimaryModal'
 import { PrimaryHeadline } from '../headline/PrimaryHeadline'
 import { PrimaryBtn } from '../btn/PrimaryBtn'
+import { ErrorMessageBox } from '../textBlock/ErrorMessageBox'
 
 type props = Omit<PrimaryModalProps, 'children'> & {
   onSubmit: () => void
   isLoading?: boolean
+  errorMessage?: string
+  isError?: boolean
 }
 
 export const LogoutModal = (props: props) => {
-  const { handleToggleModal, isOpen, onSubmit, isLoading } = props
+  const {
+    handleToggleModal,
+    onSubmit,
+    isLoading,
+    errorMessage,
+    isError,
+    ...primaryModalProps
+  } = props
   return (
-    <PrimaryModal isOpen={isOpen} handleToggleModal={handleToggleModal}>
+    <PrimaryModal handleToggleModal={handleToggleModal} {...primaryModalProps}>
       <section className="text-center p-[1em] flex-center flex-col m-auto min-w-[30vw]">
         <PrimaryHeadline tag="h3">ログアウトしますか？</PrimaryHeadline>
         <div className="flex-center flex-row gap-[1em] mt-[3em]">
@@ -34,6 +44,7 @@ export const LogoutModal = (props: props) => {
             いいえ
           </PrimaryBtn>
         </div>
+        {isError && <ErrorMessageBox>{errorMessage}</ErrorMessageBox>}
       </section>
     </PrimaryModal>
   )

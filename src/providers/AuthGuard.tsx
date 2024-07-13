@@ -7,7 +7,8 @@ import { usePathname } from 'next/navigation'
 export const AuthGuard = (props: { children: React.ReactNode }) => {
   const pathname = usePathname()
   const { data, isLoading } = useGetAuth(
-    pathname !== routers.LOGIN && pathname !== routers.SIGNUP
+    pathname !== routers.LOGIN && pathname !== routers.SIGNUP,
+    true,
   )
   return isLoading ? <LoadingIcon /> : <>{props.children}</>
 }

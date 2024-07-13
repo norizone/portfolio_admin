@@ -5,7 +5,7 @@ import { styleFormBgWhite, stylePageFormWidth } from '@/styles/style'
 import { CompleteModal } from '@/components/elements/modal/CompletModal'
 import { useRouter } from 'next/navigation'
 import { routers } from '@/routers/routers'
-import { useCompleteModal } from '@/hooks/useCompleteModal'
+import { useCompleteModal } from '@/hooks/ui/useCompleteModal'
 import { useCreateUser } from '../hooks/useCreateUser'
 
 export const UserCreate = () => {

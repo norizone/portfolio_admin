@@ -13,7 +13,7 @@ import { UserForm } from '../../components/UserForm'
 import { styleModalFormWidth, styleTableTRPadding } from '@/styles/style'
 import { useGetUserList } from '@/hooks/api/admin.hooks'
 import { UserData } from '@/types/api/admin'
-import { useCompleteModal } from '@/hooks/useCompleteModal'
+import { useCompleteModal } from '@/hooks/ui/useCompleteModal'
 import { useDeleteUser } from '../hooks/useDeleteUser'
 import { useEditUser } from '../hooks/useEditUser'
 
@@ -40,6 +40,8 @@ export const UserList = (props: Props) => {
     toggleDeleteModal,
     onClickDelete,
     onSubmitDelete,
+    isDeleteError,
+    deleteErrorMessage,
   } = useDeleteUser(setCompleteMessage, toggleCompleteModal)
 
   const {
@@ -130,6 +132,8 @@ export const UserList = (props: Props) => {
         onSubmit={onSubmitDelete}
         title={deleteTitle ? `${deleteTitle} を削除しますか？` : ''}
         isLoading={isLoadingDelete}
+        isError={isDeleteError}
+        errorMessage={deleteErrorMessage}
       />
 
       {/* 完了モーダル */}

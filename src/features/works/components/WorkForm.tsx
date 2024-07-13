@@ -22,7 +22,7 @@ import { useMemo, useState } from 'react'
 import { selectItem } from '@/types/SelectItems'
 import { styleInputMargin, styleMinInputWidth } from '@/styles/style'
 import { AddToolModal } from './AddToolModal'
-import { useToggleModal } from '@/hooks/useToggleModal'
+import { useToggleModal } from '@/hooks/ui/useToggleModal'
 import { routers } from '@/routers/routers'
 import { useRouter } from 'next/navigation'
 
@@ -56,8 +56,10 @@ const permissionItems = Object.keys(convertViewPermission).map((key) => ({
 export const WorkForm = (props: Props) => {
   const { defaultValues = {}, formType, SSRToolData } = props
   const router = useRouter()
-  const { isOpenModal: isOpenCreateModal, toggleModal: toggleCreateModal } =
-    useToggleModal()
+  const {
+    isOpenModal: isOpenCreateToolModal,
+    toggleModal: toggleCreateToolModal,
+  } = useToggleModal()
   const [toolItems, setToolItems] = useState<selectItem[]>([])
   const { data: toolList, isPending: isLoadingToolList } =
     useGetToolList(SSRToolData)
@@ -235,7 +237,7 @@ export const WorkForm = (props: Props) => {
 
         <PrimaryBtn
           btnColor="primary"
-          onClick={toggleCreateModal}
+          onClick={toggleCreateToolModal}
           btnProps={{ type: 'button' }}
           customClassName="w-max p-[.2em] min-w-[8em] min-h-[2.4em] text-sm ml-auto"
         >
@@ -350,8 +352,8 @@ export const WorkForm = (props: Props) => {
         </div>
       </form>
       <AddToolModal
-        isOpenCreateModal={isOpenCreateModal}
-        toggleCreateModal={toggleCreateModal}
+        isOpenCreateModal={isOpenCreateToolModal}
+        toggleCreateModal={toggleCreateToolModal}
       />
     </>
   )
