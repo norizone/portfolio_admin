@@ -1,6 +1,7 @@
 'use client'
 import { forwardRef, SelectHTMLAttributes } from 'react'
 import { selectItem } from '@/types/SelectItems'
+import { isEmpty } from '@/utils/dataFilters'
 
 export type BaseSelectBoxProps = {
   name: string
@@ -30,7 +31,7 @@ export const BaseSelectBox = forwardRef<HTMLSelectElement, BaseSelectBoxProps>(
         name={name}
         onChange={onChange}
         disabled={disabled}
-        defaultValue={!value ? '' : value}
+        defaultValue={isEmpty(value) ? '' : value}
         ref={ref}
         className={selectClassName}
         {...selectProps}
@@ -47,7 +48,7 @@ export const BaseSelectBox = forwardRef<HTMLSelectElement, BaseSelectBoxProps>(
         ))}
       </select>
     )
-  }
+  },
 )
 
 BaseSelectBox.displayName = 'BaseSelectBox'

@@ -7,7 +7,6 @@ import { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import { UserData } from '@/types/api/admin'
 import axios from 'axios'
-import { notFound } from 'next/navigation'
 import { baseURL, userApiUrl } from '@/utils/apiUrl'
 
 export const metadata: Metadata = {
@@ -26,7 +25,7 @@ const getUserList = async (): Promise<UserData[]> => {
     return res.data
   } catch (error) {
     console.log(error)
-    notFound()
+    return []
   }
 }
 

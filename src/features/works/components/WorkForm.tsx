@@ -1,7 +1,7 @@
 'use client'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { createWorks } from '@/utils/validations'
+import { createEditWorks } from '@/utils/validations'
 import { FormLabel } from '@/components/elements/textBlock/FormLabel'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import { PrimaryInput } from '@/components/elements/input/PrimaryInput'
@@ -12,35 +12,24 @@ import { PrimaryTextArea } from '@/components/elements/textArea/PrimaryTextArea'
 import { PUBLICATION_STATUS, VIEW_PERMISSION } from '@/utils/enum'
 import { convertPublication, convertViewPermission } from '@/utils/converter'
 import { ImageInput } from '@/components/elements/input/ImageInput'
-import { CreateWorkBody, ToolData } from '@/types/api/admin'
-import {
-  useGetToolList,
-  useMutateCreateWork,
-  useMutateUploadImages,
-} from '@/hooks/api/admin.hooks'
+import { ToolData } from '@/types/api/admin'
 import { useMemo, useState } from 'react'
-import { selectItem } from '@/types/SelectItems'
 import { styleInputMargin, styleMinInputWidth } from '@/styles/style'
 import { AddToolModal } from './AddToolModal'
 import { useToggleModal } from '@/hooks/ui/useToggleModal'
-import { routers } from '@/routers/routers'
-import { useRouter } from 'next/navigation'
+import { useImageUpload } from '../hooks/useImageUpload'
+import { WorkFormValues } from '../types/workType'
+import { ErrorMessageBox } from '@/components/elements/textBlock/ErrorMessageBox'
+import { workFormDefaultValues } from '../utils/const'
 
 type Props = {
   formType: 'create' | 'edit'
-  defaultValues?: CreateWorkBody
-  SSRToolData?: ToolData[]
-}
-
-type WorkFormValues = Omit<
-  CreateWorkBody,
-  'useTools' | 'archiveImg' | 'singleImgMain' | 'singleImgSub' | 'singleImgSub2'
-> & {
-  useTools: number[]
-  archiveImg: File
-  singleImgMain: File
-  singleImgSub: File
-  singleImgSub2?: File | null
+  defaultValues?: WorkFormValues
+  toolData?: ToolData[]
+  onHandlerSubmit: (data: WorkFormValues) => void
+  isLoadingSubmit?: boolean
+  isErrorSubmit?: boolean
+  sendErrorMessage?: string
 }
 
 const publicStatusItems = Object.keys(convertPublication).map((key) => ({
@@ -54,72 +43,49 @@ const permissionItems = Object.keys(convertViewPermission).map((key) => ({
 }))
 
 export const WorkForm = (props: Props) => {
-  const { defaultValues = {}, formType, SSRToolData } = props
-  const router = useRouter()
+  const {
+    defaultValues = workFormDefaultValues,
+    formType,
+    toolData,
+    onHandlerSubmit,
+    isLoadingSubmit,
+    isErrorSubmit,
+    sendErrorMessage,
+  } = props
   const {
     isOpenModal: isOpenCreateToolModal,
     toggleModal: toggleCreateToolModal,
   } = useToggleModal()
-  const [toolItems, setToolItems] = useState<selectItem[]>([])
-  const { data: toolList, isPending: isLoadingToolList } =
-    useGetToolList(SSRToolData)
+  const [toolItems, setToolItems] = useState<
+    { label: string; value: number }[]
+  >([])
 
   useMemo(() => {
     const tool =
-      toolList && toolList?.length > 0
-        ? toolList.map((tool) => ({ value: tool.id, label: tool.toolName }))
+      toolData && toolData?.length > 0
+        ? toolData.map((tool) => ({ value: tool.id, label: tool.toolName }))
         : []
     setToolItems(tool)
-  }, [toolList])
+  }, [toolData])
+
+  const { onSubmitUpload, isLoadingUpload } = useImageUpload()
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    setError,
     formState: { errors },
     control,
   } = useForm<WorkFormValues>({
     mode: 'onBlur',
     defaultValues,
-    resolver: yupResolver(createWorks),
+    resolver: yupResolver(createEditWorks),
   })
 
-  const { mutate: mutateCreateWork } = useMutateCreateWork()
-  const { mutate: mutateUploadImages, isPending } = useMutateUploadImages()
-
   const onSubmit = async (data: WorkFormValues) => {
-    const selectedTool = data.useTools
-    const useTools = selectedTool.map((tool) => ({
-      id: tool,
-    }))
-
-    const formData = new FormData()
-    formData.append('archiveImg', data.archiveImg)
-    formData.append('singleImgMain', data.singleImgMain)
-    formData.append('singleImgSub', data.singleImgSub)
-    if (data.singleImgSub2) {
-      formData.append('singleImgSub2', data.singleImgSub2)
-    }
-
-    mutateUploadImages(formData, {
-      onSuccess: (res) => {
-        const body = {
-          ...data,
-          useTools,
-          ...res,
-        }
-        mutateCreateWork(body, {
-          onSuccess: (res) => {
-            console.log(res)
-            router.push(routers.WORKS)
-          },
-          onError: (error) => {
-            console.error('Error in mutateCreateWork:', error)
-          },
-        })
-      },
-    })
+    onHandlerSubmit(data)
   }
 
   return (
@@ -186,18 +152,30 @@ export const WorkForm = (props: Props) => {
         <FormLabel
           label="一覧画像"
           required
-          errorMessage={errors?.archiveImg?.message}
+          errorMessage={
+            errors?.archiveImg?.message || errors.uploadArchiveImg?.message
+          }
         >
           <Controller
-            name="archiveImg"
+            name="uploadArchiveImg"
             control={control}
             render={({ field: { onChange, value } }) => (
               <ImageInput
+                defaultUrl={defaultValues?.archiveImg ?? ''}
+                isLoading={isLoadingUpload('uploadArchiveImg')}
                 customClassName={styleInputMargin}
                 isNullable={false}
                 onChangeFile={(value: File) => {
                   onChange(value)
-                  setValue('archiveImg', value, { shouldValidate: true })
+                  setValue('uploadArchiveImg', value, { shouldValidate: true })
+                  onSubmitUpload({
+                    key: 'uploadArchiveImg',
+                    file: value,
+                    setValue: (url) =>
+                      setValue('archiveImg', url, { shouldValidate: true }),
+                    setError: (message) =>
+                      setError('archiveImg', { type: 'server', message }),
+                  })
                 }}
               />
             )}
@@ -216,22 +194,32 @@ export const WorkForm = (props: Props) => {
               styleInputMargin,
             )}
           >
-            {toolItems?.length > 0 &&
-              toolItems.map((tool, index) => (
-                <Controller
-                  key={index}
-                  defaultValue={[]}
-                  control={control}
-                  name="useTools"
-                  render={({ field }) => (
-                    <PrimaryLabelCheckBox
-                      customClassName="w-max mr-auto"
-                      item={tool}
-                      {...register('useTools')}
-                    />
-                  )}
-                />
-              ))}
+            {toolItems?.length > 0 && (
+              <Controller
+                control={control}
+                name="useTools"
+                defaultValue={defaultValues.useTools}
+                render={({ field }) => (
+                  <>
+                    {toolItems.map((tool, index) => (
+                      <PrimaryLabelCheckBox
+                        key={index}
+                        customClassName="w-max mr-auto"
+                        item={tool}
+                        name={`useTools${tool.value}`}
+                        checked={field.value.includes(tool.value)}
+                        onChange={() => {
+                          const newValue = field.value.includes(tool.value)
+                            ? field.value.filter((id) => id !== tool.value)
+                            : [...field.value, tool.value]
+                          field.onChange(newValue)
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
+              />
+            )}
           </div>
         </FormLabel>
 
@@ -281,18 +269,33 @@ export const WorkForm = (props: Props) => {
         <FormLabel
           label="詳細ページメイン画像"
           required
-          errorMessage={errors?.singleImgMain?.message}
+          errorMessage={
+            errors?.singleImgMain?.message ||
+            errors.uploadSingleImgMain?.message
+          }
         >
           <Controller
-            name="singleImgMain"
+            name="uploadSingleImgMain"
             control={control}
             render={({ field: { onChange, value } }) => (
               <ImageInput
+                defaultUrl={defaultValues?.singleImgMain ?? ''}
+                isLoading={isLoadingUpload('uploadSingleImgMain')}
                 customClassName={styleInputMargin}
                 isNullable={false}
                 onChangeFile={(value: File) => {
                   onChange(value)
-                  setValue('singleImgMain', value, { shouldValidate: true })
+                  setValue('uploadSingleImgMain', value, {
+                    shouldValidate: true,
+                  })
+                  onSubmitUpload({
+                    key: 'uploadSingleImgMain',
+                    file: value,
+                    setValue: (url) =>
+                      setValue('singleImgMain', url, { shouldValidate: true }),
+                    setError: (message) =>
+                      setError('singleImgMain', { type: 'server', message }),
+                  })
                 }}
               />
             )}
@@ -302,18 +305,32 @@ export const WorkForm = (props: Props) => {
         <FormLabel
           label="詳細ページサブ画像1"
           required
-          errorMessage={errors?.singleImgSub?.message}
+          errorMessage={
+            errors?.singleImgSub?.message || errors?.singleImgSub?.message
+          }
         >
           <Controller
-            name="singleImgSub"
+            name="uploadSingleImgSub"
             control={control}
             render={({ field: { onChange, value } }) => (
               <ImageInput
+                defaultUrl={defaultValues?.singleImgSub ?? ''}
+                isLoading={isLoadingUpload('uploadSingleImgSub')}
                 customClassName={styleInputMargin}
                 isNullable={false}
                 onChangeFile={(value: File) => {
                   onChange(value)
-                  setValue('singleImgSub', value, { shouldValidate: true })
+                  setValue('uploadSingleImgSub', value, {
+                    shouldValidate: true,
+                  })
+                  onSubmitUpload({
+                    key: 'uploadSingleImgSub',
+                    file: value,
+                    setValue: (url) =>
+                      setValue('singleImgSub', url, { shouldValidate: true }),
+                    setError: (message) =>
+                      setError('singleImgSub', { type: 'server', message }),
+                  })
                 }}
               />
             )}
@@ -322,26 +339,44 @@ export const WorkForm = (props: Props) => {
 
         <FormLabel
           label="詳細ページサブ画像2"
-          errorMessage={errors?.singleImgSub2?.message}
+          errorMessage={
+            errors.singleImgSub2?.message ||
+            errors?.uploadSingleImgSub2?.message
+          }
         >
           <Controller
-            name="singleImgSub2"
+            name="uploadSingleImgSub2"
             control={control}
             render={({ field: { onChange, value } }) => (
               <ImageInput
+                defaultUrl={defaultValues?.singleImgSub2 ?? ''}
+                isLoading={isLoadingUpload('uploadSingleImgSub2')}
                 customClassName={styleInputMargin}
                 isNullable={true}
                 onChangeFile={(value: File) => {
                   onChange(value)
-                  setValue('singleImgSub2', value, { shouldValidate: true })
+                  setValue('uploadSingleImgSub2', value, {
+                    shouldValidate: true,
+                  })
+                  onSubmitUpload({
+                    key: 'uploadSingleImgSub2',
+                    file: value,
+                    setValue: (url) =>
+                      setValue('singleImgSub2', url, { shouldValidate: true }),
+                    setError: (message) =>
+                      setError('singleImgSub2', { type: 'server', message }),
+                  })
                 }}
               />
             )}
           />
         </FormLabel>
 
+        {isErrorSubmit && <ErrorMessageBox>{sendErrorMessage}</ErrorMessageBox>}
+
         <div className="flex-center mt-[2em]">
           <PrimaryBtn
+            isLoading={isLoadingSubmit}
             btnColor="primary"
             btnProps={{
               type: 'submit',

@@ -23,7 +23,7 @@ const getToolList = async (): Promise<ToolData[]> => {
     return res.data
   } catch (error) {
     console.log(error)
-    notFound()
+    return []
   }
 }
 

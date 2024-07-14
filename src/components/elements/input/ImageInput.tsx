@@ -1,20 +1,30 @@
 import React, { forwardRef, useState, useRef } from 'react'
-import { PrimaryBtn } from '../btn/PrimaryBtn'
+import { PrimaryBtn, PrimaryBtnProps } from '../btn/PrimaryBtn'
 
-export type Props<T> = {
+export type Props<T> = Omit<
+  PrimaryBtnProps,
+  'btnColor' | 'onClick' | 'children'
+> & {
   customClassName?: string
   onChangeFile: (value: T) => void
   isNullable?: boolean
+  defaultUrl?: string
 }
 
 const ImageInputInner = <T extends File | undefined>(
   props: Props<T>,
-  ref: React.Ref<HTMLDivElement>
+  ref: React.Ref<HTMLDivElement>,
 ) => {
-  const { customClassName, onChangeFile, isNullable = false } = props
+  const {
+    customClassName,
+    onChangeFile,
+    isNullable = false,
+    defaultUrl = '',
+    ...PrimaryBtnProps
+  } = props
   const inputRef = useRef<HTMLInputElement | null>(null)
   const [imageFile, setImageFile] = useState<File | null>(null)
-  const [imageSource, setImageSource] = useState('')
+  const [imageSource, setImageSource] = useState(defaultUrl)
 
   const selectFile = () => {
     if (!inputRef.current) return
@@ -36,6 +46,7 @@ const ImageInputInner = <T extends File | undefined>(
     generateImageSource(files)
     setImageFile(files[0])
     onChangeFile(files[0] as T)
+    e.target.value = ''
   }
 
   const handleDeleteFile = () => {
@@ -46,7 +57,7 @@ const ImageInputInner = <T extends File | undefined>(
 
   return (
     <div className={customClassName} ref={ref}>
-      {imageFile && (
+      {imageSource && (
         <div className="mb-[.6em] max-h-[200px] max-w-[200px]">
           {
             // eslint-disable-next-line @next/next/no-img-element
@@ -60,6 +71,7 @@ const ImageInputInner = <T extends File | undefined>(
       )}
       <div className="flex flex-row gap-x-[1em]">
         <PrimaryBtn
+          {...PrimaryBtnProps}
           btnProps={{ type: 'button' }}
           btnColor="success"
           onClick={selectFile}
@@ -68,6 +80,7 @@ const ImageInputInner = <T extends File | undefined>(
         </PrimaryBtn>
         {imageFile && isNullable && (
           <PrimaryBtn
+            {...PrimaryBtnProps}
             btnProps={{ type: 'button' }}
             btnColor="cancel"
             onClick={handleDeleteFile}
@@ -88,5 +101,5 @@ const ImageInputInner = <T extends File | undefined>(
 }
 
 export const ImageInput = forwardRef(ImageInputInner) as <T>(
-  props: Props<T> & { ref?: React.Ref<HTMLDivElement> }
+  props: Props<T> & { ref?: React.Ref<HTMLDivElement> },
 ) => ReturnType<typeof ImageInputInner>

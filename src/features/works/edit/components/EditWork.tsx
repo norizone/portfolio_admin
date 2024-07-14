@@ -1,48 +1,88 @@
 'use client'
 
+import { CompleteModal } from '@/components/elements/modal/CompletModal'
 import { WorkForm } from '@/features/works/components/WorkForm'
-import { useGetWork } from '@/hooks/api/admin.hooks'
-import { ToolData } from '@/types/api/admin'
-import { Work } from '@prisma/client'
-import Image from 'next/image'
+import {
+  useGetToolList,
+  useGetWork,
+  useMutateEditWork,
+} from '@/hooks/api/admin.hooks'
+import { useCompleteModal } from '@/hooks/ui/useCompleteModal'
+import { useRouter } from 'next/navigation'
+import { routers } from '@/routers/routers'
+import { DetailWork, ToolData } from '@/types/api/admin'
+import { useMemo, useState } from 'react'
+import { WorkFormValues } from '../../types/workType'
+import { workFormDefaultValues } from '../../utils/const'
+import { isEmpty } from '@/utils/dataFilters'
+import { useEditWork } from '../hooks/useEditWork'
 
 type Props = {
   SSRToolData?: ToolData[]
-  SSRWorkData?: Work
+  SSRWorkData?: DetailWork
   id: number
 }
 
-const widthRegex = /width:(\d+)/
-const heightRegex = /height:(\d+)/
-
 export const EditWork = (props: Props) => {
   const { SSRToolData, SSRWorkData, id } = props
+  const { data: toolData, isPending: isLoadingToolData } =
+    useGetToolList(SSRToolData)
+  const {
+    data: workData,
+    isLoading: isLoadingWorkData,
+    isError: isErrorWorkData,
+  } = useGetWork(id, SSRWorkData)
+  const router = useRouter()
+  const [defaultValues, setDefaultValues] = useState<WorkFormValues>()
 
-  const { data } = useGetWork(id, SSRWorkData)
+  const {
+    completeMessage,
+    setCompleteMessage,
+    isOpenCompleteModal,
+    toggleCompleteModal,
+  } = useCompleteModal()
 
-  const extractFromUrl = (url: string, regex: RegExp) => {
-    if (!url) return 1
-    const match = url.match(regex)
-    if (match && match[1]) {
-      return parseInt(match[1], 10)
-    } else {
-      return 1
-    }
+  const { onSubmitEdit, isLoadingEdit, isErrorEdit, errorMessageEdit } =
+    useEditWork(setCompleteMessage, toggleCompleteModal, id)
+
+  const onCloseCompleteModal = () => {
+    toggleCompleteModal()
+    router.push(routers.WORKS)
   }
 
-  const defaultValues = {}
+  useMemo(() => {
+    if (!workData) return
+    const formatDefaultData: WorkFormValues = {
+      ...workFormDefaultValues,
+      ...workData,
+      permission: isEmpty(workData.permission) ? '' : `${workData.permission}`,
+      publication: isEmpty(workData.publication)
+        ? ''
+        : `${workData.publication}`,
+      useTools: workData.useTools.map((tool) => tool.id),
+    }
+    setDefaultValues(formatDefaultData)
+  }, [workData])
 
   return (
     <>
-      <WorkForm SSRToolData={SSRToolData} formType={'edit'} />
-      {data?.archiveImg && (
-        <Image
-          alt=""
-          src={`${data.archiveImg}`}
-          width={extractFromUrl(data.archiveImg, widthRegex)}
-          height={extractFromUrl(data.archiveImg, heightRegex)}
+      {defaultValues && (
+        <WorkForm
+          toolData={toolData}
+          formType={'edit'}
+          defaultValues={defaultValues}
+          onHandlerSubmit={onSubmitEdit}
+          isLoadingSubmit={isLoadingEdit}
+          isErrorSubmit={isErrorEdit}
+          sendErrorMessage={errorMessageEdit}
         />
       )}
+
+      <CompleteModal
+        completeText={completeMessage}
+        isOpen={isOpenCompleteModal}
+        handleToggleModal={onCloseCompleteModal}
+      />
     </>
   )
 }

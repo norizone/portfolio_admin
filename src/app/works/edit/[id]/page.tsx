@@ -1,11 +1,9 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
-import { WorkForm } from '../../../../features/works/components/WorkForm'
 import axios from 'axios'
 import { cookies } from 'next/headers'
-import { ToolData } from '@/types/api/admin'
+import { DetailWork, ToolData } from '@/types/api/admin'
 import { EditWork } from '../../../../features/works/edit/components/EditWork'
-import { Work } from '@prisma/client'
 import { notFound } from 'next/navigation'
 import { baseURL, toolApiUrl, workApiUrl } from '@/utils/apiUrl'
 
@@ -15,18 +13,21 @@ export const metadata: Metadata = {
 
 const getSSRData = async (
   id: number,
-): Promise<{ tool: ToolData[]; work?: Work }> => {
+): Promise<{ tool: ToolData[]; work?: DetailWork }> => {
   const cookie = cookies()
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const toolRes = await axios.get(`${baseURL}${toolApiUrl.all()}`, {
-      headers: { cookie },
-    })
-    const workRes = await axios.get(`${baseURL}${workApiUrl.detail(id)}`, {
-      headers: { cookie },
-    })
+    const [toolRes, workRes] = await Promise.all([
+      axios.get(`${baseURL}${toolApiUrl.all()}`, {
+        headers: { cookie },
+      }),
+      axios.get(`${baseURL}${workApiUrl.detail(id)}`, {
+        headers: { cookie },
+      }),
+    ])
+
     return {
       tool: toolRes.data,
       work: workRes.data,
@@ -46,7 +47,11 @@ export default async function Works({ params }: { params: { id: string } }) {
         制作実績 編集
       </PrimaryHeadline>
       <div className="mt-[3em]">
-        <EditWork SSRToolData={[]} SSRWorkData={SSRData.work} id={Number(id)} />
+        <EditWork
+          SSRToolData={SSRData.tool}
+          SSRWorkData={SSRData.work}
+          id={Number(id)}
+        />
       </div>
     </section>
   )

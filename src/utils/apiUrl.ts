@@ -13,9 +13,10 @@ export const workApiUrl = {
   default: '/work',
   list: () => `${workApiUrl.default}/list`,
   create: () => `${workApiUrl.default}/create`,
+  edit: (id: number) => `${workApiUrl.default}/edit/${id}`,
   detail: (id: number) => `${workApiUrl.default}/detail/${id}`,
   delete: (id: number) => `${workApiUrl.default}/delete/${id}`,
-  uploadImages: () => `${workApiUrl.default}/upload_images`,
+  uploadImage: () => `${workApiUrl.default}/upload_image`,
 }
 
 export const userApiUrl = {

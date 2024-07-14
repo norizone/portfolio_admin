@@ -1,11 +1,11 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
-import { WorkForm } from '../../../features/works/components/WorkForm'
 import type { Metadata } from 'next'
 import axios from 'axios'
 import { cookies } from 'next/headers'
 import { ToolData } from '@/types/api/admin'
 import { baseURL, toolApiUrl } from '@/utils/apiUrl'
 import { notFound } from 'next/navigation'
+import { CreateForm } from '@/features/works/create/components/CreateForm'
 
 export const metadata: Metadata = {
   title: '新規作成',
@@ -35,7 +35,7 @@ export default async function Works() {
         制作実績 新規作成
       </PrimaryHeadline>
       <div className="mt-[3em]">
-        <WorkForm SSRToolData={toolData} formType={'create'} />
+        <CreateForm SSRToolData={toolData} />
       </div>
     </section>
   )

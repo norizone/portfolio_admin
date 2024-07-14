@@ -1,45 +1,57 @@
 import { useMutateCreateWork } from '@/hooks/api/admin.hooks'
-import { CreateWorkBody } from '@/types/api/admin'
+import { COMPLETE_MESSAGE_CREATE } from '@/utils/const'
+import { WorkFormValues } from '../../types/workType'
+import { useState } from 'react'
+import { EditCreateWorkBody } from '@/types/api/admin'
 
-type WorkFormValues = Omit<
-  CreateWorkBody,
-  'useTools' | 'archiveImg' | 'singleImgMain' | 'singleImgSub' | 'singleImgSub2'
-> & {
-  useTools: number[]
-  archiveImg: File
-  singleImgMain: File
-  singleImgSub: File
-  singleImgSub2?: File | null
-}
-
-export const useCreateWork = () => {
+export const useCreateWork = (
+  setCompleteMessage: (message: string) => void,
+  toggleCompleteModal: () => void,
+) => {
   const {
     mutate: mutateCreateWork,
-    isPending: isLoadingWork,
-    isError: isErrorWork,
+    isPending: isLoadingCreate,
+    isError: isErrorCreate,
   } = useMutateCreateWork()
+
+  const [errorMessageCreate, setErrorMessageCreate] = useState('')
 
   const onSubmitCreate = (data: WorkFormValues) => {
     const selectedTool = data.useTools
     const useTools = selectedTool.map((tool) => ({
       id: tool,
     }))
-    const body = {
-      ...data,
+
+    const {
+      uploadArchiveImg,
+      uploadSingleImgMain,
+      uploadSingleImgSub,
+      uploadSingleImgSub2,
+      ...formData
+    } = data
+
+    const body: EditCreateWorkBody = {
+      ...formData,
+      permission: Number(data.permission),
+      publication: Number(data.publication),
       useTools,
     }
 
     mutateCreateWork(body, {
-      onSuccess: (res) => {},
+      onSuccess: () => {
+        setCompleteMessage(COMPLETE_MESSAGE_CREATE)
+        toggleCompleteModal()
+      },
       onError: (error) => {
-        console.error(error)
+        setErrorMessageCreate(error.message ?? '保存に失敗しました')
       },
     })
   }
 
   return {
     onSubmitCreate,
-    isLoadingWork,
-    isErrorWork,
+    isLoadingCreate,
+    isErrorCreate,
+    errorMessageCreate,
   }
 }

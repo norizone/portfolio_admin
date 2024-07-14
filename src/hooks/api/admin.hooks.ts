@@ -3,7 +3,8 @@ import axios from 'axios'
 import {
   AuthData,
   CreateToolBody,
-  CreateWorkBody,
+  DetailWork,
+  EditCreateWorkBody,
   EditUserBody,
   ListBody,
   LoginBody,
@@ -11,7 +12,6 @@ import {
   ToolData,
   UpdateToolsBody,
   WorkListRes,
-  uploadImageRes,
 } from '@/types/api/admin'
 import { Tool, User, Work } from '@prisma/client'
 import { CreateUserBody, UserData } from '@/types/api/admin'
@@ -147,10 +147,10 @@ export const useGetWorkList = (ListBody: ListBody, SSRData?: WorkListRes) => {
   })
 }
 
-export const useGetWork = (id: number, SSRData?: Work) => {
-  return useQuery<Work>({
+export const useGetWork = (id: number, SSRData?: DetailWork) => {
+  return useQuery<DetailWork>({
     queryKey: workKeys.detail(id),
-    queryFn: async (): Promise<Work> => {
+    queryFn: async (): Promise<DetailWork> => {
       const res = await axiosClient.get(workApiUrl.detail(id))
       return res.data
     },
@@ -158,10 +158,10 @@ export const useGetWork = (id: number, SSRData?: Work) => {
   })
 }
 
-export const useMutateUploadImages = () => {
+export const useMutateUploadImage = () => {
   return useMutation({
-    mutationFn: async (files: FormData): Promise<uploadImageRes> => {
-      const res = await axiosClient.post(workApiUrl.uploadImages(), files, {
+    mutationFn: async (files: FormData): Promise<string> => {
+      const res = await axiosClient.post(workApiUrl.uploadImage(), files, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -173,9 +173,22 @@ export const useMutateUploadImages = () => {
 
 export const useMutateCreateWork = () => {
   return useMutation({
-    mutationFn: async (data: CreateWorkBody | any): Promise<Work> => {
+    mutationFn: async (data: EditCreateWorkBody): Promise<Work> => {
       const res = await axiosClient.post(workApiUrl.create(), data)
       return res.data
+    },
+  })
+}
+
+export const useMutateEditWork = (id: number) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (data: EditCreateWorkBody): Promise<Work> => {
+      const res = await axiosClient.patch(workApiUrl.edit(id), data)
+      return res.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: workKeys.detail(id) })
     },
   })
 }

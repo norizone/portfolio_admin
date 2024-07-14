@@ -31,7 +31,8 @@ export type WorkTool = {
   id: number
 }
 
-export type CreateWorkBody = {
+export type DetailWork = {
+  id: number
   permission: number
   publication: number
   title: string
@@ -49,12 +50,7 @@ export type CreateWorkBody = {
   singleImgSub2?: string | null
 }
 
-export type uploadImageRes = {
-  archiveImg: string
-  singleImgMain: string
-  singleImgSub: string
-  singleImgSub2: string
-}
+export type EditCreateWorkBody = Omit<DetailWork, 'id'>
 
 export type WorkListRes = {
   items: Work[]

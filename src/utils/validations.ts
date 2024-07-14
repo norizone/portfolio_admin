@@ -51,21 +51,15 @@ export const createToolSchema = yup.object({
 /**
  * works フォーム
  */
-export const createWorks = yup.object({
-  permission: yup
-    .number()
-    .typeError(requiredMessage('表示権限', 'select'))
-    .required(requiredMessage('表示権限', 'select')),
-  publication: yup
-    .number()
-    .typeError(requiredMessage('公開状況', 'select'))
-    .required(requiredMessage('公開状況', 'select')),
+export const createEditWorks = yup.object({
+  permission: yup.string().required(requiredMessage('表示権限', 'select')),
+  publication: yup.string().required(requiredMessage('公開状況', 'select')),
   title: yup.string().required(requiredMessage('タイトル')),
   titleEn: yup
     .string()
     .matches(/^[a-zA-Z0-9]*$/, '英数字のみを入力してください')
     .required(requiredMessage('英文字タイトル')),
-  archiveImg: fileSchema.required(requiredMessage('一覧画像')),
+
   useTools: yup
     .array()
     .min(1, requiredMessage('使用ツール', 'select'))
@@ -74,9 +68,16 @@ export const createWorks = yup.object({
   url: yup.string().url('url形式で入力してください').nullable(),
   gitUrl: yup.string().url('url形式で入力してください').nullable(),
   role: yup.string().required(requiredMessage('役割')),
-  singleImgMain: fileSchema.required(requiredMessage('詳細ページメイン画像')),
-  singleImgSub: fileSchema.required(requiredMessage('詳細ページサブ画像')),
-  singleImgSub2: fileSchema.nullable(),
+
+  uploadArchiveImg: fileSchema.nullable(),
+  uploadSingleImgMain: fileSchema.nullable(),
+  uploadSingleImgSub: fileSchema.nullable(),
+  uploadSingleImgSub2: fileSchema.nullable(),
+
+  archiveImg: yup.string().required(requiredMessage('一覧画像')),
+  singleImgMain: yup.string().required(requiredMessage('詳細ページメイン画像')),
+  singleImgSub: yup.string().required(requiredMessage('詳細ページサブ画像')),
+  singleImgSub2: yup.string().nullable(),
 })
 
 /**

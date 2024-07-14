@@ -9,8 +9,6 @@ const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
     data,
     columns,
     className,
-    getRowId,
-    onRowClick,
     theadTRClassName,
     tBodyTRClassName,
   } = props
@@ -20,7 +18,7 @@ const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
       <tr
         className={twMerge(
           'bg-active transition-all shadow-sm rounded-md p-0',
-          theadTRClassName
+          theadTRClassName,
         )}
       >
         {columns.map((col, index) => (
@@ -32,7 +30,7 @@ const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
             }}
             className={twMerge(
               `border-r border-border-op last-of-type:border-none font-normal`,
-              col?.tHeaderTHClassName
+              col?.tHeaderTHClassName,
             )}
             key={index}
           >
@@ -51,21 +49,21 @@ const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
             key={`row-${rowIndex}`}
             className={twMerge(
               'bg-white  shadow-sm rounded-md border-t border-border-op',
-              tBodyTRClassName
+              tBodyTRClassName,
             )}
           >
             {columns.map((col, colIndex) => {
               const colValue = col?.converter
                 ? col?.converter(row)
                 : col.key !== 'action'
-                ? (row[col.key] as string)
-                : ''
+                  ? (row[col.key] as string)
+                  : ''
               return (
                 <td
                   key={`col-${colIndex}`}
                   className={twMerge(
                     'text-center border-r border-border-op last-of-type:border-none font-normal p-0',
-                    col?.tBodyTDClassName
+                    col?.tBodyTDClassName,
                   )}
                 >
                   {col.renderCell ? (

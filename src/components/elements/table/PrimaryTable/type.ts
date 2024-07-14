@@ -17,6 +17,4 @@ export type PrimaryTableProps<T> = {
   tBodyTRClassName?: string
   columns: ColumnsType<T>[]
   className?: string
-  getRowId?: (data: T) => void
-  onRowClick?: (data: T) => void
 }

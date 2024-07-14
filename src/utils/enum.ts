@@ -11,7 +11,6 @@ export enum VIEW_PERMISSION {
   ALL = USER_ROLE.ALL_VIEWING,
 }
 
-// TODO: 公開非公開がいらない権限のみの判定で良い
 export enum PUBLICATION_STATUS {
   PUBLIC = 0,
   PRIVATE = 1,

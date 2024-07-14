@@ -1,4 +1,4 @@
-import { ReactNode, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import BaseInput, { BaseInputProps } from '../input/BaseInput'
 import { selectItem } from '@/types/SelectItems'
 import { twMerge } from 'tailwind-merge'
@@ -16,7 +16,7 @@ export const PrimaryLabelCheckBox = forwardRef<HTMLInputElement, Props>(
       <label
         className={twMerge(
           'font-normal flex-center flex-row flex-nowrap gap-x-[.4em] cursor-pointer',
-          customClassName
+          customClassName,
         )}
       >
         <BaseInput
@@ -32,7 +32,7 @@ export const PrimaryLabelCheckBox = forwardRef<HTMLInputElement, Props>(
         {item.label}
       </label>
     )
-  }
+  },
 )
 
 PrimaryLabelCheckBox.displayName = 'PrimaryLabelCheckBox'
