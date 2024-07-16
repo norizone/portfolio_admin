@@ -52,8 +52,10 @@ export type DetailWork = {
 
 export type EditCreateWorkBody = Omit<DetailWork, 'id'>
 
+export type WorkList = Pick<Work, 'id' | 'title' | 'order' | 'publication'>
+
 export type WorkListRes = {
-  items: Work[]
+  items: WorkList[]
   totalPages: number
   totalCount: number
 }
