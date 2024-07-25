@@ -43,10 +43,10 @@ export const ToolList = (props: Props) => {
   const onEditToolName = (editTool: ToolData) => {
     const updatedData = editData.some((tool) => tool.id === editTool.id)
       ? editData.map((tool) =>
-          tool.id === editTool.id
-            ? { ...tool, toolName: editTool.toolName }
-            : tool,
-        )
+        tool.id === editTool.id
+          ? { ...tool, toolName: editTool.toolName }
+          : tool,
+      )
       : [...editData, editTool]
 
     setEditData(updatedData)

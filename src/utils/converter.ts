@@ -7,8 +7,8 @@ export const convertPublication: Record<PUBLICATION_STATUS, string> = {
 
 export const convertViewPermission: Record<VIEW_PERMISSION, string> = {
   [VIEW_PERMISSION.GUEST]: '未ログイン',
-  [VIEW_PERMISSION.LIMIT]: '制限あり',
-  [VIEW_PERMISSION.ALL]: '制限なし',
+  [VIEW_PERMISSION.LIMIT]: 'ログイン&制限ありアカウント',
+  [VIEW_PERMISSION.ALL]: 'ログイン&制限なしアカウント',
 }
 
 export const convertUserRole: Record<USER_ROLE, string> = {
