@@ -1,12 +1,41 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
 import { LoginForm } from '@/features/login/components/LoginForm'
+import { cookies } from 'next/headers'
+import axios from 'axios'
+import { authApiUrl, baseURL } from '@/utils/apiUrl'
+import { redirect } from 'next/navigation'
+import { routers } from '@/routers/routers'
 
 export const metadata: Metadata = {
   title: 'ログイン',
 }
 
-export default function AdminSetting() {
+const cookieToken = cookies().get('access_token')
+
+const cookie = cookies()
+  .getAll()
+  .map((cookie) => `${cookie.name}=${cookie.value}`)
+  .join('; ')
+
+const getAuth = async () => {
+  let resStatus = 0
+  if (!cookieToken || !cookieToken.value) return
+  try {
+    const res = await axios.get(`${baseURL}${authApiUrl.default}`, {
+      headers: { cookie },
+    })
+    if (res.status === 200) {
+      resStatus = res.status
+    }
+  } catch (error) {
+    return
+  }
+  resStatus === 200 && redirect(routers.DASHBOARD)
+}
+
+export default async function AdminSetting() {
+  await getAuth()
   return (
     <section className="max-w-[420px] w-full p-[2em] text-center mx-auto h-full flex-center">
       <div className="bg-white w-full p-[2em] text-center mx-auto">
