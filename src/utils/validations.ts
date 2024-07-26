@@ -14,6 +14,10 @@ const requiredMessage = (title: string, type: 'input' | 'select' = 'input') => {
   }
 }
 
+const requiredString = (message: string) => {
+  return yup.string().trim().required(message)
+}
+
 /**
  * image_file
  */
@@ -21,10 +25,15 @@ export const fileSchema = yup
   .mixed<File>()
   .test({
     name: 'format',
-    message: 'ファイルは png、jpg、jpeg 形式のみを対応しています。',
+    message: 'ファイルは png、jpg、jpeg、webp 形式のみを対応しています。',
     test(file: unknown) {
       if (file && file instanceof File) {
-        const supportedFormats = ['image/jpeg', 'image/png', 'image/jpg']
+        const supportedFormats = [
+          'image/jpeg',
+          'image/png',
+          'image/jpg',
+          'image/webp',
+        ]
         return supportedFormats.includes(file.type)
       }
       return true
@@ -54,11 +63,10 @@ export const createToolSchema = yup.object({
 export const createEditWorks = yup.object({
   permission: yup.string().required(requiredMessage('表示権限', 'select')),
   publication: yup.string().required(requiredMessage('公開状況', 'select')),
-  title: yup.string().required(requiredMessage('タイトル')),
-  titleEn: yup
-    .string()
-    .matches(/^[a-zA-Z0-9]*$/, '英数字のみを入力してください')
-    .required(requiredMessage('英文字タイトル')),
+  title: requiredString(requiredMessage('タイトル')),
+  titleEn: requiredString(requiredMessage('英文字タイトル')).required(
+    requiredMessage('英文字タイトル'),
+  ),
 
   useTools: yup
     .array()
@@ -67,7 +75,7 @@ export const createEditWorks = yup.object({
   comment: yup.string().nullable(),
   url: yup.string().url('url形式で入力してください').nullable(),
   gitUrl: yup.string().url('url形式で入力してください').nullable(),
-  role: yup.string().required(requiredMessage('役割')),
+  role: requiredString(requiredMessage('役割')),
 
   uploadArchiveImg: fileSchema.nullable(),
   uploadSingleImgMain: fileSchema.nullable(),
@@ -86,6 +94,7 @@ export const createEditWorks = yup.object({
 export const createUserSchema = yup.object({
   email: yup
     .string()
+    .trim()
     .email('無効なメールアドレスです')
     .required(requiredMessage('メールアドレス')),
   password: yup
