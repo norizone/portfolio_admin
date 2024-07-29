@@ -128,9 +128,8 @@ export const WorkForm = (props: Props) => {
           required
           errorMessage={errors?.title?.message}
         >
-          <PrimaryInput
-            customClassName={styleInputMargin}
-            type="text"
+          <PrimaryTextArea
+            customClassName={twMerge(styleInputMargin, 'min-h-[3em]')}
             placeholder="タイトル"
             {...register('title')}
           />
@@ -141,10 +140,9 @@ export const WorkForm = (props: Props) => {
           required
           errorMessage={errors?.titleEn?.message}
         >
-          <PrimaryInput
-            type="text"
+          <PrimaryTextArea
+            customClassName={twMerge(styleInputMargin, 'min-h-[3em]')}
             placeholder="title"
-            customClassName={styleInputMargin}
             {...register('titleEn')}
           />
         </FormLabel>
