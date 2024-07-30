@@ -76,7 +76,7 @@ const ImageInputInner = <T extends File | undefined>(
           btnColor="success"
           onClick={selectFile}
         >
-          {imageFile ? '変更' : 'アップロード'}
+          {imageSource ? '変更' : 'アップロード'}
         </PrimaryBtn>
         {imageFile && isNullable && (
           <PrimaryBtn

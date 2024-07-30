@@ -84,7 +84,7 @@ export const createEditWorks = yup.object({
 
   archiveImg: yup.string().required(requiredMessage('一覧画像')),
   singleImgMain: yup.string().required(requiredMessage('詳細ページメイン画像')),
-  singleImgSub: yup.string().required(requiredMessage('詳細ページサブ画像')),
+  singleImgSub: yup.string().nullable(),
   singleImgSub2: yup.string().nullable(),
 })
 

@@ -315,7 +315,6 @@ export const WorkForm = (props: Props) => {
 
         <FormLabel
           label="詳細ページサブ画像1"
-          required
           errorMessage={
             errors?.singleImgSub?.message || errors?.singleImgSub?.message
           }

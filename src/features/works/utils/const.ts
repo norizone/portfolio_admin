@@ -13,7 +13,7 @@ export const workFormDefaultValues: WorkFormValues = {
   gitUrl: null,
   role: '',
   singleImgMain: '',
-  singleImgSub: '',
+  singleImgSub: null,
   singleImgSub2: null,
   uploadArchiveImg: null,
   uploadSingleImgMain: null,
