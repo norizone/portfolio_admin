@@ -9,6 +9,7 @@ export const workFormDefaultValues: WorkFormValues = {
   useTools: [],
   comment: null,
   url: null,
+  isLinkToUrl: null,
   gitUrl: null,
   role: '',
   singleImgMain: '',

@@ -34,6 +34,7 @@ export const useEditWork = (
       ...formData,
       permission: Number(data.permission),
       publication: Number(data.publication),
+      isLinkToUrl: Number(data.isLinkToUrl),
       useTools,
     }
 

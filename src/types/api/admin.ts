@@ -31,8 +31,13 @@ export type WorkTool = {
   id: number
 }
 
-export type DetailWork = {
-  id: number
+export type DetailWork = Omit<Work, 'createdAt' | 'updateAt' | 'order'> & {
+  useTools: {
+    id: number
+  }[]
+}
+
+export type EditCreateWorkBody = {
   permission: number
   publication: number
   title: string
@@ -43,14 +48,13 @@ export type DetailWork = {
   }[]
   comment?: string | null
   url?: string | null
+  isLinkToUrl?: number | null
   gitUrl?: string | null
   role: string
   singleImgMain: string
   singleImgSub: string
   singleImgSub2?: string | null
 }
-
-export type EditCreateWorkBody = Omit<DetailWork, 'id'>
 
 export type WorkList = Pick<Work, 'id' | 'title' | 'order' | 'publication'>
 

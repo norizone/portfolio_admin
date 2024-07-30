@@ -246,7 +246,20 @@ export const WorkForm = (props: Props) => {
           />
         </FormLabel>
 
-        <FormLabel label="git_url" errorMessage={errors?.gitUrl?.message}>
+        <FormLabel label="urlへのリンク">
+          <PrimaryLabelCheckBox
+            customClassName='mr-auto'
+            item={
+              {
+                value: 1,
+                label: '有り'
+              }
+            }
+            {...register('isLinkToUrl')}
+          />
+        </FormLabel>
+
+        <FormLabel label="Git url" errorMessage={errors?.gitUrl?.message}>
           <PrimaryInput
             customClassName={styleInputMargin}
             type="url"
