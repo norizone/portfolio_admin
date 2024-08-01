@@ -52,7 +52,7 @@ export type EditCreateWorkBody = {
   gitUrl?: string | null
   role: string
   singleImgMain: string
-  singleImgSub: string
+  singleImgSub?: string | null
   singleImgSub2?: string | null
 }
 

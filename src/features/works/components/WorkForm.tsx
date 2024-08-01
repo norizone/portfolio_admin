@@ -32,6 +32,16 @@ type Props = {
   sendErrorMessage?: string
 }
 
+type UploadKeyNama = 'uploadArchiveImg' | 'uploadSingleImgMain' | 'uploadSingleImgSub' | 'uploadSingleImgSub2';
+type ImageUryKeyName = 'archiveImg' | 'singleImgMain' | 'singleImgSub' | 'singleImgSub2'
+type OnChangeFile = {
+  imageFile?: File,
+  uploadedUrl?: string,
+  fileKeyNama: UploadKeyNama,
+  urlKeyName: ImageUryKeyName,
+  onChange: (...event: any[]) => void,
+}
+
 const publicStatusItems = Object.keys(convertPublication).map((key) => ({
   label: convertPublication[+key as PUBLICATION_STATUS],
   value: key,
@@ -88,6 +98,26 @@ export const WorkForm = (props: Props) => {
     onHandlerSubmit(data)
   }
 
+  const onChangeFile = ({
+    imageFile,
+    uploadedUrl,
+    fileKeyNama,
+    urlKeyName,
+    onChange
+  }: OnChangeFile) => {
+    onChange(imageFile);
+    setValue(fileKeyNama, imageFile, { shouldValidate: true });
+    onSubmitUpload({
+      key: fileKeyNama,
+      file: imageFile,
+      deletePath: uploadedUrl,
+      setValue: (url) =>
+        setValue(urlKeyName, url, { shouldValidate: true }),
+      setError: (message) =>
+        setError(urlKeyName, { type: 'server', message }),
+    })
+  }
+
   return (
     <>
       <form
@@ -127,6 +157,7 @@ export const WorkForm = (props: Props) => {
           label="タイトル"
           required
           errorMessage={errors?.title?.message}
+          cautionNote='推奨2行以内'
         >
           <PrimaryTextArea
             customClassName={twMerge(styleInputMargin, 'min-h-[3em]')}
@@ -139,6 +170,7 @@ export const WorkForm = (props: Props) => {
           label="英文字タイトル"
           required
           errorMessage={errors?.titleEn?.message}
+          cautionNote='推奨2行以内'
         >
           <PrimaryTextArea
             customClassName={twMerge(styleInputMargin, 'min-h-[3em]')}
@@ -150,6 +182,7 @@ export const WorkForm = (props: Props) => {
         <FormLabel
           label="一覧画像"
           required
+          cautionNote='推奨画像サイズ 1200* 750 投稿表示サイズ 800*500'
           errorMessage={
             errors?.archiveImg?.message || errors.uploadArchiveImg?.message
           }
@@ -159,22 +192,23 @@ export const WorkForm = (props: Props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <ImageInput
-                defaultUrl={defaultValues?.archiveImg ?? ''}
+                {...register('archiveImg')}
                 isLoading={isLoadingUpload('uploadArchiveImg')}
                 customClassName={styleInputMargin}
                 isNullable={false}
-                onChangeFile={(value: File) => {
-                  onChange(value)
-                  setValue('uploadArchiveImg', value, { shouldValidate: true })
-                  onSubmitUpload({
-                    key: 'uploadArchiveImg',
-                    file: value,
-                    setValue: (url) =>
-                      setValue('archiveImg', url, { shouldValidate: true }),
-                    setError: (message) =>
-                      setError('archiveImg', { type: 'server', message }),
-                  })
-                }}
+                imageUrl={watch('archiveImg')}
+                onChangeFile={(
+                  { imageFile,
+                    uploadedUrl,
+                  }: Pick<OnChangeFile, 'imageFile' | 'uploadedUrl'>) => onChangeFile(
+                    {
+                      imageFile,
+                      uploadedUrl,
+                      fileKeyNama: 'uploadArchiveImg',
+                      urlKeyName: 'archiveImg',
+                      onChange
+                    }
+                  )}
               />
             )}
           />
@@ -237,7 +271,7 @@ export const WorkForm = (props: Props) => {
           />
         </FormLabel>
 
-        <FormLabel label="url" errorMessage={errors?.url?.message}>
+        <FormLabel label="サイトURL" errorMessage={errors?.url?.message}>
           <PrimaryInput
             customClassName={styleInputMargin}
             type="url"
@@ -246,7 +280,10 @@ export const WorkForm = (props: Props) => {
           />
         </FormLabel>
 
-        <FormLabel label="urlへのリンク">
+        <FormLabel
+          label="サイトURL"
+          cautionNote='有りの場合別タブ遷移する'
+        >
           <PrimaryLabelCheckBox
             customClassName='mr-auto'
             item={
@@ -280,6 +317,7 @@ export const WorkForm = (props: Props) => {
         <FormLabel
           label="詳細ページメイン画像"
           required
+          cautionNote='推奨画像サイズ横1200px  投稿表示サイズ 横800'
           errorMessage={
             errors?.singleImgMain?.message ||
             errors.uploadSingleImgMain?.message
@@ -290,24 +328,22 @@ export const WorkForm = (props: Props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <ImageInput
-                defaultUrl={defaultValues?.singleImgMain ?? ''}
+                imageUrl={watch('singleImgMain')}
                 isLoading={isLoadingUpload('uploadSingleImgMain')}
                 customClassName={styleInputMargin}
                 isNullable={false}
-                onChangeFile={(value: File) => {
-                  onChange(value)
-                  setValue('uploadSingleImgMain', value, {
-                    shouldValidate: true,
-                  })
-                  onSubmitUpload({
-                    key: 'uploadSingleImgMain',
-                    file: value,
-                    setValue: (url) =>
-                      setValue('singleImgMain', url, { shouldValidate: true }),
-                    setError: (message) =>
-                      setError('singleImgMain', { type: 'server', message }),
-                  })
-                }}
+                onChangeFile={({
+                  imageFile, uploadedUrl,
+                }: Pick<OnChangeFile, 'imageFile' | 'uploadedUrl'>
+                ) => onChangeFile(
+                  {
+                    imageFile,
+                    uploadedUrl,
+                    fileKeyNama: 'uploadSingleImgMain',
+                    urlKeyName: 'singleImgMain',
+                    onChange
+                  }
+                )}
               />
             )}
           />
@@ -315,6 +351,7 @@ export const WorkForm = (props: Props) => {
 
         <FormLabel
           label="詳細ページサブ画像1"
+          cautionNote='推奨画像サイズ横360px 投稿表示サイズ 360'
           errorMessage={
             errors?.singleImgSub?.message || errors?.singleImgSub?.message
           }
@@ -324,24 +361,22 @@ export const WorkForm = (props: Props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <ImageInput
-                defaultUrl={defaultValues?.singleImgSub ?? ''}
+                imageUrl={watch('singleImgSub')}
                 isLoading={isLoadingUpload('uploadSingleImgSub')}
                 customClassName={styleInputMargin}
-                isNullable={false}
-                onChangeFile={(value: File) => {
-                  onChange(value)
-                  setValue('uploadSingleImgSub', value, {
-                    shouldValidate: true,
-                  })
-                  onSubmitUpload({
-                    key: 'uploadSingleImgSub',
-                    file: value,
-                    setValue: (url) =>
-                      setValue('singleImgSub', url, { shouldValidate: true }),
-                    setError: (message) =>
-                      setError('singleImgSub', { type: 'server', message }),
-                  })
-                }}
+                isNullable
+                onChangeFile={({
+                  imageFile, uploadedUrl,
+                }: Pick<OnChangeFile, 'imageFile' | 'uploadedUrl'>
+                ) => onChangeFile(
+                  {
+                    imageFile,
+                    uploadedUrl,
+                    fileKeyNama: 'uploadSingleImgSub',
+                    urlKeyName: 'singleImgSub',
+                    onChange
+                  }
+                )}
               />
             )}
           />
@@ -349,6 +384,7 @@ export const WorkForm = (props: Props) => {
 
         <FormLabel
           label="詳細ページサブ画像2"
+          cautionNote='推奨画像サイズ横360px 投稿表示サイズ 360'
           errorMessage={
             errors.singleImgSub2?.message ||
             errors?.uploadSingleImgSub2?.message
@@ -359,24 +395,22 @@ export const WorkForm = (props: Props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <ImageInput
-                defaultUrl={defaultValues?.singleImgSub2 ?? ''}
+                imageUrl={watch('singleImgSub2')}
                 isLoading={isLoadingUpload('uploadSingleImgSub2')}
                 customClassName={styleInputMargin}
-                isNullable={true}
-                onChangeFile={(value: File) => {
-                  onChange(value)
-                  setValue('uploadSingleImgSub2', value, {
-                    shouldValidate: true,
-                  })
-                  onSubmitUpload({
-                    key: 'uploadSingleImgSub2',
-                    file: value,
-                    setValue: (url) =>
-                      setValue('singleImgSub2', url, { shouldValidate: true }),
-                    setError: (message) =>
-                      setError('singleImgSub2', { type: 'server', message }),
-                  })
-                }}
+                isNullable
+                onChangeFile={({
+                  imageFile, uploadedUrl,
+                }: Pick<OnChangeFile, 'imageFile' | 'uploadedUrl'>
+                ) => onChangeFile(
+                  {
+                    imageFile,
+                    uploadedUrl,
+                    fileKeyNama: 'uploadSingleImgSub2',
+                    urlKeyName: 'singleImgSub2',
+                    onChange
+                  }
+                )}
               />
             )}
           />

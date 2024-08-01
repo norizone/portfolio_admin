@@ -171,6 +171,28 @@ export const useMutateUploadImage = () => {
   })
 }
 
+export const useMutateDeleteImage = () => {
+  return useMutation({
+    mutationFn: async (data: { fileName: string }): Promise<Work> => {
+      const res = await axiosClient.post(workApiUrl.deleteImage(), data)
+      return res.data
+    },
+  })
+}
+
+export const useMutateEditImage = () => {
+  return useMutation({
+    mutationFn: async (files: FormData): Promise<string> => {
+      const res = await axiosClient.post(workApiUrl.editImage(), files, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      return res.data
+    },
+  })
+}
+
 export const useMutateCreateWork = () => {
   return useMutation({
     mutationFn: async (data: EditCreateWorkBody): Promise<Work> => {

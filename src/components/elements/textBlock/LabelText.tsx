@@ -9,6 +9,7 @@ export type LabelTextProps = {
   required?: boolean
   labelClassName?: string
   labelProps?: LabelHTMLAttributes<HTMLLabelElement>
+  cautionNote?: string
 }
 
 export const LabelText = (props: LabelTextProps) => {
@@ -17,6 +18,7 @@ export const LabelText = (props: LabelTextProps) => {
     label,
     lang = 'jp',
     required = false,
+    cautionNote,
     labelClassName,
     labelProps,
   } = props
@@ -32,6 +34,9 @@ export const LabelText = (props: LabelTextProps) => {
           *
         </strong>
       )}
+      {cautionNote &&
+        <span className='block text-xs text-fc-placeholder'>{cautionNote}</span>
+      }
     </CustomTag>
   )
 }

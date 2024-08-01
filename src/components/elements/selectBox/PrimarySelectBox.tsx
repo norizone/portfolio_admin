@@ -11,7 +11,6 @@ export type Props = Omit<BaseSelectBoxProps, 'selectClassName'> & {
 export const PrimarySelectBox = forwardRef<HTMLSelectElement, Props>(
   (props, ref) => {
     const { customClassName, value, ...baseSelectBoxProps } = props
-    console.log(value)
     return (
       <BaseSelectBox
         ref={ref}

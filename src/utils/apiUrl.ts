@@ -17,6 +17,8 @@ export const workApiUrl = {
   detail: (id: number) => `${workApiUrl.default}/detail/${id}`,
   delete: (id: number) => `${workApiUrl.default}/delete/${id}`,
   uploadImage: () => `${workApiUrl.default}/upload_image`,
+  deleteImage: () => `${workApiUrl.default}/delete_image`,
+  editImage: () => `${workApiUrl.default}/edit_image`,
 }
 
 export const userApiUrl = {
