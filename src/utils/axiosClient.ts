@@ -2,7 +2,6 @@
 import { logout } from '@/hooks/api/admin.api'
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 import { baseURL } from './apiUrl'
-import Router from 'next/router'
 import { routers } from '@/routers/routers'
 
 export const axiosClient: AxiosInstance = axios.create({
@@ -26,7 +25,9 @@ axiosClient.interceptors.response.use(
       case 401:
         message = '認証エラー'
         await logout()
-        Router.push(routers.LOGIN)
+        if (typeof window !== 'undefined') {
+          window.location.href = routers.LOGIN // ログインページのURL
+        }
         break
       case 403:
         message = error.response?.data?.message ?? 'アクセスが拒否されました'
