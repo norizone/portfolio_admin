@@ -20,13 +20,17 @@ export const AddToolModal = (props: Props) => {
     toggleCompleteModal,
   } = useCompleteModal()
 
+  const onSuccess = () => {
+    toggleCreateModal()
+  }
+
   const {
     createErrorMessage,
     isLoadingCreate,
     isErrorCreate,
     setCreateErrorMessage,
     onSubmitCreate,
-  } = useCreateTool(setCompleteMessage, toggleCompleteModal)
+  } = useCreateTool(setCompleteMessage, toggleCompleteModal, onSuccess)
 
   const handleModal = () => {
     toggleCreateModal()

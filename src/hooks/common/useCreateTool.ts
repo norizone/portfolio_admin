@@ -7,6 +7,7 @@ import { CreateToolBody } from '@/types/api/admin'
 export const useCreateTool = (
   setCompleteMessage: (message: string) => void,
   toggleCompleteModal: () => void,
+  onSuccess?: () => void,
 ) => {
   const [createErrorMessage, setCreateErrorMessage] = useState('')
   const {
@@ -22,6 +23,7 @@ export const useCreateTool = (
       onSuccess: () => {
         setCompleteMessage(COMPLETE_MESSAGE_CREATE)
         toggleCreateModal()
+        onSuccess && onSuccess()
         toggleCompleteModal()
       },
       onError: (error) => {
