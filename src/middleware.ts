@@ -23,12 +23,13 @@ export function middleware(request: NextRequest) {
     try {
       const res = await axios.get(`${baseURL}${authApiUrl.default}`, {
         headers: { cookie },
+        withCredentials: true,
       })
       if (res.status === 200) {
         return response
       } else {
         return NextResponse.redirect(
-          `${request.nextUrl.origin}${routers.LOGIN}`,
+          `${request.nextUrl.origin}${routers.LOGIN}`
         )
       }
     } catch (error) {
