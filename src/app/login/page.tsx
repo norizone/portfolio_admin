@@ -11,14 +11,16 @@ export const metadata: Metadata = {
   title: 'ログイン',
 }
 
-const cookieToken = cookies().get('access_token')
 
-const cookie = cookies()
-  .getAll()
-  .map((cookie) => `${cookie.name}=${cookie.value}`)
-  .join('; ')
 
 const getAuth = async () => {
+  const cookieToken = cookies().get('access_token')
+
+  const cookie = cookies()
+    .getAll()
+    .map((cookie) => `${cookie.name}=${cookie.value}`)
+    .join('; ')
+
   let resStatus = 0
   if (!cookieToken || !cookieToken.value) return
   try {
