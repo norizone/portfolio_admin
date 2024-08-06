@@ -1,3 +1,4 @@
+'use client'
 import { AuthGuard } from './AuthGuard'
 import { QueryProviders } from './QueryProvider'
 
