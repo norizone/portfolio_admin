@@ -20,7 +20,7 @@ export const AuthGuard = (props: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (isLoading || !isError) return
-    onLogout()
+    // onLogout()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isLoading])
 
