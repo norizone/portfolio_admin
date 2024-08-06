@@ -22,10 +22,12 @@ const getAuth = async () => {
   let resStatus = 0
   if (!cookieToken || !cookieToken.value) return
   try {
-    const res = await axios.get(`${baseURL}${authApiUrl.default}`, {
+    const res = await fetch(`${baseURL}${authApiUrl.default}`, {
       headers: { cookie },
-      withCredentials: true,
+      mode: 'cors',
+      cache: "no-store"
     })
+    console.log(res)
     if (res.status === 200) {
       resStatus = res.status
     }

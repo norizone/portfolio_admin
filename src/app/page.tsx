@@ -34,11 +34,13 @@ const getAuthData = async (): Promise<AuthData> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.get(`${baseURL}${authApiUrl.default}`, {
+    const res = await fetch(`${baseURL}${authApiUrl.default}`, {
       headers: { cookie },
-      withCredentials: true,
+      mode: 'cors',
+      cache: "no-store"
     })
-    return res.data
+    console.log(res.json())
+    return res.json()
   } catch (error) {
     console.log(error)
     return {}

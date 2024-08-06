@@ -17,11 +17,13 @@ const getToolList = async (): Promise<ToolData[]> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.get(`${baseURL}${toolApiUrl.all()}`, {
+    const res = await fetch(`${baseURL}${toolApiUrl.all()}`, {
       headers: { cookie },
-      withCredentials: true,
+      mode: 'cors',
+      cache: "no-store"
     })
-    return res.data
+    console.log(res)
+    return res.json()
   } catch (error) {
     console.log(error)
     return []
