@@ -4,7 +4,7 @@ import './globals.css'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient } from '@tanstack/react-query'
 import Template from './templete'
-import Providers from '@/providers/Providers'
+import Providers from '@/providers/providers'
 
 const NotoSans = Noto_Sans_JP({
   weight: ['300', '700'],
