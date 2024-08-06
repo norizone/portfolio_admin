@@ -19,6 +19,7 @@ const getToolList = async (): Promise<ToolData[]> => {
   try {
     const res = await axios.get(`${baseURL}${toolApiUrl.all()}`, {
       headers: { cookie },
+      withCredentials: true,
     })
     return res.data
   } catch (error) {

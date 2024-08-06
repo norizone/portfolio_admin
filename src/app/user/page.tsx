@@ -21,6 +21,7 @@ const getUserList = async (): Promise<UserData[]> => {
   try {
     const res = await axios.get(`${baseURL}${userApiUrl.all()}`, {
       headers: { cookie },
+      withCredentials: true,
     })
     return res.data
   } catch (error) {

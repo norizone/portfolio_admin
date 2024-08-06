@@ -34,6 +34,7 @@ const getAuthData = async (): Promise<AuthData> => {
   try {
     const res = await axios.get(`${baseURL}${authApiUrl.default}`, {
       headers: { cookie },
+      withCredentials: true,
     })
     return res.data
   } catch (error) {

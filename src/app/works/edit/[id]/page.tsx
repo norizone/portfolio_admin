@@ -22,9 +22,11 @@ const getSSRData = async (
     const [toolRes, workRes] = await Promise.all([
       axios.get(`${baseURL}${toolApiUrl.all()}`, {
         headers: { cookie },
+        withCredentials: true,
       }),
       axios.get(`${baseURL}${workApiUrl.detail(id)}`, {
         headers: { cookie },
+        withCredentials: true,
       }),
     ])
 

@@ -30,6 +30,7 @@ const getWorkList = async (): Promise<WorkListRes> => {
       },
       {
         headers: { cookie },
+        withCredentials: true,
       },
     )
     return res.data
