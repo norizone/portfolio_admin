@@ -15,7 +15,7 @@ const getDashboard = async (): Promise<ResDashboardData> => {
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
-  console.log('cookie', cookie)
+  console.log(cookie)
   try {
     const res = await axios.get(`${baseURL}${dashboardApiUrl.default}`, {
       headers: { cookie },
