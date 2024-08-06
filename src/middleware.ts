@@ -12,6 +12,7 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next()
 
   const cookieToken = request.cookies.get('access_token')
+  console.log('token', cookieToken)
   if (!cookieToken?.value)
     return NextResponse.redirect(`${request.nextUrl.origin}${routers.LOGIN}`)
 
@@ -26,8 +27,10 @@ export function middleware(request: NextRequest) {
         withCredentials: true,
       })
       if (res.status === 200) {
+        console.log('success')
         return response
       } else {
+        console.log('error')
         return NextResponse.redirect(
           `${request.nextUrl.origin}${routers.LOGIN}`
         )
