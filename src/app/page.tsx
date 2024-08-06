@@ -15,6 +15,7 @@ const getDashboard = async (): Promise<ResDashboardData> => {
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
+  console.log('cookie', cookie)
   try {
     const res = await axios.get(`${baseURL}${dashboardApiUrl.default}`, {
       headers: { cookie },
@@ -22,6 +23,7 @@ const getDashboard = async (): Promise<ResDashboardData> => {
     })
     return res.data
   } catch (error) {
+    console.log(error)
     return {}
   }
 }
@@ -38,6 +40,7 @@ const getAuthData = async (): Promise<AuthData> => {
     })
     return res.data
   } catch (error) {
+    console.log(error)
     return {}
   }
 }
