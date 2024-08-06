@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next()
 
   const cookieToken = request.cookies.get('access_token')
-  console.log('token', cookieToken)
+  console.log('token', cookieToken?.value)
   if (!cookieToken?.value)
     return NextResponse.redirect(`${request.nextUrl.origin}${routers.LOGIN}`)
 
