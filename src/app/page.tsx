@@ -18,6 +18,7 @@ const getDashboard = async (): Promise<ResDashboardData> => {
   try {
     const res = await axios.get(`${baseURL}${dashboardApiUrl.default}`, {
       headers: { cookie },
+      withCredentials: true,
     })
     return res.data
   } catch (error) {
