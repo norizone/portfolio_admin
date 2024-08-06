@@ -16,11 +16,12 @@ export function middleware(request: NextRequest) {
   if (!cookieToken?.value)
     return NextResponse.redirect(`${request.nextUrl.origin}${routers.LOGIN}`)
 
+  const cookie = request.cookies
+    .getAll()
+    .map((cookie) => `${cookie.name}=${cookie.value}`)
+    .join('; ')
+  return response
   const getAuth = async () => {
-    const cookie = request.cookies
-      .getAll()
-      .map((cookie) => `${cookie.name}=${cookie.value}`)
-      .join('; ')
     try {
       const res = await axios.get(`${baseURL}${authApiUrl.default}`, {
         headers: { cookie },
