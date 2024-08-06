@@ -17,11 +17,13 @@ const getDashboard = async (): Promise<ResDashboardData> => {
     .join('; ')
   console.log(cookie)
   try {
-    const res = await axios.get(`${baseURL}${dashboardApiUrl.default}`, {
+    const res = await fetch(`${baseURL}${dashboardApiUrl.default}`, {
       headers: { cookie },
-      withCredentials: true,
+      mode: 'cors',
+      cache: "no-store"
     })
-    return res.data
+    console.log(res.json())
+    return res.json()
   } catch (error) {
     console.log(error)
     return {}
