@@ -1,7 +1,6 @@
 import { ListCard } from '@/components/elements/card/ListCard'
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import { Metadata } from 'next'
-import axios from 'axios'
 import { cookies } from 'next/headers'
 import { AuthData, ResDashboardData } from '@/types/api/admin'
 import { authApiUrl, baseURL, dashboardApiUrl } from '@/utils/apiUrl'
@@ -15,11 +14,9 @@ const getDashboard = async (): Promise<ResDashboardData> => {
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
-  console.log(cookie)
   try {
     const res = await fetch(`${baseURL}${dashboardApiUrl.default}`, {
       headers: { cookie },
-      mode: 'cors',
       cache: "no-store"
     })
     return res.json()
@@ -37,7 +34,6 @@ const getAuthData = async (): Promise<AuthData> => {
   try {
     const res = await fetch(`${baseURL}${authApiUrl.default}`, {
       headers: { cookie },
-      mode: 'cors',
       cache: "no-store"
     })
     return res.json()
@@ -49,7 +45,6 @@ const getAuthData = async (): Promise<AuthData> => {
 
 export default async function Home() {
   const userData = await getAuthData()
-  console.log(userData)
   const accountData = [
     { title: 'id', value: userData.id },
     { title: 'email', value: userData.email },
