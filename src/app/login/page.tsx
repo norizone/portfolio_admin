@@ -11,8 +11,6 @@ export const metadata: Metadata = {
   title: 'ログイン',
 }
 
-
-
 const getAuth = async () => {
   const cookieToken = cookies().get('access_token')
 
@@ -26,6 +24,7 @@ const getAuth = async () => {
   try {
     const res = await axios.get(`${baseURL}${authApiUrl.default}`, {
       headers: { cookie },
+      withCredentials: true,
     })
     if (res.status === 200) {
       resStatus = res.status
