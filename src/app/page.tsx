@@ -22,7 +22,6 @@ const getDashboard = async (): Promise<ResDashboardData> => {
       mode: 'cors',
       cache: "no-store"
     })
-    console.log(res.json())
     return res.json()
   } catch (error) {
     console.log(error)
@@ -41,7 +40,6 @@ const getAuthData = async (): Promise<AuthData> => {
       mode: 'cors',
       cache: "no-store"
     })
-    console.log(res.json())
     return res.json()
   } catch (error) {
     console.log(error)
@@ -51,8 +49,8 @@ const getAuthData = async (): Promise<AuthData> => {
 
 export default async function Home() {
   const userData = await getAuthData()
+  console.log(userData)
   const accountData = [
-    ,
     { title: 'id', value: userData.id },
     { title: 'email', value: userData.email },
   ]
@@ -70,7 +68,6 @@ export default async function Home() {
     },
   ]
 
-  const authData = await getAuthData()
   return (
     <section>
       <PrimaryHeadline tag="h1">管理者情報</PrimaryHeadline>
