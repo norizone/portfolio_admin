@@ -17,7 +17,8 @@ const getDashboard = async (): Promise<ResDashboardData> => {
   try {
     const res = await fetch(`${baseURL}${dashboardApiUrl.default}`, {
       headers: { cookie },
-      cache: "no-store"
+      cache: "no-store",
+      mode: 'cors'
     })
     return res.json()
   } catch (error) {
@@ -34,7 +35,8 @@ const getAuthData = async (): Promise<AuthData> => {
   try {
     const res = await fetch(`${baseURL}${authApiUrl.default}`, {
       headers: { cookie },
-      cache: "no-store"
+      cache: "no-store",
+      mode: 'cors'
     })
     return res.json()
   } catch (error) {
