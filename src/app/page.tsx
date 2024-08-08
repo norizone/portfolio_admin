@@ -16,9 +16,9 @@ const getDashboard = async (): Promise<ResDashboardData> => {
     .join('; ')
   try {
     const res = await fetch(`${baseURL}${dashboardApiUrl.default}`, {
-      headers: { cookie },
+      headers: { Cookie: cookies().toString(), },
       cache: "no-store",
-      mode: 'cors'
+      mode: "cors"
     })
     return res.json()
   } catch (error) {
