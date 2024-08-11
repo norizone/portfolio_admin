@@ -10,29 +10,30 @@ export const metadata: Metadata = {
 }
 
 const getDashboard = async (): Promise<ResDashboardData> => {
-  const cookie = cookies()
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join('; ')
   try {
+    const cookie = cookies()
+      .getAll()
+      .map((cookie) => `${cookie.name}=${cookie.value}`)
+      .join('; ')
     const res = await fetch(`${baseURL}${dashboardApiUrl.default}`, {
-      headers: { Cookie: cookies().toString(), },
+      headers: { cookie: cookies().toString(), },
       cache: "no-store",
       mode: "cors"
     })
     return res.json()
   } catch (error) {
     console.log(error)
+    console.log(cookies().toString())
     return {}
   }
 }
 
 const getAuthData = async (): Promise<AuthData> => {
-  const cookie = cookies()
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join('; ')
   try {
+    const cookie = cookies()
+      .getAll()
+      .map((cookie) => `${cookie.name}=${cookie.value}`)
+      .join('; ')
     const res = await fetch(`${baseURL}${authApiUrl.default}`, {
       headers: { cookie },
       cache: "no-store",
