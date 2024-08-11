@@ -18,9 +18,9 @@ const getDashboard = async (): Promise<ResDashboardData> => {
     const res = await fetch(`${baseURL}${dashboardApiUrl.default}`, {
       headers: { cookie: cookies().toString(), },
       cache: "no-store",
-      mode: "cors"
+      credentials: "include",
     })
-    return res.json()
+    return await res.json()
   } catch (error) {
     console.log(error)
     console.log(cookies().toString())
@@ -36,10 +36,10 @@ const getAuthData = async (): Promise<AuthData> => {
       .join('; ')
     const res = await fetch(`${baseURL}${authApiUrl.default}`, {
       headers: { cookie },
+      credentials: "include",
       cache: "no-store",
-      mode: 'cors'
     })
-    return res.json()
+    return await res.json()
   } catch (error) {
     console.log(error)
     return {}
