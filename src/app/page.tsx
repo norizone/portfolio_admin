@@ -16,14 +16,13 @@ const getDashboard = async (): Promise<ResDashboardData> => {
       .map((cookie) => `${cookie.name}=${cookie.value}`)
       .join('; ')
     const res = await fetch(`${baseURL}${dashboardApiUrl.default}`, {
-      headers: { cookie: cookies().toString(), },
+      headers: { cookie },
       cache: "no-store",
       credentials: "include",
     })
     return await res.json()
   } catch (error) {
     console.log(error)
-    console.log(cookies().toString())
     return {}
   }
 }
