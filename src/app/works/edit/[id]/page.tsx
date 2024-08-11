@@ -1,6 +1,5 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
-import axios from 'axios'
 import { cookies } from 'next/headers'
 import { DetailWork, ToolData } from '@/types/api/admin'
 import { EditWork } from '../../../../features/works/edit/components/EditWork'
@@ -20,19 +19,19 @@ const getSSRData = async (
     .join('; ')
   try {
     const [toolRes, workRes] = await Promise.all([
-      axios.get(`${baseURL}${toolApiUrl.all()}`, {
+      fetch(`${baseURL}${toolApiUrl.all()}`, {
         headers: { cookie },
-        withCredentials: true,
+        cache: "no-store"
       }),
-      axios.get(`${baseURL}${workApiUrl.detail(id)}`, {
+      fetch(`${baseURL}${workApiUrl.detail(id)}`, {
         headers: { cookie },
-        withCredentials: true,
+        cache: "no-store"
       }),
     ])
 
     return {
-      tool: toolRes.data,
-      work: workRes.data,
+      tool: await toolRes.json(),
+      work: await workRes.json(),
     }
   } catch (error) {
     console.log(error)

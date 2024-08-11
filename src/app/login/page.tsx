@@ -2,7 +2,6 @@ import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
 import { LoginForm } from '@/features/login/components/LoginForm'
 import { cookies } from 'next/headers'
-import axios from 'axios'
 import { authApiUrl, baseURL } from '@/utils/apiUrl'
 import { redirect } from 'next/navigation'
 import { routers } from '@/routers/routers'
@@ -27,7 +26,6 @@ const getAuth = async () => {
       mode: 'cors',
       cache: "no-store"
     })
-    console.log(res)
     if (res.status === 200) {
       resStatus = res.status
     }

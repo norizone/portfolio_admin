@@ -1,10 +1,8 @@
 import { PrimaryHeadline } from '@/components/elements/headline/PrimaryHeadline'
 import type { Metadata } from 'next'
-import axios from 'axios'
 import { cookies } from 'next/headers'
 import { ToolData } from '@/types/api/admin'
 import { baseURL, toolApiUrl } from '@/utils/apiUrl'
-import { notFound } from 'next/navigation'
 import { CreateForm } from '@/features/works/create/components/CreateForm'
 
 export const metadata: Metadata = {
@@ -17,14 +15,14 @@ const getToolList = async (): Promise<ToolData[]> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.get(`${baseURL}${toolApiUrl.all()}`, {
+    const res = await fetch(`${baseURL}${toolApiUrl.all()}`, {
       headers: { cookie },
-      withCredentials: true,
+      cache: "no-store"
     })
-    return res.data
+    return await res.json()
   } catch (error) {
     console.log(error)
-    notFound()
+    return []
   }
 }
 

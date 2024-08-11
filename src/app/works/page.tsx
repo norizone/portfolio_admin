@@ -22,18 +22,19 @@ const getWorkList = async (): Promise<WorkListRes> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.post(
+    const res = await fetch(
       `${baseURL}${workApiUrl.list()}`,
       {
-        page: DEFAULT_PAGE,
-        pageSize: PAGE_SiZE,
-      },
-      {
+        method: "POST",
         headers: { cookie },
-        withCredentials: true,
+        body: JSON.stringify({
+          page: DEFAULT_PAGE,
+          pageSize: PAGE_SiZE,
+        }),
+        cache: "no-store",
       },
     )
-    return res.data
+    return await res.json()
   } catch (error) {
     return {
       items: [],

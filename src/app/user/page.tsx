@@ -19,11 +19,11 @@ const getUserList = async (): Promise<UserData[]> => {
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
   try {
-    const res = await axios.get(`${baseURL}${userApiUrl.all()}`, {
+    const res = await fetch(`${baseURL}${userApiUrl.all()}`, {
       headers: { cookie },
-      withCredentials: true,
+      cache: "no-store"
     })
-    return res.data
+    return await res.json()
   } catch (error) {
     console.log(error)
     return []
