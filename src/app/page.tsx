@@ -68,10 +68,6 @@ export default async function Home() {
 
   return (
     <section>
-      <p>cookie_{cookies()
-        .getAll()
-        .map((cookie) => `${cookie.name}=${cookie.value}`)
-        .join('; ')}</p>
       <PrimaryHeadline tag="h1">管理者情報</PrimaryHeadline>
       <ul className="flex flex-col mt-[2em] gap-[1em]">
         {accountData.map((data, index) => (
