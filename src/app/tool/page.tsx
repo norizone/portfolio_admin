@@ -25,6 +25,7 @@ const getToolList = async (): Promise<ToolData[]> => {
     console.log(res)
     return res.json()
   } catch (error) {
+    console.log('cookie', cookie)
     console.log(error)
     return []
   }
