@@ -68,7 +68,7 @@ export default async function Home() {
 
   return (
     <section>
-      <p>{cookies()
+      <p>cookie_{cookies()
         .getAll()
         .map((cookie) => `${cookie.name}=${cookie.value}`)
         .join('; ')}</p>
