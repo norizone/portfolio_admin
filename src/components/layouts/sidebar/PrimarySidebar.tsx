@@ -110,7 +110,7 @@ export const SideBar = () => {
                   className={twMerge(
                     `${xWrap} py-[.5em] grid grid-cols-[1em_1fr] gap-x-[2em] fill-black hover:fill-primary transition-all bg-transparent hover:bg-hover`,
                     clsx(
-                      menu.url === parentPath && 'fill-primary bg-hover',
+                      menu.url === parentPath && 'fill-primary bg-background',
                       menu.url === pathname && 'cursor-default',
                     ),
                   )}
