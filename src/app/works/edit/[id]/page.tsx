@@ -5,6 +5,7 @@ import { DetailWork, ToolData } from '@/types/api/admin'
 import { EditWork } from '../../../../features/works/edit/components/EditWork'
 import { notFound } from 'next/navigation'
 import { baseURL, toolApiUrl, workApiUrl } from '@/utils/apiUrl'
+import { fetchError } from '@/utils/fetchError'
 
 export const metadata: Metadata = {
   title: '制作実績 編集',
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 const getSSRData = async (
   id: number,
 ): Promise<{ tool: ToolData[]; work?: DetailWork }> => {
+  let resStatus: Response['status'] = 0
   const cookie = cookies()
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
@@ -29,13 +31,22 @@ const getSSRData = async (
       }),
     ])
 
+    if (!toolRes.ok) {
+      resStatus = toolRes.status
+      throw new Error(`Tool API error: ${toolRes.status}`);
+    }
+    if (!workRes.ok) {
+      resStatus = workRes.status
+      throw new Error(`Work API error: ${workRes.status}`);
+    }
+
     return {
       tool: await toolRes.json(),
       work: await workRes.json(),
     }
   } catch (error) {
-    console.log(error)
-    notFound()
+    fetchError(resStatus)
+    return { tool: [] }
   }
 }
 

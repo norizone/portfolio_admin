@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { routers } from './routers/routers'
-import axios from 'axios'
 import { authApiUrl, baseURL } from './utils/apiUrl'
 
 export const config = {
@@ -21,7 +20,7 @@ export function middleware(request: NextRequest) {
       .map((cookie) => `${cookie.name}=${cookie.value}`)
       .join('; ')
     try {
-      const res = await axios.get(`${baseURL}${authApiUrl.default}`, {
+      const res = await fetch(`${baseURL}${authApiUrl.default}`, {
         headers: { cookie },
       })
       if (res.status === 200) {

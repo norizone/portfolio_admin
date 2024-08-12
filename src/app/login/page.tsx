@@ -23,11 +23,15 @@ const getAuth = async () => {
   try {
     const res = await fetch(`${baseURL}${authApiUrl.default}`, {
       headers: { cookie },
-      mode: 'cors',
       cache: "no-store"
     })
     if (res.status === 200) {
       resStatus = res.status
+    } else {
+      await fetch(`${baseURL}${authApiUrl.logout}`, {
+        headers: { cookie },
+        cache: "no-store"
+      })
     }
   } catch (error) {
     return

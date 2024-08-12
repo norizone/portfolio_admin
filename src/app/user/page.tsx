@@ -6,14 +6,15 @@ import { routers } from '@/routers/routers'
 import { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import { UserData } from '@/types/api/admin'
-import axios from 'axios'
 import { baseURL, userApiUrl } from '@/utils/apiUrl'
+import { fetchError } from '@/utils/fetchError'
 
 export const metadata: Metadata = {
   title: 'ユーザー一覧',
 }
 
 const getUserList = async (): Promise<UserData[]> => {
+  let resStatus: Response['status'] = 0
   const cookie = cookies()
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
@@ -23,9 +24,13 @@ const getUserList = async (): Promise<UserData[]> => {
       headers: { cookie },
       cache: "no-store"
     })
+    if (!res.ok) {
+      resStatus = res.status
+      throw new Error(`HTTPエラー: ステータスコード ${res.status}`);
+    }
     return await res.json()
   } catch (error) {
-    console.log(error)
+    fetchError(resStatus)
     return []
   }
 }

@@ -4,12 +4,14 @@ import { cookies } from 'next/headers'
 import { ToolData } from '@/types/api/admin'
 import { baseURL, toolApiUrl } from '@/utils/apiUrl'
 import { CreateForm } from '@/features/works/create/components/CreateForm'
+import { fetchError } from '@/utils/fetchError'
 
 export const metadata: Metadata = {
   title: '新規作成',
 }
 
 const getToolList = async (): Promise<ToolData[]> => {
+  let resStatus: Response['status'] = 0
   const cookie = cookies()
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
@@ -19,9 +21,13 @@ const getToolList = async (): Promise<ToolData[]> => {
       headers: { cookie },
       cache: "no-store"
     })
+    if (!res.ok) {
+      resStatus = res.status
+      throw new Error(`HTTPエラー: ステータスコード ${res.status}`);
+    }
     return await res.json()
   } catch (error) {
-    console.log(error)
+    fetchError(resStatus)
     return []
   }
 }

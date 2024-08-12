@@ -4,10 +4,10 @@ import { routers } from '@/routers/routers'
 import type { Metadata } from 'next'
 import { WorkList } from '../../features/works/root/components/WorkList'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
-import axios from 'axios'
 import { cookies } from 'next/headers'
 import { WorkListRes } from '@/types/api/admin'
 import { baseURL, workApiUrl } from '@/utils/apiUrl'
+import { fetchError } from '@/utils/fetchError'
 
 export const metadata: Metadata = {
   title: '制作実績一覧',
@@ -17,6 +17,7 @@ const PAGE_SiZE = 10
 const DEFAULT_PAGE = 1
 
 const getWorkList = async (): Promise<WorkListRes> => {
+  let resStatus: Response['status'] = 0
   const cookie = cookies()
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
@@ -34,8 +35,13 @@ const getWorkList = async (): Promise<WorkListRes> => {
         cache: "no-store",
       },
     )
-    return await res.json()
+    if (!res.ok) {
+      resStatus = res.status
+      throw new Error(`HTTPエラー: ステータスコード ${res.status}`);
+    }
+    return await res.json();
   } catch (error) {
+    fetchError(resStatus)
     return {
       items: [],
       totalCount: 0,
