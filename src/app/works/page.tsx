@@ -27,7 +27,7 @@ const getWorkList = async (): Promise<WorkListRes> => {
       `${baseURL}${workApiUrl.list()}`,
       {
         method: "POST",
-        headers: { cookie },
+        headers: { cookie, "Content-Type": "application/json", },
         body: JSON.stringify({
           page: DEFAULT_PAGE,
           pageSize: PAGE_SiZE,
