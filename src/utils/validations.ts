@@ -25,15 +25,10 @@ export const fileSchema = yup
   .mixed<File>()
   .test({
     name: 'format',
-    message: 'ファイルは png、jpg、jpeg、webp 形式のみを対応しています。',
+    message: 'png、jpg、jpeg 形式の画像をアップロードしてください',
     test(file: unknown) {
       if (file && file instanceof File) {
-        const supportedFormats = [
-          'image/jpeg',
-          'image/png',
-          'image/jpg',
-          'image/webp',
-        ]
+        const supportedFormats = ['image/jpeg', 'image/png', 'image/jpg']
         return supportedFormats.includes(file.type)
       }
       return true
@@ -41,10 +36,10 @@ export const fileSchema = yup
   })
   .test({
     name: 'size',
-    message: 'ファイルサイズは2.5MBを超えることはできません。',
+    message: '1MBまでの画像をアップロードしてください',
     test(file: unknown) {
       if (file && file instanceof File) {
-        return file.size <= 2.5 * 1024 * 1024
+        return file.size <= 1 * 1024 * 1024
       }
       return true
     },
@@ -65,7 +60,7 @@ export const createEditWorks = yup.object({
   publication: yup.string().required(requiredMessage('公開状況', 'select')),
   title: requiredString(requiredMessage('タイトル')),
   titleEn: requiredString(requiredMessage('英文字タイトル')).required(
-    requiredMessage('英文字タイトル'),
+    requiredMessage('英文字タイトル')
   ),
 
   useTools: yup
