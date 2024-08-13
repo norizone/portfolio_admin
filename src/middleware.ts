@@ -15,6 +15,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(`${request.nextUrl.origin}${routers.LOGIN}`)
 
   const getAuth = async () => {
+    let resStatus = 0
     const cookie = request.cookies
       .getAll()
       .map((cookie) => `${cookie.name}=${cookie.value}`)
@@ -23,6 +24,7 @@ export function middleware(request: NextRequest) {
       const res = await fetch(`${baseURL}${authApiUrl.default}`, {
         headers: { cookie },
       })
+      resStatus = res.status
       if (res.status === 200) {
         return response
       } else {
@@ -33,6 +35,8 @@ export function middleware(request: NextRequest) {
     } catch (error) {
       return NextResponse.redirect(`${request.nextUrl.origin}${routers.LOGIN}`)
     }
+    if (resStatus !== 200)
+      NextResponse.redirect(`${request.nextUrl.origin}${routers.LOGIN}`)
   }
   getAuth()
 }
