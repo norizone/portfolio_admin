@@ -51,13 +51,13 @@ const ImageInputInner = (
   return (
     <div className={customClassName} ref={ref}>
       {imageUrl && (
-        <div className="mb-[.6em] max-h-[200px] max-w-[200px]">
+        <div className="mb-[.6em] max-h-[400px] max-w-[400px]">
           {
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={imageUrl}
               alt=""
-              className="object-cover w-full h-full block"
+              className="object-contain w-full h-full max-h-[400px] max-w-[400px] block"
             />
           }
         </div>
