@@ -36,12 +36,11 @@ const getWorkList = async (): Promise<WorkListRes> => {
       },
     )
     if (!res.ok) {
-      resStatus = res.status
       throw new Error(`HTTPエラー: ステータスコード ${res.status}`);
     }
+    resStatus = res.status
     return await res.json();
   } catch (error) {
-    fetchError(resStatus)
     return {
       items: [],
       totalCount: 0,
