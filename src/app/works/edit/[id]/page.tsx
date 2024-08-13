@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const getSSRData = async (
   id: number,
 ): Promise<{ tool: ToolData[]; work?: DetailWork }> => {
-  let resStatus: Response['status'] = 0
+  let resStatus: Response['status'] = 200
   const cookie = cookies()
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
@@ -45,9 +45,9 @@ const getSSRData = async (
       work: await workRes.json(),
     }
   } catch (error) {
-    fetchError(resStatus)
     return { tool: [] }
   }
+  if (resStatus !== 200) fetchError(resStatus)
 }
 
 export default async function Works({ params }: { params: { id: string } }) {

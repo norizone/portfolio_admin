@@ -11,14 +11,12 @@ export const metadata: Metadata = {
 }
 
 const getAuth = async () => {
+  let resStatus = 0
   const cookieToken = cookies().get('access_token')
-
   const cookie = cookies()
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join('; ')
-
-  let resStatus = 0
   if (!cookieToken || !cookieToken.value) return
   try {
     const res = await fetch(`${baseURL}${authApiUrl.default}`, {

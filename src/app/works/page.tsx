@@ -48,6 +48,7 @@ const getWorkList = async (): Promise<WorkListRes> => {
       totalPages: 0,
     }
   }
+  if (resStatus !== 200) fetchError(resStatus)
 }
 
 export default async function Works() {
