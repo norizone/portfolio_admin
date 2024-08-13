@@ -4,7 +4,6 @@ import {
   useMutateUploadImage,
 } from '@/hooks/api/admin.hooks'
 import { useState } from 'react'
-
 interface UploadState {
   [key: string]: boolean
 }
@@ -71,7 +70,7 @@ export const useImageUpload = () => {
         onSettled: () => {
           setUploadState(key, false)
         },
-      },
+      }
     )
   }
 

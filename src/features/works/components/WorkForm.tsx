@@ -88,6 +88,7 @@ export const WorkForm = (props: Props) => {
     setError,
     formState: { errors },
     control,
+    trigger
   } = useForm<WorkFormValues>({
     mode: 'onBlur',
     defaultValues,
@@ -98,7 +99,7 @@ export const WorkForm = (props: Props) => {
     onHandlerSubmit(data)
   }
 
-  const onChangeFile = ({
+  const onChangeFile = async ({
     imageFile,
     uploadedUrl,
     fileKeyNama,
@@ -107,7 +108,8 @@ export const WorkForm = (props: Props) => {
   }: OnChangeFile) => {
     onChange(imageFile);
     setValue(fileKeyNama, imageFile, { shouldValidate: true });
-    if (errors[fileKeyNama]) return;
+    const isValid = await trigger(fileKeyNama);
+    if (!isValid) return;
     onSubmitUpload({
       key: fileKeyNama,
       file: imageFile,
