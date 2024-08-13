@@ -4,6 +4,7 @@ import { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import { AuthData, ResDashboardData } from '@/types/api/admin'
 import { authApiUrl, baseURL, dashboardApiUrl } from '@/utils/apiUrl'
+import { fetchError } from '@/utils/fetchError'
 
 export const metadata: Metadata = {
   title: '管理者情報',
@@ -45,23 +46,64 @@ const getAuthData = async (): Promise<AuthData> => {
   }
 }
 
+const SSRData = async (): Promise<{ authData: AuthData, dashboardData: ResDashboardData }> => {
+  let resStatus: Response['status'] = 0;
+  try {
+    const cookie = cookies()
+      .getAll()
+      .map((cookie) => `${cookie.name}=${cookie.value}`)
+      .join('; ')
+
+    const [authRes, dashboardRes] = await Promise.all([
+      fetch(`${baseURL}${authApiUrl.default}`, {
+        headers: { cookie },
+        cache: "no-store",
+      }),
+
+      fetch(`${baseURL}${dashboardApiUrl.default}`, {
+        headers: { cookie },
+        cache: "no-store",
+      })
+    ])
+
+    if (!authRes.ok) {
+      resStatus = authRes.status
+      throw new Error(`Auth API error: ${authRes.status}`);
+    }
+    if (!dashboardRes.ok) {
+      resStatus = authRes.status
+      throw new Error(`Auth API error: ${authRes.status}`);
+    }
+
+    return {
+      authData: await authRes.json(),
+      dashboardData: await dashboardRes.json()
+    }
+  } catch (error) {
+    return {
+      authData: {},
+      dashboardData: {}
+    }
+  }
+  if (resStatus !== 0) fetchError(resStatus)
+}
+
 export default async function Home() {
-  const userData = await getAuthData()
+  const { authData, dashboardData } = await SSRData()
   const accountData = [
-    { title: 'id', value: userData.id },
-    { title: 'email', value: userData.email },
+    { title: 'id', value: authData?.id ?? '' },
+    { title: 'email', value: authData?.email ?? '' },
   ]
 
-  const data = await getDashboard()
   const countData = [
     {
       title: '制作実績',
-      count: data?.workCount ?? 0,
+      count: dashboardData?.workCount ?? 0,
     },
-    { title: 'ユーザー', count: data?.userCount ?? 0 },
+    { title: 'ユーザー', count: dashboardData?.userCount ?? 0 },
     {
       title: 'ツール',
-      count: data?.toolCount ?? 0,
+      count: dashboardData?.toolCount ?? 0,
     },
   ]
 

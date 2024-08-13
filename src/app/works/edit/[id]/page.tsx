@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import { DetailWork, ToolData } from '@/types/api/admin'
 import { EditWork } from '../../../../features/works/edit/components/EditWork'
-import { notFound } from 'next/navigation'
 import { baseURL, toolApiUrl, workApiUrl } from '@/utils/apiUrl'
 import { fetchError } from '@/utils/fetchError'
 
@@ -14,12 +13,13 @@ export const metadata: Metadata = {
 const getSSRData = async (
   id: number,
 ): Promise<{ tool: ToolData[]; work?: DetailWork }> => {
-  let resStatus: Response['status'] = 200
-  const cookie = cookies()
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join('; ')
+  let resStatus: Response['status'] = 0
   try {
+    const cookie = cookies()
+      .getAll()
+      .map((cookie) => `${cookie.name}=${cookie.value}`)
+      .join('; ')
+
     const [toolRes, workRes] = await Promise.all([
       fetch(`${baseURL}${toolApiUrl.all()}`, {
         headers: { cookie },
@@ -47,7 +47,7 @@ const getSSRData = async (
   } catch (error) {
     return { tool: [] }
   }
-  if (resStatus !== 200) fetchError(resStatus)
+  if (resStatus !== 0) fetchError(resStatus)
 }
 
 export default async function Works({ params }: { params: { id: string } }) {

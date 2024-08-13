@@ -28,14 +28,8 @@ export function middleware(request: NextRequest) {
       if (res.status === 200) {
         return response
       }
-      // else {
-      //   return NextResponse.redirect(
-      //     `${request.nextUrl.origin}${routers.LOGIN}`
-      //   )
-      // }
     } catch (error) {
       resStatus = 400
-      // return NextResponse.redirect(`${request.nextUrl.origin}${routers.LOGIN}`)
     }
     if (resStatus !== 200)
       NextResponse.redirect(`${request.nextUrl.origin}${routers.LOGIN}`)

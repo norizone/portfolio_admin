@@ -26,9 +26,9 @@ const getToolList = async (): Promise<ToolData[]> => {
     }
     return await res.json()
   } catch (error) {
-    fetchError(resStatus)
     return []
   }
+  if (resStatus !== 0) fetchError(resStatus)
 }
 
 export default async function Tool() {

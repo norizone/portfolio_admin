@@ -36,9 +36,9 @@ const getWorkList = async (): Promise<WorkListRes> => {
       },
     )
     if (!res.ok) {
+      resStatus = res.status
       throw new Error(`HTTPエラー: ステータスコード ${res.status}`);
     }
-    resStatus = res.status
     return await res.json();
   } catch (error) {
     return {
@@ -47,7 +47,7 @@ const getWorkList = async (): Promise<WorkListRes> => {
       totalPages: 0,
     }
   }
-  if (resStatus !== 200) fetchError(resStatus)
+  if (resStatus !== 0) fetchError(resStatus)
 }
 
 export default async function Works() {

@@ -30,9 +30,9 @@ const getUserList = async (): Promise<UserData[]> => {
     }
     return await res.json()
   } catch (error) {
-    fetchError(resStatus)
     return []
   }
+  if (resStatus !== 0) fetchError(resStatus)
 }
 
 export default async function UserManagement() {
