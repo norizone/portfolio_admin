@@ -107,6 +107,7 @@ export const WorkForm = (props: Props) => {
   }: OnChangeFile) => {
     onChange(imageFile);
     setValue(fileKeyNama, imageFile, { shouldValidate: true });
+    if (errors[fileKeyNama]) return;
     onSubmitUpload({
       key: fileKeyNama,
       file: imageFile,

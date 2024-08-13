@@ -5,7 +5,6 @@ import { WorkForm } from '@/features/works/components/WorkForm'
 import {
   useGetToolList,
   useGetWork,
-  useMutateEditWork,
 } from '@/hooks/api/admin.hooks'
 import { useCompleteModal } from '@/hooks/ui/useCompleteModal'
 import { useRouter } from 'next/navigation'

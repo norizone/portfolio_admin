@@ -10,42 +10,6 @@ export const metadata: Metadata = {
   title: '管理者情報',
 }
 
-const getDashboard = async (): Promise<ResDashboardData> => {
-  try {
-    const cookie = cookies()
-      .getAll()
-      .map((cookie) => `${cookie.name}=${cookie.value}`)
-      .join('; ')
-    const res = await fetch(`${baseURL}${dashboardApiUrl.default}`, {
-      headers: { cookie },
-      cache: "no-store",
-      credentials: "include",
-    })
-    return await res.json()
-  } catch (error) {
-    console.log(error)
-    return {}
-  }
-}
-
-const getAuthData = async (): Promise<AuthData> => {
-  try {
-    const cookie = cookies()
-      .getAll()
-      .map((cookie) => `${cookie.name}=${cookie.value}`)
-      .join('; ')
-    const res = await fetch(`${baseURL}${authApiUrl.default}`, {
-      headers: { cookie },
-      credentials: "include",
-      cache: "no-store",
-    })
-    return await res.json()
-  } catch (error) {
-    console.log(error)
-    return {}
-  }
-}
-
 const SSRData = async (): Promise<{ authData: AuthData, dashboardData: ResDashboardData }> => {
   let resStatus: Response['status'] = 0;
   try {
