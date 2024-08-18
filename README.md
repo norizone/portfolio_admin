@@ -1,4 +1,5 @@
 ## Getting Started
+- BE : https://github.com/norizone/portfolio_backend
 
 First, run the development server:
 
@@ -15,7 +16,7 @@ bun dev
 ## ディレクトリ構造
 
 ```
-├── app // routing,サーバーサイドの処理が必要なもの
+├── app // routing,サーバーサイドの処理が必要なもの サーバーサイドコンポーネントなど
 ├── components
 │   ├── elements　// Base~から始まるcomponentはリセット以外のstyleをつけない
 │   ├── layouts　 // どのページでも使うlayoutに関わるcomponent
