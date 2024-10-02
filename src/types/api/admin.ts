@@ -56,7 +56,7 @@ export type EditCreateWorkBody = {
   singleImgSub2?: string | null
 }
 
-export type WorkList = Pick<Work, 'id' | 'title' | 'order' | 'publication'>
+export type WorkList = Pick<Work, 'id' | 'title' | 'permission' | 'publication'>
 
 export type WorkListRes = {
   items: WorkList[]

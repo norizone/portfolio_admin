@@ -2,12 +2,12 @@
 import { PrimaryPagination } from '@/components/elements/pagination/PrimaryPagination'
 import { useState } from 'react'
 import { DeleteModal } from '@/components/elements/modal/DeleatModal'
-import { convertPublication } from '@/utils/converter'
+import { convertPublication, convertViewPermission } from '@/utils/converter'
 import PrimaryTable from '@/components/elements/table/PrimaryTable'
 import { EditBtn } from '@/components/elements/btn/EditBtn'
 import { DeleteBtn } from '@/components/elements/btn/DeleteBtn'
 import { ColumnsType } from '@/components/elements/table/PrimaryTable/type'
-import { PUBLICATION_STATUS } from '@/utils/enum'
+import { PUBLICATION_STATUS, VIEW_PERMISSION } from '@/utils/enum'
 import Link from 'next/link'
 import { routers } from '@/routers/routers'
 import { useGetWorkList } from '@/hooks/api/admin.hooks'
@@ -26,7 +26,7 @@ type Props = {
 type WorkList = {
   id: number
   title: string
-  order: number
+  permission: VIEW_PERMISSION
   publication: PUBLICATION_STATUS
 }
 
@@ -64,13 +64,15 @@ export const WorkList = (props: Props) => {
       width: 4,
     },
     {
-      header: '並び順',
-      key: 'order',
+      header: '表示権限',
+      key: 'permission',
+      converter: (row) => convertViewPermission[row.permission],
+      width: 2,
     },
     {
       header: '公開状況',
       key: 'publication',
-      width: 2,
+      width: 1,
       converter: (row) => convertPublication[row.publication],
     },
     {
