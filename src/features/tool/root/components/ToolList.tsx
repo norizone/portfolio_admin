@@ -6,15 +6,17 @@ import { DeleteBtn } from '@/components/elements/btn/DeleteBtn'
 import { ColumnsType } from '@/components/elements/table/PrimaryTable/type'
 import { styleTableTRPadding } from '@/styles/style'
 import BaseInput from '@/components/elements/input/BaseInput'
-import { ToolData } from '@/types/api/admin'
+import { EditTool, ToolData } from '@/types/api/admin'
+import { DragBtn } from '@/components/elements/btn/DragBtn'
+import { useEditOrderTool } from '../hooks/useEditOrderTool'
 
 type Props = {
   toolItems?: ToolData[]
   isEditMode?: boolean
   isLoading?: boolean
   onClickDelete: (id: number, title: string) => void
-  setEditData: (value: ToolData[]) => void
-  editData: ToolData[]
+  setEditData: (value: EditTool[]) => void
+  editData: EditTool[]
 }
 
 export const ToolList = (props: Props) => {
@@ -29,6 +31,7 @@ export const ToolList = (props: Props) => {
 
   const [firstRow, setFirstRow] = useState(0)
   const firstRowInput = useRef<HTMLInputElement | null>(null)
+  const { onEditOrder } = useEditOrderTool(toolItems)
 
   useMemo(() => {
     if (!toolItems || toolItems.length === 0) return setFirstRow(0)
@@ -40,7 +43,7 @@ export const ToolList = (props: Props) => {
     firstRowInput.current?.focus()
   }, [isEditMode])
 
-  const onEditToolName = (editTool: ToolData) => {
+  const onEditToolName = (editTool: EditTool) => {
     const updatedData = editData.some((tool) => tool.id === editTool.id)
       ? editData.map((tool) =>
         tool.id === editTool.id
@@ -54,15 +57,27 @@ export const ToolList = (props: Props) => {
 
   const tableColumns: ColumnsType<ToolData>[] = [
     {
+      header: '',
+      key: 'drag',
+      width: 0.5,
+      tBodyTDClassName: isEditMode ? 'hidden' : '',
+      tHeaderTHClassName: isEditMode ? 'hidden' : '',
+      renderCell: (row) => (
+        <DragBtn
+          customClassName={styleTableTRPadding}
+          disabled={isEditMode}
+        />
+      ),
+    },
+    {
       header: 'ID',
       key: 'id',
-      tHeaderTHClassName: styleTableTRPadding,
-      tBodyTDClassName: isEditMode ? 'bg-hover' : '',
     },
     {
       header: 'タイトル',
       key: 'toolName',
       width: 8,
+      tHeaderTHClassName: styleTableTRPadding,
       tBodyTDClassName: `text-left px-[1em]`,
       renderCell: (row) => {
         const isFirstRow = firstRow === row.id
@@ -106,6 +121,7 @@ export const ToolList = (props: Props) => {
           columns={tableColumns}
           isLoading={isLoading}
           data={toolItems}
+          handleDragEnd={onEditOrder}
         />
       </div>
     </>

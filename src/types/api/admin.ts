@@ -81,13 +81,17 @@ export type EditUserBody = {
 /**
  * Tool
  */
-export type ToolData = Pick<Tool, 'id' | 'toolName'>
+export type ToolData = Pick<Tool, 'id' | 'toolName' | 'order'>
 
 export type CreateToolBody = Pick<ToolData, 'toolName'>
 
+export type EditTool = Omit<ToolData, 'order'>
+
 export type UpdateToolsBody = {
-  tools: ToolData[]
+  tools: EditTool[]
 }
+
+export type UpdateOrderTool = Pick<Tool, 'id' | 'order'>
 
 export type DeleteToolParams = Pick<ToolData, 'id'>
 

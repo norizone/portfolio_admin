@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useMutateUpdateTools } from '@/hooks/api/admin.hooks'
 import { COMPLETE_MESSAGE_EDIT } from '@/utils/const'
-import { ToolData } from '@/types/api/admin'
+import { EditTool } from '@/types/api/admin'
 
 export const useEditTool = (
   setCompleteMessage: (message: string) => void,
-  toggleCompleteModal: () => void,
+  toggleCompleteModal: () => void
 ) => {
   const {
     mutate: mutateUpdate,
@@ -14,7 +14,7 @@ export const useEditTool = (
   } = useMutateUpdateTools()
   const [isEditMode, setIsEditMode] = useState<boolean>(false)
   const [editErrorMessage, setEditErrorMessage] = useState('')
-  const [editData, setEditData] = useState<ToolData[]>([])
+  const [editData, setEditData] = useState<EditTool[]>([])
 
   const handleEditMode = () => {
     setIsEditMode(!isEditMode)
@@ -46,7 +46,7 @@ export const useEditTool = (
         onError: (error) => {
           setEditErrorMessage(error.message)
         },
-      },
+      }
     )
   }
 

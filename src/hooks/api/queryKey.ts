@@ -6,6 +6,7 @@ export const toolKeys = {
   list: (filters: string) => [...toolKeys.lists(), { filters }] as const,
   details: () => [...toolKeys.all, 'detail'] as const,
   detail: (id: number) => [...toolKeys.details(), id] as const,
+  order: () => [...toolKeys.all, 'order'] as const,
 }
 
 export const workKeys = {

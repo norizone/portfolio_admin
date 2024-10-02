@@ -30,6 +30,9 @@ export function middleware(request: NextRequest) {
       }
     } catch (error) {
       resStatus = 400
+      await fetch(`${baseURL}${authApiUrl.logout}`, {
+        headers: { cookie },
+      })
     }
     if (resStatus !== 200)
       NextResponse.redirect(`${request.nextUrl.origin}${routers.LOGIN}`)

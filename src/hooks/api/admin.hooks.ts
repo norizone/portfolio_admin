@@ -10,6 +10,7 @@ import {
   LoginBody,
   ResDashboardData,
   ToolData,
+  UpdateOrderTool,
   UpdateToolsBody,
   WorkListRes,
 } from '@/types/api/admin'
@@ -33,7 +34,7 @@ import {
 
 export const useGetAuth = (
   enabled: boolean = true,
-  refetchOnWindowFocus?: boolean,
+  refetchOnWindowFocus?: boolean
 ) => {
   return useQuery({
     queryKey: authKeys.default,
@@ -111,7 +112,7 @@ export const useMutateEditUser = () => {
     }): Promise<UserData> => {
       const res = await axiosClient.patch(
         userApiUrl.edit(params.userId),
-        params.body,
+        params.body
       )
       return res.data
     },
@@ -272,6 +273,20 @@ export const useMutateUpdateTools = () => {
   return useMutation({
     mutationFn: async (body: UpdateToolsBody) => {
       const res = await axiosClient.patch(toolApiUrl.edit(), body)
+      return res.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: toolKeys.all })
+    },
+  })
+}
+
+// tools_order_update
+export const useMutateUpdateOrderTool = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (body: UpdateOrderTool) => {
+      const res = await axiosClient.patch(toolApiUrl.editOrder(), body)
       return res.data
     },
     onSuccess: () => {

@@ -1,9 +1,12 @@
 'use client'
 import { twMerge } from 'tailwind-merge'
 import { PrimaryTableProps } from './type'
-import { LoadingIcon } from '../../icon/LodingIcon'
+import { DndContext } from "@dnd-kit/core";
+import { TableRow } from './TableRow'
+import { SortableContext } from '@dnd-kit/sortable';
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 
-const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
+const PrimaryTable = <T extends { id: number },>(props: PrimaryTableProps<T>) => {
   const {
     isLoading = false,
     data,
@@ -11,6 +14,7 @@ const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
     className,
     theadTRClassName,
     tBodyTRClassName,
+    handleDragEnd
   } = props
 
   const tHead = () => (
@@ -24,9 +28,8 @@ const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
         {columns.map((col, index) => (
           <th
             style={{
-              width: `${
-                ((col?.width ? col.width : 1) / columns.length) * 100
-              }%`,
+              width: `${((col?.width ? col.width : 1) / columns.length) * 100
+                }%`,
             }}
             className={twMerge(
               `border-r border-border-op last-of-type:border-none font-normal`,
@@ -41,52 +44,29 @@ const PrimaryTable = <T,>(props: PrimaryTableProps<T>) => {
     </thead>
   )
 
-  const tBody = () => {
-    return (
-      <tbody>
-        {data?.map((row, rowIndex) => (
-          <tr
-            key={`row-${rowIndex}`}
-            className={twMerge(
-              'bg-white  shadow-sm rounded-md border-t border-border-op',
-              tBodyTRClassName,
-            )}
-          >
-            {columns.map((col, colIndex) => {
-              const colValue = col?.converter
-                ? col?.converter(row)
-                : col.key !== 'action'
-                  ? (row[col.key] as string)
-                  : ''
-              return (
-                <td
-                  key={`col-${colIndex}`}
-                  className={twMerge(
-                    'text-center border-r border-border-op last-of-type:border-none font-normal p-0',
-                    col?.tBodyTDClassName,
-                  )}
-                >
-                  {col.renderCell ? (
-                    col.renderCell(row)
-                  ) : (
-                    <span className={twMerge(`truncate block`)}>
-                      {colValue}
-                    </span>
-                  )}
-                </td>
-              )
-            })}
-          </tr>
-        ))}
-      </tbody>
-    )
-  }
-
   return (
-    <table className="w-full table-fixed">
-      {tHead()}
-      {tBody()}
-    </table>
+    <DndContext
+      onDragEnd={handleDragEnd ? (event) => handleDragEnd(event) : undefined}
+      modifiers={[restrictToVerticalAxis]}
+    >
+      <table className="w-full table-fixed">
+        {tHead()}
+        <tbody>
+          {data && data?.length &&
+            <SortableContext items={data}>
+              {data?.map(rowData => (
+                <TableRow
+                  key={rowData.id}
+                  rowData={rowData}
+                  columns={columns}
+                  tBodyTRClassName={tBodyTRClassName}
+                />
+              ))}
+            </SortableContext>
+          }
+        </tbody >
+      </table>
+    </DndContext>
   )
 }
 

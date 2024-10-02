@@ -5,6 +5,7 @@ export const toolApiUrl = {
   all: () => `${toolApiUrl.default}`,
   create: () => `${toolApiUrl.default}/create`,
   edit: () => `${toolApiUrl.default}/edit`,
+  editOrder: () => `${toolApiUrl.default}/edit/order`,
   detail: (id: number) => `${toolApiUrl.default}/detail/${id}`,
   delete: (id: number) => `${toolApiUrl.default}/delete/${id}`,
 }
