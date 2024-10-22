@@ -24,6 +24,18 @@ export const metadata: Metadata = {
     default: 'portfolio_管理画面',
     template: '%s | portfolio_管理画面',
   },
+  robots: {
+    index: false,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: false,
+      noimageindex: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  }
 }
 
 export default function RootLayout({
