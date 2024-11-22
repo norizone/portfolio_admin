@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
 import { WorkList } from '../../features/works/root/components/WorkList'
 import { PrimaryBtn } from '@/components/elements/btn/PrimaryBtn'
 import { cookies } from 'next/headers'
-import { WorkListRes } from '@/types/api/admin'
+import { WorkListItemWithOrder } from '@/types/api/admin'
 import { baseURL, workApiUrl } from '@/utils/apiUrl'
 import { fetchError } from '@/utils/fetchError'
 
@@ -13,10 +13,8 @@ export const metadata: Metadata = {
   title: '制作実績一覧',
 }
 
-const PAGE_SiZE = 10
-const DEFAULT_PAGE = 1
 
-const getWorkList = async (): Promise<WorkListRes> => {
+const getWorkList = async (): Promise<WorkListItemWithOrder[]> => {
   let resStatus: Response['status'] = 0
   const cookie = cookies()
     .getAll()
@@ -24,14 +22,9 @@ const getWorkList = async (): Promise<WorkListRes> => {
     .join('; ')
   try {
     const res = await fetch(
-      `${baseURL}${workApiUrl.list()}`,
+      `${baseURL}${workApiUrl.listAll()}`,
       {
-        method: "POST",
-        headers: { cookie, "Content-Type": "application/json", },
-        body: JSON.stringify({
-          page: DEFAULT_PAGE,
-          pageSize: PAGE_SiZE,
-        }),
+        headers: { cookie },
         cache: "no-store",
       },
     )
@@ -41,11 +34,7 @@ const getWorkList = async (): Promise<WorkListRes> => {
     }
     return await res.json();
   } catch (error) {
-    return {
-      items: [],
-      totalCount: 0,
-      totalPages: 0,
-    }
+    return []
   }
   if (resStatus !== 0) fetchError(resStatus)
 }
@@ -70,8 +59,6 @@ export default async function Works() {
       </div>
       <WorkList
         SSRData={dataWorkList}
-        pageSize={PAGE_SiZE}
-        defaultPage={DEFAULT_PAGE}
       />
     </section>
   )

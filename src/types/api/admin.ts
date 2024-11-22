@@ -64,6 +64,10 @@ export type WorkListRes = {
   totalCount: number
 }
 
+export type WorkListItemWithOrder = WorkList & Pick<Work, 'order'> 
+
+export type UpdateOrderWork = Pick<Work, 'id' | 'order'>
+
 /**
  * User
  */

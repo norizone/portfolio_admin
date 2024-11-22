@@ -116,7 +116,7 @@ export const ToolList = (props: Props) => {
 
   return (
     <>
-      <div className="mt-[2em]">
+      <div className="mt-[2em] relative">
         <PrimaryTable
           columns={tableColumns}
           isLoading={isLoading}

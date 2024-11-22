@@ -27,18 +27,12 @@ export const useDeleteWork = (
     toggleDeleteModal()
   }
 
-  const onDeleteSubmit = ({
-    page,
-    pageSize,
-  }: {
-    page: number
-    pageSize: number
-  }) => {
+  const onDeleteSubmit = () => {
     if (!deleteId) return
     mutateDelete(deleteId, {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: workKeys.list({ page, pageSize }),
+          queryKey: workKeys.listAll(),
         })
         toggleDeleteModal()
         setCompleteMessage(COMPLETE_MESSAGE_DELETE)

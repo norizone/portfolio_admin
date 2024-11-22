@@ -13,8 +13,10 @@ export const workKeys = {
   all: ['work'] as const,
   lists: () => [...workKeys.all, 'list'] as const,
   list: (filters: ListBody) => [...workKeys.lists(), { filters }] as const,
+  listAll: () => [...workKeys.lists(), 'all'] as const,
   details: () => [...workKeys.all, 'detail'] as const,
   detail: (id: number) => [...workKeys.details(), id] as const,
+  order: () => [...workKeys.all, 'order'] as const,
 }
 
 export const userKeys = {

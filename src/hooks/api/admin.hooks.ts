@@ -11,7 +11,9 @@ import {
   ResDashboardData,
   ToolData,
   UpdateOrderTool,
+  UpdateOrderWork,
   UpdateToolsBody,
+  WorkListItemWithOrder,
   WorkListRes,
 } from '@/types/api/admin'
 import { Tool, User, Work } from '@prisma/client'
@@ -148,6 +150,17 @@ export const useGetWorkList = (ListBody: ListBody, SSRData?: WorkListRes) => {
   })
 }
 
+export const useGetWorkListAll = (SSRData?: WorkListItemWithOrder[]) => {
+  return useQuery<WorkListItemWithOrder[]>({
+    queryKey: workKeys.all,
+    queryFn: async (): Promise<WorkListItemWithOrder[]> => {
+      const res = await axiosClient.get(workApiUrl.listAll())
+      return res.data
+    },
+    initialData: SSRData,
+  })
+}
+
 export const useGetWork = (id: number, SSRData?: DetailWork) => {
   return useQuery<DetailWork>({
     queryKey: workKeys.detail(id),
@@ -221,6 +234,20 @@ export const useMutateDeleteWork = () => {
     mutationFn: async (id: number) => {
       const res = await axiosClient.delete(workApiUrl.delete(id))
       return res.data
+    },
+  })
+}
+
+// work_order_update
+export const useMutateUpdateOrderWork = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (body: UpdateOrderWork) => {
+      const res = await axiosClient.patch(workApiUrl.editOrder(), body)
+      return res.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: workKeys.all })
     },
   })
 }
